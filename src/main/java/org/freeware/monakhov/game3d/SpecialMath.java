@@ -30,7 +30,7 @@ public class SpecialMath {
         return Math.max(a, c) <= Math.min(b, d);
     }
 
-    static double lineLength(Point a, Point b) {
+    public static double lineLength(Point a, Point b) {
         double x = a.getX() - b.getX();
         double y = a.getY() - b.getY();
         return Math.sqrt(x * x + y * y);
@@ -44,7 +44,7 @@ public class SpecialMath {
         return Math.sqrt(p * (p - ab) * (p - bc) * (p - ac));
     }
 
-    final static double EPSILON = 0.0001d;      
+    public final static double EPSILON = 0.0001d;      
     
     public static boolean lineIntersection (Point p1, Point p2, Point p3, Point p4, Point i) {
         double a1 = p2.getY() - p1.getY();

@@ -8,6 +8,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.Arrays;
 import org.freeware.monakhov.game3d.maps.Line;
 import org.freeware.monakhov.game3d.maps.Point;
@@ -66,25 +67,28 @@ public class GraphicsEngine {
     final double wh = 10;
     
     void renderWalls() {
-        Graphics g = screen.getDoubleImage().getGraphics();
+        Graphics2D g = (Graphics2D)screen.getDoubleImage().getGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
         for (int i = 0; i < mapLines.length; i++) {
             Line l = mapLines[i];
             if (l != null) {
                 double dist = SpecialMath.lineLength(hero.getPosition(), intersectPoints[i]);
                 double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[i]);
                 int h = (int) Math.round(wh * k / dist);
-                if (h > screen.getHeight()) h = screen.getHeight();
-                int ch = (screen.getHeight() - h) / 2;
-                if (ch > 0) {
-                    g.setColor(Color.WHITE);
-                    g.drawRect(i, 0, 1, ch);
+                if (h < screen.getHeight()) {
+                    int ch = (screen.getHeight() - h) / 2;
+                    if (ch > 0) {
+                        g.setColor(Color.LIGHT_GRAY);
+                        g.drawRect(i, 0, 1, ch);
+                        g.setColor(Color.DARK_GRAY);
+                        g.drawRect(i, h + ch, 1, ch);                        
+                    }
+                    g.drawImage(l.getSubImage(intersectPoints[i], h, screen.getHeight()), i, ch, 1, h, null);
+                } else {
+                    g.drawImage(l.getSubImage(intersectPoints[i], h, screen.getHeight()), i, 0, 1, screen.getHeight(), null);                    
                 }
-                g.setColor(l.getColor()); 
-                g.drawRect(i, screen.getHeight() / 2 - h / 2, 1, h);
-                if (ch > 0) {
-                    g.setColor(Color.LIGHT_GRAY);
-                    g.drawRect(i, h + ch, 1, ch);
-                }                
             }
         }
     }

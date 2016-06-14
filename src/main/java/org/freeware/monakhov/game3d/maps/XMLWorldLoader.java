@@ -29,10 +29,10 @@ public class XMLWorldLoader {
         saxParser = spf.newSAXParser();
     }
 
-    public void parse(World world, InputStream is) throws UnsupportedEncodingException, SAXException, IOException {
+    public void parse(World world, InputStream is, TextureManager textureManager) throws UnsupportedEncodingException, SAXException, IOException {
         try (InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             BufferedReader bisr = new BufferedReader(isr)) {
-            saxParser.parse(new InputSource(bisr), new XMLWorldHandler(world));
+            saxParser.parse(new InputSource(bisr), new XMLWorldHandler(world, textureManager));
         }
     }
     

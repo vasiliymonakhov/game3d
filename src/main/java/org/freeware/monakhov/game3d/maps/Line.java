@@ -1,8 +1,8 @@
 package org.freeware.monakhov.game3d.maps;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.Random;
-import org.freeware.monakhov.game3d.Hero;
 import org.freeware.monakhov.game3d.SpecialMath;
 
 /**
@@ -99,14 +99,6 @@ public class Line {
         return false;
     }
 
-    private static final Random rand = new Random();
-
-    private final Color color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-
-    public Color getColor() {
-        return color;
-    }
-
     /**
      * Проверяет, пересекает ли отрезок из друх точек эту линию
      *
@@ -118,4 +110,8 @@ public class Line {
         return SpecialMath.checkCross(a, b, start, end);
     }
 
+    public BufferedImage getSubImage(Point p, int height, int screenHeight) {
+        return null;
+    }
+    
 }

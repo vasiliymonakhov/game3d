@@ -6,10 +6,10 @@
             <point id = "p1" x="-1" y = "1"/>
             <point id = "p2" x="1" y = "1"/>
             <point id = "p3" x="1" y = "-1"/>
-            <wall id = "w0" start = "p0" end = "p1"/>
-            <wall id = "w1" start = "p1" end = "p2"/>
+            <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
+            <wall id = "w1" start = "p1" end = "p2" texture = "brick01"/>
             <line id = "l2" start = "p2" end = "p3"/>
-            <wall id = "w3" start = "p3" end = "p0"/>                           
+            <wall id = "w3" start = "p3" end = "p0" texture = "brick01"/>                           
         </room>   
         <room id = "r1">
             <point id = "p0" x="1" y = "-1"/>
@@ -17,9 +17,9 @@
             <point id = "p2" x="3" y = "1"/>
             <point id = "p3" x="3" y = "-1"/>
             <line id = "l0" start = "p0" end = "p1"/>
-            <wall id = "w1" start = "p1" end = "p2"/>
-            <wall id = "w2" start = "p2" end = "p3"/>
-            <wall id = "w3" start = "p3" end = "p0"/>                           
+            <wall id = "w1" start = "p1" end = "p2" texture = "brick01"/>
+            <wall id = "w2" start = "p2" end = "p3" texture = "brick01"/>
+            <wall id = "w3" start = "p3" end = "p0" texture = "brick01"/>                           
         </room>   
     </rooms>
     <portals>

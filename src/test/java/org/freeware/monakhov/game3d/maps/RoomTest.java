@@ -57,9 +57,9 @@ public class RoomTest {
         r.addPoint("p0", new Point(10, 20));
         r.addPoint("p1", new Point(30, 40));
         r.addPoint("p2", new Point(50, 60));
-        r.addLine("w0", new Wall(r.getPoint("p0"), r.getPoint("p1")));
-        r.addLine("w1", new Wall(r.getPoint("p1"), r.getPoint("p2")));
-        r.addLine("w2", new Wall(r.getPoint("p2"), r.getPoint("p0")));
+        r.addLine("w0", new Wall(r.getPoint("p0"), r.getPoint("p1"), null));
+        r.addLine("w1", new Wall(r.getPoint("p1"), r.getPoint("p2"), null));
+        r.addLine("w2", new Wall(r.getPoint("p2"), r.getPoint("p0"), null));
         assertEquals(10, r.getLine("w0").getStart().getX(), EPSILON);
         assertEquals(20, r.getLine("w0").getStart().getY(), EPSILON);
         assertEquals(30, r.getLine("w0").getEnd().getX(), EPSILON);
@@ -80,8 +80,8 @@ public class RoomTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddAndGetWall2() {
         Room r = new Room();
-        r.addLine("w0", new Wall(null, null));
-        r.addLine("w0", new Wall(null, null));
+        r.addLine("w0", new Wall(null, null, null));
+        r.addLine("w0", new Wall(null, null, null));
     }    
 
 }

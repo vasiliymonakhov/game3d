@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 import org.freeware.monakhov.game3d.maps.Point;
+import org.freeware.monakhov.game3d.maps.TextureManager;
 import org.freeware.monakhov.game3d.maps.World;
 import org.freeware.monakhov.game3d.maps.XMLWorldLoader;
 import org.xml.sax.SAXException;
@@ -36,7 +37,11 @@ public class MainFrame extends javax.swing.JFrame {
         world = new World();
         engine = new GraphicsEngine(world, hero, screen);
         XMLWorldLoader loader = new XMLWorldLoader();
-        loader.parse(world, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testWorld1.xml"));
+        TextureManager textureManager = new TextureManager();
+        textureManager.add("brick01", "/org/freeware/monakhov/game3d/maps/brick01.jpg");
+        textureManager.add("brick02", "/org/freeware/monakhov/game3d/maps/brick02.jpg");
+        textureManager.add("brick03", "/org/freeware/monakhov/game3d/maps/brick03.jpg");
+        loader.parse(world, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testWorld1.xml"), textureManager);
         hero.setRoom(world.getRoom("r0"));
         jPanel1.add(new JPanel() {
             @Override

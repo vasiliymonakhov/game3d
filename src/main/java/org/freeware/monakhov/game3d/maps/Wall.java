@@ -4,7 +4,7 @@
 
 package org.freeware.monakhov.game3d.maps;
 
-import org.freeware.monakhov.game3d.Hero;
+import java.awt.image.BufferedImage;
 import org.freeware.monakhov.game3d.SpecialMath;
 
 /**
@@ -13,8 +13,11 @@ import org.freeware.monakhov.game3d.SpecialMath;
  */
 public class Wall extends Line {
 
-    public Wall(Point start, Point end) {
+    private final Texture texture;
+    
+    public Wall(Point start, Point end, Texture texture) {
         super(start, end);
+        this.texture = texture;
     }
     
     @Override
@@ -43,5 +46,16 @@ public class Wall extends Line {
         return flag;
     }
     
+    @Override
+    public BufferedImage getSubImage(Point p, int height, int screenHeight) {
+        long xOffset = Math.round(SpecialMath.lineLength(start, p) * 20);
+        int textureOffset = (int)(xOffset % texture.getWidth());
+        if (height > screenHeight) {
+            int th = (int)(texture.getHeight() * screenHeight / height);
+            int dy = (texture.getHeight() - th) / 2;
+            return texture.getSubImage(textureOffset, dy, 1, th);
+        }
+        return texture.getSubImage(textureOffset, 0, 1, texture.getHeight());
+    }
     
 }

@@ -22,9 +22,12 @@ public class XMLWorldLoaderTest {
     @Test
     public void testParse() throws Exception {
         World w = new World();
-
+        TextureManager textureManager = new TextureManager();
+        textureManager.add("brick01", "/org/freeware/monakhov/game3d/maps/brick01.jpg");
+        textureManager.add("brick02", "/org/freeware/monakhov/game3d/maps/brick02.jpg");
+        textureManager.add("brick03", "/org/freeware/monakhov/game3d/maps/brick03.jpg");
         XMLWorldLoader wl = new XMLWorldLoader();
-        wl.parse(w, XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testXMLWorld.xml"));
+        wl.parse(w, XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testXMLWorld.xml"), textureManager);
         Room r0 = w.getRoom("r0");
         Point p0 = r0.getPoint("p0");
         Point p1 = r0.getPoint("p1");

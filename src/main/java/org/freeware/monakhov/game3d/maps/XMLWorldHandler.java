@@ -15,9 +15,11 @@ import org.xml.sax.helpers.DefaultHandler;
 class XMLWorldHandler extends DefaultHandler {
     
     private final World world;
+    private final TextureManager textureManager;
     
-    XMLWorldHandler(World world) {
+    XMLWorldHandler(World world, TextureManager textureManager) {
         this.world = world;
+        this.textureManager = textureManager;
     }
 
     private boolean loadingRooms;
@@ -55,7 +57,8 @@ class XMLWorldHandler extends DefaultHandler {
             case "wall" :
                 if (loadingRooms) {
                     if (roomID != null) {
-                        room.addLine(attr.getValue("id"), new Wall(room.getPoint(attr.getValue("start")), room.getPoint(attr.getValue("end"))));
+                        room.addLine(attr.getValue("id"), new Wall(room.getPoint(attr.getValue("start")), room.getPoint(attr.getValue("end")), 
+                        textureManager.get(attr.getValue("texture"))));
                     }
                 }                
                 break;

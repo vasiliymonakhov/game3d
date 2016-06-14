@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <rooms>
+        <room id = "r0">
+            <point id = "p0" x="-1" y = "-1"/>
+            <point id = "p1" x="-1" y = "1"/>
+            <point id = "p2" x="1" y = "1"/>
+            <point id = "p3" x="1" y = "-1"/>
+            <wall id = "w0" start = "p0" end = "p1"/>
+            <wall id = "w1" start = "p1" end = "p2"/>
+            <line id = "l2" start = "p2" end = "p3"/>
+            <wall id = "w3" start = "p3" end = "p0"/>                           
+        </room>   
+        <room id = "r1">
+            <point id = "p0" x="1" y = "-1"/>
+            <point id = "p1" x="1" y = "1"/>
+            <point id = "p2" x="3" y = "1"/>
+            <point id = "p3" x="3" y = "-1"/>
+            <line id = "l0" start = "p0" end = "p1"/>
+            <wall id = "w1" start = "p1" end = "p2"/>
+            <wall id = "w2" start = "p2" end = "p3"/>
+            <wall id = "w3" start = "p3" end = "p0"/>                           
+        </room>   
+    </rooms>
+    <portals>
+        <portal from = "r0" line = "l2" to = "r1"/>
+        <portal from = "r1" line = "l0" to = "r0"/>
+    </portals>
+</root>

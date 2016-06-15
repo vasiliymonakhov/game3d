@@ -6,7 +6,6 @@ package org.freeware.monakhov.game3d;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.Arrays;
@@ -76,19 +75,17 @@ public class GraphicsEngine {
             if (l != null) {
                 double dist = SpecialMath.lineLength(hero.getPosition(), intersectPoints[i]);
                 double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[i]);
-                int h = (int) Math.round(wh * k / dist);
+                double h = wh * k / dist;
+                int ch = (int)Math.round((screen.getHeight() - h) / 2);
                 if (h < screen.getHeight()) {
-                    int ch = (screen.getHeight() - h) / 2;
                     if (ch > 0) {
                         g.setColor(Color.LIGHT_GRAY);
                         g.drawRect(i, 0, 1, ch);
                         g.setColor(Color.DARK_GRAY);
-                        g.drawRect(i, h + ch, 1, ch);                        
+                        g.drawRect(i, (int)Math.round(h + ch), 1, ch);                        
                     }
-                    g.drawImage(l.getSubImage(intersectPoints[i], h, screen.getHeight()), i, ch, 1, h, null);
-                } else {
-                    g.drawImage(l.getSubImage(intersectPoints[i], h, screen.getHeight()), i, 0, 1, screen.getHeight(), null);                    
                 }
+                g.drawImage(l.getSubImage(intersectPoints[i]), i, ch, 1, (int)Math.round(h), null);                    
             }
         }
     }

@@ -110,7 +110,7 @@ public class Line {
         return SpecialMath.checkCross(a, b, start, end);
     }
 
-    public BufferedImage getSubImage(Point p, int height, int screenHeight) {
+    public BufferedImage getSubImage(Point p) {
         return null;
     }
     

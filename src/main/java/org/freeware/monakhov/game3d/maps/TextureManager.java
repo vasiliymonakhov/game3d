@@ -25,6 +25,9 @@ public class TextureManager {
         if (textures.containsKey(id)) {
             throw new IllegalArgumentException("Texture " + id + " already exists");             
         }
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Texture id is null or empty");             
+        }        
         textures.put(id, new Texture(fileName));
     }
     

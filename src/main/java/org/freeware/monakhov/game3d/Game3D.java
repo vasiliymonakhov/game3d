@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d;
 
+import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,8 @@ public class Game3D {
             @Override
             public void run() {
                 try {
-                    new MainFrame().setVisible(true);
+                    MainFrame mf = new MainFrame();
+                    mf.setVisible(true);
                 } catch (ParserConfigurationException | SAXException | IOException ex) {
                     Logger.getLogger(Game3D.class.getName()).log(Level.SEVERE, null, ex);
                 }

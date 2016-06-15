@@ -50,6 +50,7 @@ public class WallTest {
 
     /**
      * Test of getSubImage method, of class Wall.
+     * @throws java.io.IOException
      */
     @Test
     public void testGetSubImage() throws IOException {

@@ -18,14 +18,14 @@ public class Room {
      */
     private final Map<String, Point> points = new LinkedHashMap<>();    
     
-    void addPoint(String id, Point p) {
+    public void addPoint(String id, Point p) {
         if (points.containsKey(id)) {
             throw new IllegalArgumentException("Point " + id + " already exists"); 
         }
         points.put(id, p);
     }
     
-    Point getPoint(String id) {
+    public Point getPoint(String id) {
         return points.get(id);
     }
     
@@ -42,14 +42,14 @@ public class Room {
      */
     private final Map<String, Line> lines = new LinkedHashMap<>();
     
-    void addLine(String id, Line w) {
+    public void addLine(String id, Line w) {
         if (lines.containsKey(id)) {
             throw new IllegalArgumentException("Wall " + id + " already exists"); 
         }
         lines.put(id, w);
     }    
     
-    Line getLine(String id) {
+    public Line getLine(String id) {
         return lines.get(id);
     }
 

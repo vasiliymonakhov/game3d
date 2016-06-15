@@ -90,9 +90,17 @@ public class GraphicsEngine {
         }
     }
     
+    private boolean mapEnabled;    
+    
+    void toggleMap() {
+        mapEnabled = !mapEnabled;
+    }
+    
     void render() {
         renderWalls();
-        drawMap();        
+        if (mapEnabled) {
+            drawMap();        
+        }
         screen.doubleBufferToScreen();
     }
     

@@ -32,11 +32,10 @@ public class Line {
     /**
      * Создаёт линию
      *
-     * @param room комната
      * @param start начальная точка
      * @param end конечная точка
      */
-    Line(Point start, Point end) {
+    public Line(Point start, Point end) {
         this.start = start;
         this.end = end;
     }
@@ -64,7 +63,7 @@ public class Line {
      *
      * @param portalTo в какую комнату ведёт портал
      */
-    void setPortal(Room portalTo) {
+    public void setPortal(Room portalTo) {
         this.portalTo = portalTo;
     }
 

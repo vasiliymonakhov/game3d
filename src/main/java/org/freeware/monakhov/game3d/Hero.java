@@ -26,6 +26,9 @@ public class Hero {
      * @param position the position to set
      */
     public Hero(Point position) {
+        if (position == null) {
+            throw new IllegalArgumentException("Position may not be null");
+        }        
         this.position = position;
         oldPosition = new Point();
     }
@@ -41,7 +44,7 @@ public class Hero {
      * @param asimuth the asimuth to set
      */
     public void setAsimuth(double asimuth) {
-        this.asimuth = asimuth;
+        this.asimuth = asimuth % (2 * Math.PI);
     }
 
     /**
@@ -55,6 +58,9 @@ public class Hero {
      * @param room the room to set
      */
     public void setRoom(Room room) {
+        if (room == null) {
+            throw new IllegalArgumentException("Room may not be null");
+        }
         this.room = room;
     }
 

@@ -2,7 +2,6 @@ package org.freeware.monakhov.game3d.objects;
 
 import org.freeware.monakhov.game3d.objects.movable.Hero;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import org.freeware.monakhov.game3d.GraphicsEngine;
 import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Point;

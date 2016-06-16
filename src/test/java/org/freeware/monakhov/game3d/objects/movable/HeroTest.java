@@ -4,7 +4,6 @@
 
 package org.freeware.monakhov.game3d.objects.movable;
 
-import org.freeware.monakhov.game3d.objects.movable.Hero;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;

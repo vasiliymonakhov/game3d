@@ -4,9 +4,6 @@
 
 package org.freeware.monakhov.game3d.map;
 
-import org.freeware.monakhov.game3d.map.Wall;
-import org.freeware.monakhov.game3d.map.Room;
-import org.freeware.monakhov.game3d.map.Point;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

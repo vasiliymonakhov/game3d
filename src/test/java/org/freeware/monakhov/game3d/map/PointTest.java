@@ -3,7 +3,6 @@
  */
 package org.freeware.monakhov.game3d.map;
 
-import org.freeware.monakhov.game3d.map.Point;
 import junit.framework.TestCase;
 import org.junit.Test;
 

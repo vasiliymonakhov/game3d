@@ -4,12 +4,7 @@
 
 package org.freeware.monakhov.game3d.map;
 
-import org.freeware.monakhov.game3d.map.Line;
-import org.freeware.monakhov.game3d.map.Point;
 import static junit.framework.Assert.assertEquals;
-import org.freeware.monakhov.game3d.SpecialMath;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**

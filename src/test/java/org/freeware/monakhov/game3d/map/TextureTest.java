@@ -4,7 +4,6 @@
 
 package org.freeware.monakhov.game3d.map;
 
-import org.freeware.monakhov.game3d.map.Texture;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import org.junit.Test;

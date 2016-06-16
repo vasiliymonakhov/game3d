@@ -4,10 +4,6 @@
 
 package org.freeware.monakhov.game3d.map;
 
-import org.freeware.monakhov.game3d.map.Wall;
-import org.freeware.monakhov.game3d.map.Texture;
-import org.freeware.monakhov.game3d.map.Line;
-import org.freeware.monakhov.game3d.map.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import static junit.framework.Assert.assertEquals;

@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import javax.swing.Timer;
 import javax.xml.parsers.ParserConfigurationException;
 import org.freeware.monakhov.game3d.map.Point;
-import org.freeware.monakhov.game3d.map.TextureManager;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.map.XMLWorldLoader;
 import org.xml.sax.SAXException;

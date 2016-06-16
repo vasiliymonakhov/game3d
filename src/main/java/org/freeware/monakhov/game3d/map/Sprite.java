@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import org.freeware.monakhov.game3d.GraphicsEngine;
 
 /**
  * Спрайт

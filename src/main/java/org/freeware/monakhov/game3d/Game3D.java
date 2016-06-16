@@ -1,6 +1,5 @@
 package org.freeware.monakhov.game3d;
 
-import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

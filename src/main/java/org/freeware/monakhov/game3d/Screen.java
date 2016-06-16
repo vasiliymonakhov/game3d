@@ -5,6 +5,9 @@
 package org.freeware.monakhov.game3d;
 
 import java.awt.Graphics;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -14,9 +17,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 class Screen {
 
-    private final BufferedImage doubleImage;
-    
-    private final BufferedImage screenImage;
+    private BufferedImage screenImage;
+    private BufferedImage drawImage;
     
     private final int width;
     private final int height;
@@ -24,32 +26,37 @@ class Screen {
     Screen (int width, int height) {
         this.width = width;
         this.height = height;
-        screenImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        doubleImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        GraphicsConfiguration gfx_config = GraphicsEnvironment.
+		getLocalGraphicsEnvironment().getDefaultScreenDevice().
+		getDefaultConfiguration();
+        screenImage = gfx_config.createCompatibleImage(width, height, Transparency.OPAQUE);
+        drawImage = gfx_config.createCompatibleImage(width, height, Transparency.OPAQUE);
     }
     
     private final ReentrantLock lock = new ReentrantLock();
     
-    void paint(Graphics g, int screenX, int screenY) {
+    void paint(Graphics g, int screenX, int screenY, int screenW, int screenH) {
         try {
             lock.lock();
-            g.drawImage(screenImage, screenX, screenY, null);
+            g.drawImage(screenImage, screenX, screenY, screenW, screenH, null);
         } 
         finally {
             lock.unlock();
         }
     }
 
-    void doubleBufferToScreen() {
+    public void swapBuffers() {
         try {
             lock.lock();
-            screenImage.setData(getDoubleImage().getData());
+            BufferedImage bi = screenImage;
+            screenImage = drawImage;
+            drawImage = bi;        
         } 
         finally {
             lock.unlock();
         }        
     }
-
+    
     /**
      * @return the width
      */
@@ -65,10 +72,17 @@ class Screen {
     }
 
     /**
-     * @return the doubleImage
+     * @return the Image
      */
-    public BufferedImage getDoubleImage() {
-        return doubleImage;
+    public BufferedImage getImage() {
+        return drawImage;
+    }
+
+    /**
+     * @return the lock
+     */
+    public ReentrantLock getLock() {
+        return lock;
     }
     
     

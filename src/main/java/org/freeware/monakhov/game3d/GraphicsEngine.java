@@ -1,14 +1,19 @@
 /**
- * This software is free. You can use it without any limitations, but I don't give any kind of warranties!
+ * This software is free. You can use it without any limitations, but I don't
+ * give any kind of warranties!
  */
-
 package org.freeware.monakhov.game3d;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import org.freeware.monakhov.game3d.maps.Line;
 import org.freeware.monakhov.game3d.maps.Point;
 import org.freeware.monakhov.game3d.maps.Room;
@@ -16,23 +21,24 @@ import org.freeware.monakhov.game3d.maps.World;
 
 /**
  * This is a Graphics Engine
- * @author Vasily Monakhov 
+ *
+ * @author Vasily Monakhov
  */
 public class GraphicsEngine {
-    
+
     private final World world;
-    
+
     private final Hero hero;
-    
+
     private final Screen screen;
-    
+
     private final double perspective;
-    
+
     private final Line[] mapLines;
     private final Point[] rayPoints;
     private final Point[] transformedRayPoints;
     private final Point[] intersectPoints;
-    
+
     GraphicsEngine(World world, Hero hero, Screen screen) {
         this.world = world;
         this.hero = hero;
@@ -53,57 +59,106 @@ public class GraphicsEngine {
             intersectPoints[i] = new Point();
             transformedRayPoints[i] = new Point();
         }
+        wallColumnDrawers = new WallColumnDrawer[screen.getWidth()];
+        for (int i = 0; i < screen.getWidth(); i++) {
+            wallColumnDrawers[i] = new WallColumnDrawer(i);
+        }
     }
-    
+
     void clearRender() {
         Arrays.fill(mapLines, null);
     }
-    
+
     void checkVisibleRooms() {
         hero.getRoom().checkVisibility(mapLines, hero.getPosition(), transformedRayPoints, intersectPoints);
     }
-    
+
     final double wh = 10;
-    
-    void renderWalls() {
-        Graphics2D g = (Graphics2D)screen.getDoubleImage().getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        g.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-        for (int i = 0; i < mapLines.length; i++) {
-            Line l = mapLines[i];
+
+    private final static Executor EXECUTOR = Executors.newCachedThreadPool();
+
+    private class WallColumnDrawer implements Runnable {
+
+        WallColumnDrawer(int index) {
+            this.index = index;
+        }
+
+        void set(Graphics2D g, CountDownLatch doneSignal) {
+            this.g = g;
+            this.doneSignal = doneSignal;
+        }
+
+        private CountDownLatch doneSignal;
+        private Graphics2D g;
+        private final int index;
+
+        @Override
+        public void run() {
+            Line l = mapLines[index];
             if (l != null) {
-                double dist = SpecialMath.lineLength(hero.getPosition(), intersectPoints[i]);
-                double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[i]);
+                double dist = SpecialMath.lineLength(hero.getPosition(), intersectPoints[index]);
+                double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[index]);
                 double h = wh * k / dist;
-                int ch = (int)Math.round((screen.getHeight() - h) / 2);
-                if (h < screen.getHeight()) {
-                    if (ch > 0) {
-                        g.setColor(Color.LIGHT_GRAY);
-                        g.drawRect(i, 0, 1, ch);
-                        g.setColor(Color.DARK_GRAY);
-                        g.drawRect(i, (int)Math.round(h + ch), 1, ch);                        
-                    }
-                }
-                g.drawImage(l.getSubImage(intersectPoints[i]), i, ch, 1, (int)Math.round(h), null);                    
+                int ch = (int) Math.round((screen.getHeight() - h) / 2);
+                g.drawImage(l.getSubImage(intersectPoints[index]), index, ch, 1, (int) Math.round(h), null);
             }
+            doneSignal.countDown();
+        }
+    }
+
+    private final WallColumnDrawer[] wallColumnDrawers;
+
+    void renderWalls() throws InterruptedException {
+        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
+        //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
+        for (int i = 0; i < mapLines.length; i++) {
+            wallColumnDrawers[i].set(g, doneSignal);
+            EXECUTOR.execute(wallColumnDrawers[i]);
+        }
+        doneSignal.await();
+    }
+
+    void renderFloor() {
+        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(0, 0, screen.getWidth(), screen.getHeight() / 2);
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0, screen.getHeight() / 2 + 1, screen.getWidth(), screen.getHeight() / 2);
+    }
+
+    void renderObjects() {
+        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
+        //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        //g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        ArrayList<WorldObject> list = new ArrayList<>();
+        list.addAll(world.getAllObjects());
+        Collections.sort(list, new Comparator<WorldObject>() {
+            @Override
+            public int compare(WorldObject o1, WorldObject o2) {
+                return (int)(o2.distanceTo(hero.getPosition()) - o1.distanceTo(hero.getPosition()));
+            }
+        });
+        for (WorldObject o : list) {
+            o.render(g, screen.getHeight(), hero, transformedRayPoints, intersectPoints);
         }
     }
     
-    private boolean mapEnabled;    
-    
+    private boolean mapEnabled;
+
     void toggleMap() {
         mapEnabled = !mapEnabled;
     }
-    
-    void render() {
+
+    void render() throws InterruptedException {
+        renderFloor();
         renderWalls();
+        renderObjects();
         if (mapEnabled) {
-            drawMap();        
+            drawMap();
         }
-        screen.doubleBufferToScreen();
     }
-    
+
     void transform() {
         double sin = Math.sin(-hero.getAsimuth());
         double cos = Math.cos(-hero.getAsimuth());
@@ -113,15 +168,16 @@ public class GraphicsEngine {
             double new_x = x * cos - y * sin + hero.getPosition().getX();
             double new_y = y * cos + x * sin + hero.getPosition().getY();
             transformedRayPoints[i].moveTo(new_x, new_y);
-        }        
+        }
     }
     
-    void doCycle() {
+    void doCycle() throws InterruptedException {
         world.prepareForVisibilityCheck();
         clearRender();
         transform();
         checkVisibleRooms();
         render();
+        screen.swapBuffers();
     }
 
     /**
@@ -132,28 +188,30 @@ public class GraphicsEngine {
     }
 
     BasicStroke LINE = new BasicStroke(1);
-    BasicStroke WALL = new BasicStroke(3);    
-    
+    BasicStroke WALL = new BasicStroke(3);
+
     void drawMap() {
-        Graphics2D g = (Graphics2D)screen.getDoubleImage().getGraphics();
-        int dx = screen.getDoubleImage().getWidth() / 2;
-        int dy = screen.getDoubleImage().getHeight() / 2;
+        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
+        int dx = screen.getImage().getWidth() / 2;
+        int dy = screen.getImage().getHeight() / 2;
         g.setColor(Color.red);
-        g.fillOval(dx-2, dy-2, 4, 4);  
-        dx +=  - (int)hero.getPosition().getX() * 10;
-        dy += (int)hero.getPosition().getY() * 10;
+        g.fillOval(dx - 2, dy - 2, 4, 4);
+        dx += -(int) hero.getPosition().getX() * 10;
+        dy += (int) hero.getPosition().getY() * 10;
         g.setColor(Color.GREEN);
         for (Room r : world.getAllRooms()) {
             for (Line l : r.getAllLines()) {
-                if (l.isVisible()) g.setStroke(WALL);
-                else g.setStroke(LINE);
-                g.drawLine(dx + (int)l.getStart().getX() * 10, dy - (int)l.getStart().getY() * 10, 
-                        dx + (int)l.getEnd().getX() * 10, dy - (int)l.getEnd().getY() * 10);
+                if (l.isVisible()) {
+                    g.setStroke(WALL);
+                } else {
+                    g.setStroke(LINE);
+                }
+                g.drawLine(dx + (int) l.getStart().getX() * 10, dy - (int) l.getStart().getY() * 10,
+                        dx + (int) l.getEnd().getX() * 10, dy - (int) l.getEnd().getY() * 10);
             }
         }
 
-        
     }
     
-    
+
 }

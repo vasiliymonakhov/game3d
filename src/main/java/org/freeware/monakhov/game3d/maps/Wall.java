@@ -48,7 +48,7 @@ public class Wall extends Line {
     
     @Override
     public BufferedImage getSubImage(Point p) {
-        long xOffset = Math.round(SpecialMath.lineLength(start, p) * 20);
+        long xOffset = Math.round(SpecialMath.lineLength(start, p) * 25);
         int textureOffset = (int)(xOffset % texture.getWidth());
         return texture.getSubImage(textureOffset, 0, 1, texture.getHeight());
     }

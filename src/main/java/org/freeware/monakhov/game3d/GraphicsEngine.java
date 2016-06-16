@@ -4,6 +4,8 @@
  */
 package org.freeware.monakhov.game3d;
 
+import org.freeware.monakhov.game3d.objects.movable.Hero;
+import org.freeware.monakhov.game3d.objects.WorldObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -14,10 +16,10 @@ import java.util.Comparator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import org.freeware.monakhov.game3d.maps.Line;
-import org.freeware.monakhov.game3d.maps.Point;
-import org.freeware.monakhov.game3d.maps.Room;
-import org.freeware.monakhov.game3d.maps.World;
+import org.freeware.monakhov.game3d.map.Line;
+import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.Room;
+import org.freeware.monakhov.game3d.map.World;
 
 /**
  * This is a Graphics Engine
@@ -25,14 +27,14 @@ import org.freeware.monakhov.game3d.maps.World;
  * @author Vasily Monakhov
  */
 public class GraphicsEngine {
-
+    
     private final World world;
 
     private final Hero hero;
 
     private final Screen screen;
 
-    private final double perspective;
+    private final double farFarFrontier;
 
     private final Line[] mapLines;
     private final Point[] rayPoints;
@@ -44,14 +46,14 @@ public class GraphicsEngine {
         this.hero = hero;
         this.screen = screen;
         mapLines = new Line[screen.getWidth()];
-        perspective = KORRECTION * screen.getWidth() / 2;
+        farFarFrontier = KORRECTION * screen.getWidth() / 2;
         rayPoints = new Point[screen.getWidth()];
         int index1 = screen.getWidth() / 2 - 1;
         int index2 = index1 + 1;
         int steps = index2;
         for (int i = 0; i < steps; i++) {
-            rayPoints[index1 - i] = new Point(-0.5 - i * KORRECTION, perspective);
-            rayPoints[index2 + i] = new Point(0.5 + i * KORRECTION, perspective);
+            rayPoints[index1 - i] = new Point(-0.5 - i * KORRECTION, farFarFrontier);
+            rayPoints[index2 + i] = new Point(0.5 + i * KORRECTION, farFarFrontier);
         }
         transformedRayPoints = new Point[screen.getWidth()];
         intersectPoints = new Point[screen.getWidth()];
@@ -73,8 +75,8 @@ public class GraphicsEngine {
         hero.getRoom().checkVisibility(mapLines, hero.getPosition(), transformedRayPoints, intersectPoints);
     }
 
-    final static double WALL_HEIGHT = 256;
-    final static double KORRECTION = 64;
+    public final static double WALL_SIZE = 256;
+    public final static double KORRECTION = 64;
 
     private final static Executor EXECUTOR = Executors.newCachedThreadPool();
 
@@ -99,7 +101,7 @@ public class GraphicsEngine {
             if (l != null) {
                 double dist = SpecialMath.lineLength(hero.getPosition(), intersectPoints[index]);
                 double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[index]);
-                double h = WALL_HEIGHT * k / (dist * KORRECTION);
+                double h = WALL_SIZE * k / (dist * KORRECTION);
                 int ch = (int) Math.round((screen.getHeight() - h) / 2);
                 g.drawImage(l.getSubImage(intersectPoints[index]), index, ch, 1, (int) Math.round(h), null);
             }
@@ -128,23 +130,27 @@ public class GraphicsEngine {
         g.fillRect(0, screen.getHeight() / 2 + 1, screen.getWidth(), screen.getHeight() / 2);
     }
 
+    private final ArrayList<WorldObject> objectsSortList = new ArrayList<>();
+
+    Comparator<WorldObject> objectsSortComparator = new Comparator<WorldObject>() {
+        @Override
+        public int compare(WorldObject o1, WorldObject o2) {
+            return (int) (o2.distanceTo(hero.getPosition()) - o1.distanceTo(hero.getPosition()));
+        }
+    };
+
     void renderObjects() {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
         //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         //g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        ArrayList<WorldObject> list = new ArrayList<>();
-        list.addAll(world.getAllObjects());
-        Collections.sort(list, new Comparator<WorldObject>() {
-            @Override
-            public int compare(WorldObject o1, WorldObject o2) {
-                return (int)(o2.distanceTo(hero.getPosition()) - o1.distanceTo(hero.getPosition()));
-            }
-        });
-        for (WorldObject o : list) {
+        objectsSortList.clear();
+        objectsSortList.addAll(world.getAllObjects());
+        Collections.sort(objectsSortList, objectsSortComparator);
+        for (WorldObject o : objectsSortList) {
             o.render(g, screen.getHeight(), hero, transformedRayPoints, intersectPoints);
         }
     }
-    
+
     private boolean mapEnabled;
 
     void toggleMap() {
@@ -171,7 +177,7 @@ public class GraphicsEngine {
             transformedRayPoints[i].moveTo(new_x, new_y);
         }
     }
-    
+
     void doCycle() throws InterruptedException {
         world.prepareForVisibilityCheck();
         clearRender();
@@ -195,7 +201,9 @@ public class GraphicsEngine {
         g.setColor(Color.GREEN);
         for (Room r : world.getAllRooms()) {
             for (Line l : r.getAllLines()) {
-                if (!l.isEverSeen()) continue;
+                if (!l.isEverSeen()) {
+                    continue;
+                }
                 if (l.isVisible()) {
                     g.setStroke(WALL);
                 } else {
@@ -207,6 +215,5 @@ public class GraphicsEngine {
         }
 
     }
-    
 
 }

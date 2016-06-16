@@ -1,13 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.freeware.monakhov.game3d;
 
-import java.awt.Color;
+import org.freeware.monakhov.game3d.objects.nonmovable.Barrel;
+import org.freeware.monakhov.game3d.objects.movable.Hero;
+import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
+import org.freeware.monakhov.game3d.objects.nonmovable.Key;
+import org.freeware.monakhov.game3d.objects.nonmovable.Lamp;
+import org.freeware.monakhov.game3d.objects.nonmovable.Milton;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
@@ -16,23 +15,17 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
 import javax.xml.parsers.ParserConfigurationException;
-import org.freeware.monakhov.game3d.maps.Point;
-import org.freeware.monakhov.game3d.maps.TextureManager;
-import org.freeware.monakhov.game3d.maps.World;
-import org.freeware.monakhov.game3d.maps.XMLWorldLoader;
+import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.TextureManager;
+import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.map.XMLWorldLoader;
 import org.xml.sax.SAXException;
 
-/**
- *
- * @author vasya
- */
 public class MainFrame extends javax.swing.JFrame {
 
     GraphicsEngine engine;
@@ -40,62 +33,24 @@ public class MainFrame extends javax.swing.JFrame {
     Screen screen;
     Hero hero;
 
-    /**
-     * Creates new form MainFrame
-     */
     public MainFrame() throws ParserConfigurationException, SAXException, IOException {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(false);
         setUndecorated(true);
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setSize(new Dimension(rect.width, rect.height));
-        
         screen = new Screen(rect.width / 1, rect.height / 1);
-
-        hero = new Hero(new Point(256, 256));
         world = new World();
+        hero = new Hero(new Point(256, 256), world);
         engine = new GraphicsEngine(world, hero, screen);
         XMLWorldLoader loader = new XMLWorldLoader();
-        TextureManager textureManager = new TextureManager();
-        textureManager.add("brick01", "/org/freeware/monakhov/game3d/maps/brick01.jpg");
-        textureManager.add("brick02", "/org/freeware/monakhov/game3d/maps/brick02.jpg");
-        textureManager.add("brick03", "/org/freeware/monakhov/game3d/maps/brick03.jpg");
-        loader.parse(world, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testWorld1.xml"), textureManager);
+        loader.parse(world, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml"));
         hero.setRoom(world.getRoom("r0"));
-        world.addObject("01", new StaticObject(new Point(128, 896), "green_barrel"));
-        world.addObject("02", new StaticObject(new Point(640, 896), "milton"));
-        world.addObject("03", new StaticObject(new Point(2048, 512), "tree"));
-        
-        addWindowListener(new WindowListener() {
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
+        world.addObject("01", new Barrel(new Point(128, 896)));
+        world.addObject("02", new Milton(new Point(640, 896)));
+        world.addObject("03", new Tree(new Point(2048, 512)));
+        world.addObject("04", new Lamp(new Point(128, 896)));
+        world.addObject("05", new Key(new Point(512, 512)));
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyDispatcher());
         Timer repainter = new Timer(10, new ActionListener() {
             @Override
@@ -105,7 +60,17 @@ public class MainFrame extends javax.swing.JFrame {
         });
         repainter.setCoalesce(true);
         repainter.start();
+        Timer sec = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.printf("%d FPS%n", frames);
+                frames = 0;
+            }
+        });
+        sec.start();
     }
+
+    private volatile int frames;
 
     @Override
     public void paint(Graphics g) {
@@ -115,6 +80,7 @@ public class MainFrame extends javax.swing.JFrame {
             engine.doCycle();
             Rectangle rr = this.getBounds();
             screen.paint(g, 0, 0, rr.width, rr.height);
+            frames++;
         } catch (InterruptedException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -122,7 +88,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private long frameNanoTime;
-    
+
     boolean left;
     boolean right;
     boolean forward;
@@ -131,8 +97,8 @@ public class MainFrame extends javax.swing.JFrame {
     boolean strifeRight;
 
     final static double TURN_SPEED = Math.PI / 1000000000.0;
-    final static double MOVE_SPEED = 512 / 1000000000.0;
-    
+    final static double MOVE_SPEED = 1024 / 1000000000.0;
+
     void analyseKeys() {
         double ts = TURN_SPEED * frameNanoTime;
         double ms = MOVE_SPEED * frameNanoTime;

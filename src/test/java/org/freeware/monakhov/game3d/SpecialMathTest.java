@@ -1,7 +1,7 @@
 
 package org.freeware.monakhov.game3d;
 
-import org.freeware.monakhov.game3d.maps.Point;
+import org.freeware.monakhov.game3d.map.Point;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

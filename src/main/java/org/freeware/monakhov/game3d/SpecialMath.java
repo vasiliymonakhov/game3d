@@ -1,6 +1,6 @@
 package org.freeware.monakhov.game3d;
 
-import org.freeware.monakhov.game3d.maps.Point;
+import org.freeware.monakhov.game3d.map.Point;
 
 /**
  * Класс для специальной математики

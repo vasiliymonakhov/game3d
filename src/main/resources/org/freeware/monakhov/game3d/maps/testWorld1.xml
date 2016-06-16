@@ -3,11 +3,11 @@
     <rooms>
         <room id = "r0">
             <point id = "p0" x="0" y = "0"/>
-            <point id = "p1" x="0" y = "30"/>
-            <point id = "p2" x="10" y = "30"/>
-            <point id = "p3" x="20" y = "30"/>
-            <point id = "p4" x="30" y = "20"/>
-            <point id = "p5" x="30" y = "0"/>
+            <point id = "p1" x="0" y = "768"/>
+            <point id = "p2" x="256" y = "768"/>
+            <point id = "p3" x="512" y = "768"/>
+            <point id = "p4" x="768" y = "512"/>
+            <point id = "p5" x="768" y = "0"/>
             <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
             <line id = "l1" start = "p1" end = "p2"/>            
             <wall id = "w2" start = "p2" end = "p3" texture = "brick01"/>
@@ -16,41 +16,41 @@
             <wall id = "w5" start = "p5" end = "p0" texture = "brick01"/>                           
         </room>   
         <room id = "r1">
-            <point id = "p0" x="0" y = "30"/>
-            <point id = "p1" x="0" y = "40"/>
-            <point id = "p2" x="10" y = "40"/>
-            <point id = "p3" x="10" y = "30"/>
+            <point id = "p0" x="0" y = "768"/>
+            <point id = "p1" x="0" y = "1024"/>
+            <point id = "p2" x="256" y = "1024"/>
+            <point id = "p3" x="256" y = "768"/>
             <wall id = "w0" start = "p0" end = "p1" texture = "brick02"/>
             <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>
             <wall id = "w2" start = "p2" end = "p3" texture = "brick02"/>                           
             <line id = "l3" start = "p3" end = "p0"/>            
         </room>   
         <room id = "r2">
-            <point id = "p0" x="20" y = "30"/>
-            <point id = "p1" x="20" y = "40"/>
-            <point id = "p2" x="30" y = "40"/>
-            <point id = "p3" x="30" y = "20"/>
+            <point id = "p0" x="512" y = "768"/>
+            <point id = "p1" x="512" y = "1024"/>
+            <point id = "p2" x="768" y = "1024"/>
+            <point id = "p3" x="768" y = "512"/>
             <wall id = "w0" start = "p0" end = "p1" texture = "brick03"/>
             <wall id = "w1" start = "p1" end = "p2" texture = "brick03"/>
             <wall id = "w2" start = "p2" end = "p3" texture = "brick03"/>                           
             <line id = "l3" start = "p3" end = "p0"/>            
         </room>           
         <room id = "r3">
-            <point id = "p0" x="30" y = "20"/>
-            <point id = "p1" x="50" y = "20"/>
-            <point id = "p2" x="50" y = "0"/>
-            <point id = "p3" x="30" y = "0"/>
+            <point id = "p0" x="768" y = "512"/>
+            <point id = "p1" x="1280" y = "512"/>
+            <point id = "p2" x="1280" y = "0"/>
+            <point id = "p3" x="768" y = "0"/>
             <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
             <line id = "l1" start = "p1" end = "p2"/>
             <wall id = "w2" start = "p2" end = "p3" texture = "brick01"/>                           
             <line id = "l3" start = "p3" end = "p0"/>            
         </room>      
         <room id = "r4">
-            <point id = "p0" x="50" y = "0"/>
-            <point id = "p1" x="50" y = "20"/>
-            <point id = "p2" x="50" y = "40"/>
-            <point id = "p3" x="65" y = "25"/>
-            <point id = "p4" x="65" y = "0"/>
+            <point id = "p0" x="1280" y = "0"/>
+            <point id = "p1" x="1280" y = "512"/>
+            <point id = "p2" x="1280" y = "1024"/>
+            <point id = "p3" x="1664" y = "640"/>
+            <point id = "p4" x="1664" y = "0"/>
             <line id = "l0" start = "p0" end = "p1"/>
             <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>
             <line id = "l2" start = "p2" end = "p3"/>                           
@@ -58,11 +58,11 @@
             <wall id = "w4" start = "p4" end = "p0" texture = "brick02"/>                        
         </room>                           
         <room id = "r5">
-            <point id = "p0" x="50" y = "40"/>
-            <point id = "p1" x="85" y = "40"/>
-            <point id = "p2" x="85" y = "25"/>
-            <point id = "p3" x="75" y = "25"/>
-            <point id = "p4" x="65" y = "25"/>
+            <point id = "p0" x="1280" y = "1024"/>
+            <point id = "p1" x="2176" y = "1024"/>
+            <point id = "p2" x="2176" y = "640"/>
+            <point id = "p3" x="1920" y = "640"/>
+            <point id = "p4" x="1664" y = "640"/>
             <wall id = "w0" start = "p0" end = "p1" texture = "brick03"/>
             <wall id = "w1" start = "p1" end = "p2" texture = "brick03"/>
             <line id = "l2" start = "p2" end = "p3"/>                           
@@ -70,10 +70,10 @@
             <line id = "l4" start = "p4" end = "p0"/>                        
         </room>                                   
         <room id = "r6">
-            <point id = "p0" x="85" y = "25"/>
-            <point id = "p1" x="85" y = "15"/>
-            <point id = "p2" x="75" y = "15"/>
-            <point id = "p3" x="75" y = "25"/>
+            <point id = "p0" x="2176" y = "640"/>
+            <point id = "p1" x="2176" y = "384"/>
+            <point id = "p2" x="1920" y = "384"/>
+            <point id = "p3" x="1920" y = "640"/>
             <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
             <wall id = "w1" start = "p1" end = "p2" texture = "brick01"/>
             <wall id = "w2" start = "p2" end = "p3" texture = "brick01"/>                           

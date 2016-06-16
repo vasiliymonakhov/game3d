@@ -44,14 +44,14 @@ public class GraphicsEngine {
         this.hero = hero;
         this.screen = screen;
         mapLines = new Line[screen.getWidth()];
-        perspective = screen.getWidth() / 2;
+        perspective = KORRECTION * screen.getWidth() / 2;
         rayPoints = new Point[screen.getWidth()];
         int index1 = screen.getWidth() / 2 - 1;
         int index2 = index1 + 1;
         int steps = index2;
         for (int i = 0; i < steps; i++) {
-            rayPoints[index1 - i] = new Point(-0.5 - i, perspective);
-            rayPoints[index2 + i] = new Point(0.5 + i, perspective);
+            rayPoints[index1 - i] = new Point(-0.5 - i * KORRECTION, perspective);
+            rayPoints[index2 + i] = new Point(0.5 + i * KORRECTION, perspective);
         }
         transformedRayPoints = new Point[screen.getWidth()];
         intersectPoints = new Point[screen.getWidth()];
@@ -73,7 +73,8 @@ public class GraphicsEngine {
         hero.getRoom().checkVisibility(mapLines, hero.getPosition(), transformedRayPoints, intersectPoints);
     }
 
-    final double wh = 10;
+    final static double WALL_HEIGHT = 256;
+    final static double KORRECTION = 64;
 
     private final static Executor EXECUTOR = Executors.newCachedThreadPool();
 
@@ -98,7 +99,7 @@ public class GraphicsEngine {
             if (l != null) {
                 double dist = SpecialMath.lineLength(hero.getPosition(), intersectPoints[index]);
                 double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[index]);
-                double h = wh * k / dist;
+                double h = WALL_HEIGHT * k / (dist * KORRECTION);
                 int ch = (int) Math.round((screen.getHeight() - h) / 2);
                 g.drawImage(l.getSubImage(intersectPoints[index]), index, ch, 1, (int) Math.round(h), null);
             }
@@ -180,13 +181,6 @@ public class GraphicsEngine {
         screen.swapBuffers();
     }
 
-    /**
-     * @return the perspective
-     */
-    public double getPerspective() {
-        return perspective;
-    }
-
     BasicStroke LINE = new BasicStroke(1);
     BasicStroke WALL = new BasicStroke(3);
 
@@ -196,18 +190,19 @@ public class GraphicsEngine {
         int dy = screen.getImage().getHeight() / 2;
         g.setColor(Color.red);
         g.fillOval(dx - 2, dy - 2, 4, 4);
-        dx += -(int) hero.getPosition().getX() * 10;
-        dy += (int) hero.getPosition().getY() * 10;
+        dx += -(int) hero.getPosition().getX() / 4;
+        dy += (int) hero.getPosition().getY() / 4;
         g.setColor(Color.GREEN);
         for (Room r : world.getAllRooms()) {
             for (Line l : r.getAllLines()) {
+                if (!l.isEverSeen()) continue;
                 if (l.isVisible()) {
                     g.setStroke(WALL);
                 } else {
                     g.setStroke(LINE);
                 }
-                g.drawLine(dx + (int) l.getStart().getX() * 10, dy - (int) l.getStart().getY() * 10,
-                        dx + (int) l.getEnd().getX() * 10, dy - (int) l.getEnd().getY() * 10);
+                g.drawLine(dx + (int) l.getStart().getX() / 4, dy - (int) l.getStart().getY() / 4,
+                        dx + (int) l.getEnd().getX() / 4, dy - (int) l.getEnd().getY() / 4);
             }
         }
 

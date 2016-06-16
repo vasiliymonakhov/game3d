@@ -71,13 +71,11 @@ abstract public class WorldObject {
     
     abstract public void moveBy(double df, double ds);
     
-    double wh = 10;
-    
     public void render(Graphics2D g, int screenHeight, Hero hero, Point[] transformedRayPoints, Point[] intersectPoints) {
         Point s = new Point();
         Point e = new Point();
-        double deltaX =  5 * Math.cos(-hero.getAsimuth());
-        double deltaY = 5 * Math.sin(-hero.getAsimuth());
+        double deltaX =  GraphicsEngine.WALL_HEIGHT / 2 * Math.cos(-hero.getAsimuth());
+        double deltaY = GraphicsEngine.WALL_HEIGHT / 2 * Math.sin(-hero.getAsimuth());
 
         s.moveTo(position.getX() - deltaX, position.getY() - deltaY);        
         e.moveTo(position.getX() + deltaX, position.getY() + deltaY);
@@ -87,9 +85,9 @@ abstract public class WorldObject {
                 if (p.between(s, e) && p.between(hero.getPosition(), intersectPoints[i])) {
                     double dist = SpecialMath.lineLength(hero.getPosition(), p);
                     double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[i]);
-                    double h = wh * k / dist;
+                    double h = GraphicsEngine.WALL_HEIGHT * k / (dist * GraphicsEngine.KORRECTION);
                     int ch = (int) Math.round((screenHeight - h) / 2);
-                    long xOffset = Math.round(SpecialMath.lineLength(s, p) * 25);
+                    long xOffset = Math.round(SpecialMath.lineLength(s, p));
                     Sprite sprite = getSprite();
                     int spriteOffset = (int)(xOffset % sprite.getWidth());
                     g.drawImage(sprite.getSubImage(spriteOffset, 0, 1, sprite.getHeight()), i, ch, 1, (int) Math.round(h), null);                    

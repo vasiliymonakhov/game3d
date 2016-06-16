@@ -24,6 +24,15 @@ public class Wall extends Line {
     public boolean isVisible() {
         return true;
     }
+    
+    /**
+     * Сообщает, что линию можно пересекать
+     * @return можно ли пересекать через линию
+     */
+    @Override
+    public boolean isCrossable() {
+        return false;
+    }    
 
     /**
      * Проверяет видимость линии на экране
@@ -38,6 +47,7 @@ public class Wall extends Line {
                     if (mapLines[i] == null) {
                         flag = true;
                         mapLines[i] = this;
+                        everSeen = true;
                         intersectPoints[i].moveTo(p.getX(), p.getY());
                     }
                 }
@@ -48,9 +58,10 @@ public class Wall extends Line {
     
     @Override
     public BufferedImage getSubImage(Point p) {
-        long xOffset = Math.round(SpecialMath.lineLength(start, p) * 25);
+        long xOffset = Math.round(SpecialMath.lineLength(start, p));
         int textureOffset = (int)(xOffset % texture.getWidth());
         return texture.getSubImage(textureOffset, 0, 1, texture.getHeight());
     }
+    
     
 }

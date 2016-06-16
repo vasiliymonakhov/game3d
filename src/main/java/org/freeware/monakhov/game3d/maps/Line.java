@@ -84,6 +84,20 @@ public class Line {
     public boolean isVisible() {
         return false;
     }
+    
+    protected boolean everSeen = false;    
+    
+    public boolean isEverSeen() {
+        return everSeen;
+    }
+    
+    /**
+     * Сообщает, что линию можно пересекать
+     * @return можно ли пересекать через линию
+     */
+    public boolean isCrossable() {
+        return true;
+    }
 
     /**
      * Проверяет видимость линии на экране

@@ -52,7 +52,7 @@ public class MainFrame extends javax.swing.JFrame {
         
         screen = new Screen(rect.width / 1, rect.height / 1);
 
-        hero = new Hero(new Point(10, 10));
+        hero = new Hero(new Point(256, 256));
         world = new World();
         engine = new GraphicsEngine(world, hero, screen);
         XMLWorldLoader loader = new XMLWorldLoader();
@@ -62,9 +62,9 @@ public class MainFrame extends javax.swing.JFrame {
         textureManager.add("brick03", "/org/freeware/monakhov/game3d/maps/brick03.jpg");
         loader.parse(world, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testWorld1.xml"), textureManager);
         hero.setRoom(world.getRoom("r0"));
-        world.addObject("01", new StaticObject(new Point(5, 35), "green_barrel"));
-        world.addObject("02", new StaticObject(new Point(25, 35), "milton"));
-        world.addObject("03", new StaticObject(new Point(80, 20), "tree"));
+        world.addObject("01", new StaticObject(new Point(128, 896), "green_barrel"));
+        world.addObject("02", new StaticObject(new Point(640, 896), "milton"));
+        world.addObject("03", new StaticObject(new Point(2048, 512), "tree"));
         
         addWindowListener(new WindowListener() {
 
@@ -131,7 +131,7 @@ public class MainFrame extends javax.swing.JFrame {
     boolean strifeRight;
 
     final static double TURN_SPEED = Math.PI / 1000000000.0;
-    final static double MOVE_SPEED = 20 / 1000000000.0;
+    final static double MOVE_SPEED = 512 / 1000000000.0;
     
     void analyseKeys() {
         double ts = TURN_SPEED * frameNanoTime;

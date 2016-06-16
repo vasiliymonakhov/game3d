@@ -23,14 +23,22 @@ public abstract class MovableObject extends WorldObject {
             return;
         }
         for (Line l : room.getAllLines()) {
-            Room nr = l.getRoomFromPortal();
-            if (nr != null) {
-                // возможно, перешли в другую комнату?
-                if (l.checkCross(oldPosition, position)) {
-                    if (nr.insideThisRoom(position)) {
-                        room = nr;
-                        break;                        
-                    }
+            if (l.checkCross(oldPosition, position)) {
+                // пересекли линию
+                if (l.isCrossable()) {
+                    // и её можно пересекать
+                    Room nr = l.getRoomFromPortal();
+                    if (nr != null) {
+                        // возможно, перешли в другую комнату?
+                        if (nr.insideThisRoom(position)) {
+                            room = nr;
+                            break;                        
+                        }
+                    }                    
+                } else {
+                    // линию пересекать нельзя!
+                    // вернём юзера назад
+                    position.moveTo(oldPosition.getX(), oldPosition.getY());
                 }
             }
         }

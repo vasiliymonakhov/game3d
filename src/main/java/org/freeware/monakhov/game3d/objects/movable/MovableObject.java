@@ -18,8 +18,8 @@ public abstract class MovableObject extends WorldObject {
     @Override
     public void moveBy(double df, double ds) {
         oldPosition.moveTo(position.getX(), position.getY());
-        double deltaX = df * Math.sin(asimuth) + ds * Math.cos(-asimuth);
-        double deltaY =  df * Math.cos(asimuth) + ds * Math.sin(-asimuth);       
+        double deltaX = df * Math.sin(azimuth) + ds * Math.cos(-azimuth);
+        double deltaY =  df * Math.cos(azimuth) + ds * Math.sin(-azimuth);       
         position.moveBy(deltaX, deltaY);
         if (room.insideThisRoom(position)) {
             return;

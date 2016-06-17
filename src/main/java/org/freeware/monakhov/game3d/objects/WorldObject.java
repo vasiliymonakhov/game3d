@@ -17,7 +17,7 @@ abstract public class WorldObject {
     protected final Point position;
     protected final Point oldPosition;
     
-    protected double asimuth;
+    protected double azimuth;
     
     protected Room room;
 
@@ -33,17 +33,17 @@ abstract public class WorldObject {
     }
 
     /**
-     * @return the asimuth
+     * @return the azimuth
      */
-    public double getAsimuth() {
-        return asimuth;
+    public double getAzimuth() {
+        return azimuth;
     }
 
     /**
-     * @param asimuth the asimuth to set
+     * @param azimuth the azimuth to set
      */
-    public void setAsimuth(double asimuth) {
-        this.asimuth = asimuth % (2 * Math.PI);
+    public void setAzimuth(double azimuth) {
+        this.azimuth = azimuth % (2 * Math.PI);
     }
 
     /**
@@ -79,8 +79,8 @@ abstract public class WorldObject {
         Point e = new Point();
         Sprite sprite = getSprite();                    
         int sw2 = sprite.getWidth() / 2;
-        double deltaX =  sw2 * Math.cos(-hero.getAsimuth());
-        double deltaY = sw2 * Math.sin(-hero.getAsimuth());
+        double deltaX =  sw2 * Math.cos(-hero.getAzimuth());
+        double deltaY = sw2 * Math.sin(-hero.getAzimuth());
         
         s.moveTo(position.getX() - deltaX, position.getY() - deltaY);        
         e.moveTo(position.getX() + deltaX, position.getY() + deltaY);

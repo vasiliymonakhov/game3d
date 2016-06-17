@@ -167,8 +167,8 @@ public class GraphicsEngine {
     }
 
     void transform() {
-        double sin = Math.sin(-hero.getAsimuth());
-        double cos = Math.cos(-hero.getAsimuth());
+        double sin = Math.sin(-hero.getAzimuth());
+        double cos = Math.cos(-hero.getAzimuth());
         for (int i = 0; i < screen.getWidth(); i++) {
             double x = rayPoints[i].getX();
             double y = rayPoints[i].getY();

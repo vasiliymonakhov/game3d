@@ -102,10 +102,10 @@ public class MainFrame extends javax.swing.JFrame {
         double ts = TURN_SPEED * frameNanoTime;
         double ms = MOVE_SPEED * frameNanoTime;
         if (left) {
-            hero.setAsimuth(hero.getAsimuth() - ts);
+            hero.setAzimuth(hero.getAzimuth() - ts);
         }
         if (right) {
-            hero.setAsimuth(hero.getAsimuth() + ts);
+            hero.setAzimuth(hero.getAzimuth() + ts);
         }
         if (forward) {
             hero.moveBy(ms, 0);

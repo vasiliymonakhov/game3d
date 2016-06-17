@@ -26,15 +26,15 @@ public class HeroTest {
     @Test
     public void testSetAndGetAsimuth() {
         Hero h = new Hero(new Point(0, 0), null);
-        assertEquals(0, h.getAsimuth(), EPSILON);
-        h.setAsimuth(1);
-        assertEquals(1, h.getAsimuth(), EPSILON);
-        h.setAsimuth(Math.PI);
-        assertEquals(Math.PI, h.getAsimuth(), EPSILON);
-        h.setAsimuth(2 * Math.PI + EPSILON / 2);
-        assertEquals(0, h.getAsimuth(), EPSILON);
-        h.setAsimuth(3 * Math.PI);
-        assertEquals(Math.PI, h.getAsimuth(), EPSILON);
+        assertEquals(0, h.getAzimuth(), EPSILON);
+        h.setAzimuth(1);
+        assertEquals(1, h.getAzimuth(), EPSILON);
+        h.setAzimuth(Math.PI);
+        assertEquals(Math.PI, h.getAzimuth(), EPSILON);
+        h.setAzimuth(2 * Math.PI + EPSILON / 2);
+        assertEquals(0, h.getAzimuth(), EPSILON);
+        h.setAzimuth(3 * Math.PI);
+        assertEquals(Math.PI, h.getAzimuth(), EPSILON);
     }
 
     /**
@@ -117,7 +117,7 @@ public class HeroTest {
         assertEquals(5,  h.getPosition().getY(), EPSILON);
         assertTrue(h.getRoom() == r1);
         
-        h.setAsimuth(- Math.PI / 2); // turn left
+        h.setAzimuth(- Math.PI / 2); // turn left
         h.moveBy(10, 0);
         assertEquals(5,  h.getPosition().getX(), EPSILON);
         assertEquals(5,  h.getPosition().getY(), EPSILON);

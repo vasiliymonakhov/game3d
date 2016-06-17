@@ -18,6 +18,12 @@ public class Room {
     private final Map<String, Point> points = new LinkedHashMap<>();    
     
     public void addPoint(String id, Point p) {
+         if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Point id must be not null or empty");             
+        }        
+        if (p == null) {
+            throw new IllegalArgumentException("Point must be not null");             
+        }         
         if (points.containsKey(id)) {
             throw new IllegalArgumentException("Point " + id + " already exists"); 
         }
@@ -42,8 +48,14 @@ public class Room {
     private final Map<String, Line> lines = new LinkedHashMap<>();
     
     public void addLine(String id, Line w) {
+         if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Line id must be not null or empty");             
+        }        
+        if (w == null) {
+            throw new IllegalArgumentException("Line must be not null");             
+        } 
         if (lines.containsKey(id)) {
-            throw new IllegalArgumentException("Wall " + id + " already exists"); 
+            throw new IllegalArgumentException("Line " + id + " already exists"); 
         }
         lines.put(id, w);
     }    
@@ -56,7 +68,7 @@ public class Room {
         roomVisibilityAlreadyChecked = false;
     }
     
-    private boolean roomVisibilityAlreadyChecked;
+    boolean roomVisibilityAlreadyChecked;
     
     public boolean checkVisibility(Line[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
         if (isRoomVisibilityAlreadyChecked()) return false;

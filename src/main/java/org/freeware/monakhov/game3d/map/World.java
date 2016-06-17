@@ -21,9 +21,15 @@ public class World {
     private final Map<String, Room> rooms = new HashMap<>();
     
     public void addRoom(String id, Room r) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Room id must be not null or empty");             
+        }        
+        if (r == null) {
+            throw new IllegalArgumentException("Room must be not null");             
+        }               
         if (rooms.containsKey(id)) {
             throw new IllegalArgumentException("Room " + id + " already exists"); 
-        }
+        }        
         rooms.put(id, r);
     }
     
@@ -48,6 +54,12 @@ public class World {
     }
     
     public void addObject(String id, WorldObject o) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Object id must be not null or empty");             
+        }
+        if (o == null) {
+            throw new IllegalArgumentException("Object must be not null");             
+        }        
         if (objects.containsKey(id)) {
             throw new IllegalArgumentException("Object " + id + " already exists"); 
         }

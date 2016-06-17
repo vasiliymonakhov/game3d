@@ -51,7 +51,7 @@ public class Sprite {
     
     public static Sprite get(String id) {
         Sprite spr = sprites.get(id);
-        if (id== null) {
+        if (spr == null) {
             throw new IllegalArgumentException("Sprite " + id + " not exists"); 
         }
         return spr;

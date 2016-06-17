@@ -4,6 +4,11 @@
 
 package org.freeware.monakhov.game3d.map;
 
+import java.util.Collection;
+import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.nonmovable.Barrel;
+import org.freeware.monakhov.game3d.objects.nonmovable.Key;
+import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -12,9 +17,6 @@ import static org.junit.Assert.*;
  * @author Vasily Monakhov 
  */
 public class WorldTest {
-
-    public WorldTest() {
-    }
 
     /**
      * Test of addRoom method, of class World.
@@ -44,5 +46,146 @@ public class WorldTest {
         w.addRoom("r1", r1);
         w.addRoom("r1", r2);
     }    
+
+    /**
+     * Test of addRoom method, of class World.
+     */
+    @Test
+    public void testAddRoom() {
+        World w = new World();
+        Room r1 = new Room();
+        Room r2 = new Room();
+        Room r3 = new Room();
+        w.addRoom("r1", r1);
+        w.addRoom("r2", r2);
+        w.addRoom("r3", r3);        
+        assertTrue(r1 == w.getRoom("r1"));
+        assertTrue(r2 == w.getRoom("r2"));
+        assertTrue(r3 == w.getRoom("r3"));
+    }
+
+    /**
+     * Test of getRoom method, of class World.
+     */
+    @Test
+    public void testGetRoom() {
+        World w = new World();
+        Room r1 = new Room();
+        Room r2 = new Room();
+        Room r3 = new Room();
+        w.addRoom("r1", r1);
+        w.addRoom("r2", r2);
+        w.addRoom("r3", r3);        
+        assertTrue(r1 == w.getRoom("r1"));
+        assertTrue(r2 == w.getRoom("r2"));
+        assertTrue(r3 == w.getRoom("r3"));
+    }
+
+    /**
+     * Test of getAllRooms method, of class World.
+     */
+    @Test
+    public void testGetAllRooms() {
+        World w = new World();
+        Room r1 = new Room();
+        Room r2 = new Room();
+        Room r3 = new Room();
+        Room r4 = new Room();
+        w.addRoom("r1", r1);
+        w.addRoom("r2", r2);
+        w.addRoom("r3", r3);        
+        assertTrue(r1 == w.getRoom("r1"));
+        assertTrue(r2 == w.getRoom("r2"));
+        assertTrue(r3 == w.getRoom("r3"));
+        Collection<Room> expResult = w.getAllRooms();
+        assertTrue(expResult.contains(r1));
+        assertTrue(expResult.contains(r2));
+        assertTrue(expResult.contains(r3));
+        assertFalse(expResult.contains(r4));
+    }
+
+    /**
+     * Test of prepareForVisibilityCheck method, of class World.
+     */
+    @Test
+    public void testPrepareForVisibilityCheck() {
+        World w = new World();
+        Room r1 = new Room();
+        Room r2 = new Room();
+        Room r3 = new Room();
+        w.addRoom("r1", r1);
+        w.addRoom("r2", r2);
+        w.addRoom("r3", r3);                
+        r1.roomVisibilityAlreadyChecked = true;
+        r2.roomVisibilityAlreadyChecked = true;        
+        r3.roomVisibilityAlreadyChecked = true;                
+        w.prepareForVisibilityCheck();
+        assertFalse(r1.isRoomVisibilityAlreadyChecked());
+        assertFalse(r2.isRoomVisibilityAlreadyChecked());
+        assertFalse(r3.isRoomVisibilityAlreadyChecked());
+        assertFalse(r1.roomVisibilityAlreadyChecked);
+        assertFalse(r2.roomVisibilityAlreadyChecked);
+        assertFalse(r3.roomVisibilityAlreadyChecked);
+    }
+
+    /**
+     * Test of getAllObjects method, of class World.
+     */
+    @Test
+    public void testGetAllObjects() {
+        World w = new World();
+        Barrel b = new Barrel(new Point());
+        Tree t = new Tree(new Point());
+        w.addObject("1", b);
+        w.addObject("2", t);
+        Key k = new Key(new Point());
+        Collection<WorldObject> res = w.getAllObjects();
+        assertTrue(res.contains(t));
+        assertTrue(res.contains(b));
+        assertFalse(res.contains(k));
+    }
+
+    /**
+     * Test of addObject method, of class World.
+     */
+    @Test
+    public void testAddObject1() {
+        World w = new World();
+        Barrel b = new Barrel(new Point());
+        Tree t = new Tree(new Point());
+        w.addObject("1", b);
+        w.addObject("2", t);
+    }
+
+    /**
+     * Test of addObject method, of class World.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testAddObject2() {
+        World w = new World();
+        Barrel b = new Barrel(new Point());
+        w.addObject("", b);
+    }    
+
+    /**
+     * Test of addObject method, of class World.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testAddObject3() {
+        World w = new World();
+        Barrel b = new Barrel(new Point());
+        w.addObject(null, b);
+    }    
+    
+    /**
+     * Test of addObject method, of class World.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testAddObject4() {
+        World w = new World();
+        Barrel b = new Barrel(new Point());
+        w.addObject("abarrel", null);
+    }    
+    
     
 }

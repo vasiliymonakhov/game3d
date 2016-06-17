@@ -77,13 +77,6 @@ class Screen {
     public BufferedImage getImage() {
         return drawImage;
     }
-
-    /**
-     * @return the lock
-     */
-    public ReentrantLock getLock() {
-        return lock;
-    }
-    
+ 
     
 }

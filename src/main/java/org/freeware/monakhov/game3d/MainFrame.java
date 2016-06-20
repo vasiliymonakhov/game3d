@@ -51,7 +51,7 @@ public class MainFrame extends javax.swing.JFrame {
         world.addObject("03", new Tree(new Point(2048, 512)));
         world.addObject("04", new Lamp(new Point(128, 896)));
         world.addObject("05", new Key(new Point(512, 512)));
-        world.addObject("06", new Fire(new Point(128, 890)));
+        world.addObject("06", new Fire(new Point(128, 512)));
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyDispatcher());
         Timer repainter = new Timer(10, new ActionListener() {
             @Override

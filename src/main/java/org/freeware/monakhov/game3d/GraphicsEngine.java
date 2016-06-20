@@ -9,6 +9,7 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -83,7 +84,7 @@ public class GraphicsEngine {
     public final static double WALL_SIZE = 256;
     public final static double KORRECTION = 64;
 
-    private final static Executor EXECUTOR = Executors.newFixedThreadPool(16);
+    private final static Executor EXECUTOR = Executors.newFixedThreadPool(4);
 
     private class WallColumnDrawer implements Runnable {
 
@@ -116,7 +117,7 @@ public class GraphicsEngine {
 
     void renderWalls() throws InterruptedException {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-        //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+//        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
         for (int i = 0; i < mapLines.length; i++) {
             wallColumnDrawers[i].set(g, doneSignal);
@@ -183,10 +184,10 @@ public class GraphicsEngine {
         }
     }
 
-    void checkAndRenderVisibleObjects() throws InterruptedException {
+    void renderObjects() throws InterruptedException {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-        //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        //g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+//        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+//        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
         objectsSortList.clear();
         objectsSortList.addAll(world.getAllObjects());
         Collections.sort(objectsSortList, objectsSortComparator);
@@ -218,7 +219,7 @@ public class GraphicsEngine {
     void render() throws InterruptedException {
         renderFloor();
         renderWalls();
-        checkAndRenderVisibleObjects();
+        renderObjects();
         if (mapEnabled) {
             drawMap();
         }

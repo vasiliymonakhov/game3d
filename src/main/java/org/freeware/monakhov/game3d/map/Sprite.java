@@ -64,7 +64,22 @@ public class Sprite {
             sprites.put("milton", new Sprite("/org/freeware/monakhov/game3d/map/milton.png", 46));
             sprites.put("lamp", new Sprite("/org/freeware/monakhov/game3d/map/lamp.png", 0));
             sprites.put("key", new Sprite("/org/freeware/monakhov/game3d/map/key.png", 122));
-            
+            sprites.put("fire00", new Sprite("/org/freeware/monakhov/game3d/map/fire00.png", 46));
+            sprites.put("fire01", new Sprite("/org/freeware/monakhov/game3d/map/fire01.png", 46));            
+            sprites.put("fire02", new Sprite("/org/freeware/monakhov/game3d/map/fire02.png", 46));
+            sprites.put("fire03", new Sprite("/org/freeware/monakhov/game3d/map/fire03.png", 46));                        
+            sprites.put("fire04", new Sprite("/org/freeware/monakhov/game3d/map/fire04.png", 46));
+            sprites.put("fire05", new Sprite("/org/freeware/monakhov/game3d/map/fire05.png", 46));                        
+            sprites.put("fire06", new Sprite("/org/freeware/monakhov/game3d/map/fire06.png", 46));
+            sprites.put("fire07", new Sprite("/org/freeware/monakhov/game3d/map/fire07.png", 46));                                    
+            sprites.put("fire08", new Sprite("/org/freeware/monakhov/game3d/map/fire08.png", 46));
+            sprites.put("fire09", new Sprite("/org/freeware/monakhov/game3d/map/fire09.png", 46));            
+            sprites.put("fire10", new Sprite("/org/freeware/monakhov/game3d/map/fire10.png", 46));
+            sprites.put("fire11", new Sprite("/org/freeware/monakhov/game3d/map/fire11.png", 46));                        
+            sprites.put("fire12", new Sprite("/org/freeware/monakhov/game3d/map/fire12.png", 46));
+            sprites.put("fire13", new Sprite("/org/freeware/monakhov/game3d/map/fire13.png", 46));                        
+            sprites.put("fire14", new Sprite("/org/freeware/monakhov/game3d/map/fire14.png", 46));
+            sprites.put("fire15", new Sprite("/org/freeware/monakhov/game3d/map/fire15.png", 46));                                    
         } catch (IOException ex) {
             Logger.getLogger(Sprite.class.getName()).log(Level.SEVERE, null, ex);
         }

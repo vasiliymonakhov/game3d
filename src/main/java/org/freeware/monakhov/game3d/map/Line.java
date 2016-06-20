@@ -110,17 +110,6 @@ public class Line {
         return false;
     }
 
-    /**
-     * Проверяет, пересекает ли отрезок из друх точек эту линию
-     *
-     * @param a начало отрезка
-     * @param b конец отрезка
-     * @return true если пересекает
-     */
-    public boolean checkCross(Point a, Point b) {
-        return SpecialMath.checkCross(a, b, start, end);
-    }
-
     public BufferedImage getSubImage(Point p) {
         return null;
     }

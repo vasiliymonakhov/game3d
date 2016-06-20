@@ -8,28 +8,6 @@ import org.freeware.monakhov.game3d.map.Point;
  */
 public class SpecialMath {
 
-    private static double area(Point a, Point b, Point c) {
-        return (b.getX() - a.getX()) * (c.getY() - a.getY()) - (b.getY() - a.getY()) * (c.getX() - a.getX());
-    }
-
-    public static boolean checkCross(Point a, Point b, Point c, Point d) {
-        return intersect(a.getX(), b.getX(), c.getX(), d.getX()) && intersect(a.getY(), b.getY(), c.getY(), d.getY()) && area(a, b, c) * area(a, b, d) <= 0 && area(c, d, a) * area(c, d, b) <= 0;
-    }
-    
-    private static boolean intersect(double a, double b, double c, double d) {
-        if (a > b) {
-            double t = a;
-            a = b;
-            b = t;
-        }
-        if (c > d) {
-            double t = c;
-            c = d;
-            d = t;
-        }
-        return Math.max(a, c) <= Math.min(b, d);
-    }
-
     public static double lineLength(Point a, Point b) {
         double x = a.getX() - b.getX();
         double y = a.getY() - b.getY();

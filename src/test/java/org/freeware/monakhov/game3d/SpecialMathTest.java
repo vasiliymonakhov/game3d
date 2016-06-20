@@ -11,41 +11,6 @@ import org.junit.Test;
  */
 public class SpecialMathTest {
 
-    @Test    
-    public void testCheckCross1() {
-        Point p1 = new Point(1, 0);
-        Point p2 = new Point(-1, 0);
-        Point p3 = new Point(0, 1);
-        Point p4 = new Point(0, -1);
-        assertTrue(SpecialMath.checkCross(p1, p2, p3, p4));
-        Point p5 = new Point(1, 2);
-        Point p6 = new Point(-1, 2);
-        assertFalse(SpecialMath.checkCross(p1, p2, p5, p6));
-        Point p7 = new Point(1, -2);
-        Point p8 = new Point(-1, -2);
-        assertFalse(SpecialMath.checkCross(p1, p2, p7, p8));   
-        Point p9 = new Point(2, 2);
-        Point p10 = new Point(2, -2);
-        assertFalse(SpecialMath.checkCross(p1, p2, p9, p10));   
-        Point p11 = new Point(2, 2);
-        Point p12 = new Point(2, -2);        
-        assertFalse(SpecialMath.checkCross(p1, p2, p11, p12));   
-    }
-    
-    @Test    
-    public void testCheckCross2() {
-        Point p1 = new Point(0.5, 1);
-        Point p2 = new Point(1, 2);
-        Point p3 = new Point(1, 1);
-        Point p4 = new Point(2, 2);
-        Point p5 = new Point(1, 0.5);
-        Point p6 = new Point(2, 1);
-        assertFalse(SpecialMath.checkCross(p1, p2, p3, p4));
-        assertFalse(SpecialMath.checkCross(p1, p2, p5, p6));   
-        assertTrue(SpecialMath.checkCross(p3, p4, p2, p6));   
-        assertFalse(SpecialMath.checkCross(p3, p4, p1, p5));   
-    }   
-
     final static double EPSILON = 0.0001d;          
     
     /**

@@ -23,6 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.map.XMLWorldLoader;
+import org.freeware.monakhov.game3d.objects.nonmovable.Fire;
 import org.xml.sax.SAXException;
 
 public class MainFrame extends javax.swing.JFrame {
@@ -38,7 +39,7 @@ public class MainFrame extends javax.swing.JFrame {
         setUndecorated(true);
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setSize(new Dimension(rect.width, rect.height));
-        screen = new Screen(rect.width / 1, rect.height / 1);
+        screen = new Screen(rect.width, rect.height);
         world = new World();
         hero = new Hero(new Point(256, 256), world);
         engine = new GraphicsEngine(world, hero, screen);
@@ -50,6 +51,7 @@ public class MainFrame extends javax.swing.JFrame {
         world.addObject("03", new Tree(new Point(2048, 512)));
         world.addObject("04", new Lamp(new Point(128, 896)));
         world.addObject("05", new Key(new Point(512, 512)));
+        world.addObject("06", new Fire(new Point(128, 890)));
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyDispatcher());
         Timer repainter = new Timer(10, new ActionListener() {
             @Override

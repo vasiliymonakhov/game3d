@@ -13,8 +13,4 @@ abstract class NonMovableObject extends WorldObject {
         super(position);
     }
 
-    @Override
-    public void moveBy(double df, double ds) {
-    }
-
 }

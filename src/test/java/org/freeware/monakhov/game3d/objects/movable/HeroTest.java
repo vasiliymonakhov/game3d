@@ -67,7 +67,6 @@ public class HeroTest {
     /**
      * Test of moveBy method, of class Hero.
      */
-    @Ignore
     @Test
     public void testMoveBy() {
         World w = new World();
@@ -84,7 +83,7 @@ public class HeroTest {
         Wall w4 = new Wall(p5, p3, null);
         Wall w5 = new Wall(p3, p0, null);
         Line l0 = new Line (p2, p3);
-        Line l1 = new Line (p3, p2);        
+        Line l1 = new Line (p2, p3);        
         Room r0 = new Room();
         Room r1 = new Room();        
         r0.addPoint("p0", p0);

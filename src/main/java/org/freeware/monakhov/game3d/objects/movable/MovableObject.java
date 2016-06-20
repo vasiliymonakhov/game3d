@@ -56,8 +56,8 @@ public abstract class MovableObject extends WorldObject {
         Point p = new Point();
         for (Line l : room.getAllLines()) {
             if (l.isCrossable()
-                    && SpecialMath.lineIntersection(l.getStart(), l.getEnd(), newPosition, oldPosition, p)
-                    && p.between(l.getStart(), l.getEnd()) && p.between(newPosition, oldPosition)) {
+                    && SpecialMath.lineIntersection(l.getStart(), l.getEnd(), newPosition, position, p)
+                    && p.between(l.getStart(), l.getEnd()) && p.between(newPosition, position)) {
                 // пересекли линию и её можно пересекать
                 Room nr = l.getRoomFromPortal();
                 if (nr != null) {

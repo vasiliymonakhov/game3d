@@ -165,7 +165,7 @@ public class GraphicsEngine {
         private Sprite sprite;
 
         @Override
-        public void run() {
+        public synchronized void run() {
             if (SpecialMath.lineIntersection(s, e, hero.getPosition(), wallsIntersectPoints[index], p)) {
                 if (p.between(s, e) && p.between(hero.getPosition(), wallsIntersectPoints[index])) {
                     double dist = SpecialMath.lineLength(hero.getPosition(), p);
@@ -191,18 +191,11 @@ public class GraphicsEngine {
         objectsSortList.addAll(world.getAllObjects());
         Collections.sort(objectsSortList, objectsSortComparator);
         for (WorldObject wobj : objectsSortList) {
-            Point s = new Point();
-            Point e = new Point();
             Sprite sprite = wobj.getSprite();
-            int sw2 = sprite.getWidth() / 2;
-            double deltaX = sw2 * Math.cos(-hero.getAzimuth());
-            double deltaY = sw2 * Math.sin(-hero.getAzimuth());
-            Point op = wobj.getPosition();
-            s.moveTo(op.getX() - deltaX, op.getY() - deltaY);
-            e.moveTo(op.getX() + deltaX, op.getY() + deltaY);
-            CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
+            wobj.turnSpriteToHero(hero);
+            CountDownLatch doneSignal = new CountDownLatch(mapLines.length);            
             for (int i = 0; i < transformedRayPoints.length; i++) {
-                spriteColumnDrawers[i].set(g, s, e, sprite, doneSignal);
+                spriteColumnDrawers[i].set(g, wobj.getLeft(), wobj.getRight(), sprite, doneSignal);
                 EXECUTOR.execute(spriteColumnDrawers[i]);
             }
             doneSignal.await();

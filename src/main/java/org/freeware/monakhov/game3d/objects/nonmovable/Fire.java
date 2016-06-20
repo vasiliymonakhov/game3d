@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d.objects.nonmovable;
 
+import java.util.Random;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Sprite;
 
@@ -17,6 +18,8 @@ public class Fire extends CrossableObject {
         for (int i = 0; i < sprites.length; i++) {
             sprites[i] = Sprite.get(String.format("fire%02d", i));
         }
+        Random r = new Random();
+        index = r.nextInt(sprites.length);
     }
 
     @Override

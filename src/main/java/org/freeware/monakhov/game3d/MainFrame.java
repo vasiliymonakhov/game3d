@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.xml.parsers.ParserConfigurationException;
 import org.freeware.monakhov.game3d.map.Point;
@@ -47,20 +48,16 @@ public class MainFrame extends javax.swing.JFrame {
         loader.parse(world, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml"));
         hero.setRoom(world.getRoom("r0"));
         world.addObject("01", new Barrel(new Point(128, 896)));
+        world.addObject("011", new Fire(new Point(128, 128)));
+        world.addObject("012", new Fire(new Point(256, 128)));
+        world.addObject("013", new Fire(new Point(384, 128)));
+        world.addObject("014", new Fire(new Point(512, 128)));        
         world.addObject("02", new Milton(new Point(640, 896)));
         world.addObject("03", new Tree(new Point(2048, 512)));
         world.addObject("04", new Lamp(new Point(128, 896)));
         world.addObject("05", new Key(new Point(512, 512)));
         world.addObject("06", new Fire(new Point(128, 512)));
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyDispatcher());
-        Timer repainter = new Timer(10, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                repaint();
-            }
-        });
-        repainter.setCoalesce(true);
-        repainter.start();
         Timer sec = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,23 +66,37 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         sec.start();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    long now = System.nanoTime();
+                    analyseKeys();
+                    try {
+                        engine.doCycle();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    frames++;
+                    frameNanoTime = System.nanoTime() - now;                    
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            repaint();
+                        }
+                    });
+                }
+            }
+        });
+        t.start();
     }
 
     private volatile int frames;
 
     @Override
     public void paint(Graphics g) {
-        long now = System.nanoTime();
-        try {
-            analyseKeys();
-            engine.doCycle();
-            Rectangle rr = this.getBounds();
-            screen.paint(g, 0, 0, rr.width, rr.height);
-            frames++;
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        frameNanoTime = System.nanoTime() - now;
+        Rectangle rr = this.getBounds();
+        screen.paint(g, 0, 0, rr.width, rr.height);
     }
 
     private long frameNanoTime;

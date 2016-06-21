@@ -44,7 +44,7 @@ public class MainFrame extends javax.swing.JFrame {
         setUndecorated(true);
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setSize(new Dimension(rect.width, rect.height));
-        screen = new Screen(rect.width, rect.height);
+        screen = new Screen(rect.width * 2 / 3, rect.height * 2 / 3);
         world = new World();
         hero = new Hero(new Point(256, 256), world);
         engine = new GraphicsEngine(world, hero, screen);
@@ -55,7 +55,7 @@ public class MainFrame extends javax.swing.JFrame {
         world.addObject("011", new Fire(new Point(128, 128)));
         world.addObject("012", new Fire(new Point(256, 128)));
         world.addObject("013", new Fire(new Point(384, 128)));
-        world.addObject("014", new Fire(new Point(512, 128)));        
+        world.addObject("014", new Fire(new Point(512, 128)));
         world.addObject("02", new Milton(new Point(640, 896)));
         world.addObject("03", new Tree(new Point(2048, 512)));
         world.addObject("04", new Lamp(new Point(128, 896)));
@@ -83,10 +83,9 @@ public class MainFrame extends javax.swing.JFrame {
                             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         frames++;
-                        frameNanoTime = System.nanoTime() - now;                    
-                        SwingUtilities.invokeLater(repainter);                        
-                    } 
-                    catch (Throwable th) {
+                        frameNanoTime = System.nanoTime() - now;
+                        SwingUtilities.invokeLater(repainter);
+                    } catch (Throwable th) {
                     }
 
                 }
@@ -97,14 +96,17 @@ public class MainFrame extends javax.swing.JFrame {
             public void windowOpened(WindowEvent e) {
                 t.start();
             }
+
             @Override
             public void windowActivated(WindowEvent e) {
                 java.awt.Point mp = getMousePosition();
-                if (mp == null) return;
-                oldMousePointX = mp.x;        
-                oldMousePointY = mp.y; 
-            }            
-        }) ;
+                if (mp == null) {
+                    return;
+                }
+                oldMousePointX = mp.x;
+                oldMousePointY = mp.y;
+            }
+        });
     }
 
     private final Runnable repainter = new Runnable() {
@@ -114,16 +116,30 @@ public class MainFrame extends javax.swing.JFrame {
             repaint();
         }
     };
-    
+
     String fps = "";
     Font f = new Font("Arial", 0, 20);
-    
+
     private volatile int frames;
+
+    private boolean fullScreen = true;
 
     @Override
     public void paint(Graphics g) {
         Rectangle rr = this.getBounds();
-        screen.paint(g, 0, 0, rr.width, rr.height);
+        if (fullScreen) {
+            int x = (rr.width - screen.getWidth()) / 2;
+            int y = (rr.height - screen.getHeight()) / 2;
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, rr.width, y);
+            g.fillRect(0, rr.height - y, rr.width, y);
+            int sw = (rr.width - screen.getWidth()) / 2;
+            g.fillRect(0, y, sw, screen.getHeight());
+            g.fillRect(x + screen.getWidth(), y, sw, screen.getHeight());
+            screen.paint(g, x, y, screen.getWidth(), screen.getHeight());
+        } else {
+            screen.paint(g, 0, 0, rr.width, rr.height);
+        }
         g.setColor(Color.GREEN);
         g.setFont(f);
         g.drawString(fps, 25, 25);
@@ -142,19 +158,19 @@ public class MainFrame extends javax.swing.JFrame {
     final static double MOVE_SPEED = 1024 / 1000000000.0;
 
     int oldMousePointX, oldMousePointY;
-    
+
     void analyseKeysAndMouse() {
         double ts = TURN_SPEED * frameNanoTime;
-        double ms = MOVE_SPEED * frameNanoTime;        
-        java.awt.Point mousePoint = getMousePosition();        
+        double ms = MOVE_SPEED * frameNanoTime;
+        java.awt.Point mousePoint = getMousePosition();
         if (mousePoint != null) {
             int mdx = mousePoint.x - oldMousePointX;
             int mdy = mousePoint.y - oldMousePointY;
             oldMousePointX = mousePoint.x;
             oldMousePointY = mousePoint.y;
             hero.moveBy(ms * -mdy / 64, 0);
-            hero.setAzimuth(hero.getAzimuth() + ts * mdx / 64.0);        
-            
+            hero.setAzimuth(hero.getAzimuth() + ts * mdx / 64.0);
+
         }
         if (left) {
             hero.setAzimuth(hero.getAzimuth() - ts);
@@ -205,6 +221,9 @@ public class MainFrame extends javax.swing.JFrame {
                     case KeyEvent.VK_TAB:
                         engine.toggleMap();
                         break;
+                    case KeyEvent.VK_F12:
+                        fullScreen = !fullScreen;
+                        break;                        
                 }
             }
             if (e.getID() == KeyEvent.KEY_RELEASED) {

@@ -83,4 +83,43 @@ public class SpecialMathTest {
         assertEquals(-10, i.getY(), EPSILON);
     }    
 
+    @Test
+    public void testLineAndCircleIntersection() {
+        Point a = new Point(-1, 2);
+        Point b = new Point (2, 2);
+        Point o = new Point (1, 1);
+        Point p1 = new Point();
+        Point p2 = new Point();
+        assertEquals(0, SpecialMath.lineAndCircleIntersection(a, b, o, 0.5, p1, p2));
+        assertEquals(1, SpecialMath.lineAndCircleIntersection(a, b, o, 1, p1, p2));
+        assertEquals(1, p1.getX(), EPSILON);
+        assertEquals(2, p1.getY(), EPSILON);
+        assertEquals(2, SpecialMath.lineAndCircleIntersection(a, b, o, 2, p1, p2));
+        assertEquals(-0.73205, p1.getX(), EPSILON);
+        assertEquals(2, p1.getY(), EPSILON);
+        assertEquals(2.73205, p2.getX(), EPSILON);
+        assertEquals(2, p2.getY(), EPSILON);        
+        
+        a = new Point(2, 2);
+        b = new Point (2, -2);        
+        assertEquals(0, SpecialMath.lineAndCircleIntersection(a, b, o, 0.5, p1, p2));
+        assertEquals(1, SpecialMath.lineAndCircleIntersection(a, b, o, 1, p1, p2));
+        assertEquals(2, p1.getX(), EPSILON);
+        assertEquals(1, p1.getY(), EPSILON);
+        assertEquals(2, SpecialMath.lineAndCircleIntersection(a, b, o, 2, p1, p2));
+        assertEquals(2, p1.getX(), EPSILON);
+        assertEquals(2.73205, p1.getY(), EPSILON);
+        assertEquals(2, p2.getX(), EPSILON);
+        assertEquals(-0.73205, p2.getY(), EPSILON);                
+        
+        a = new Point(2, 2);
+        b = new Point (-2, -2);              
+        o = new Point();
+        assertEquals(2, SpecialMath.lineAndCircleIntersection(a, b, o, Math.sqrt(2), p1, p2));
+        assertEquals(1, p1.getX(), EPSILON);
+        assertEquals(1, p1.getY(), EPSILON);
+        assertEquals(-1, p2.getX(), EPSILON);
+        assertEquals(-1, p2.getY(), EPSILON);                        
+    }
+    
 }

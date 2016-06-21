@@ -9,18 +9,19 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
  * Объект, который может перемещаться
- * @author Vasily Monakhov 
+ *
+ * @author Vasily Monakhov
  */
 public abstract class MovableObject extends WorldObject {
 
-    private final World world;    
-    
+    private final World world;
+
     public MovableObject(Point position, World world) {
         super(position);
         this.world = world;
     }
 
-    boolean notTouchAnyObject(Point newPosition) {
+    boolean touchAnyObject(Point newPosition) {
         // проверяем, не столкнулись ли мы с каким-то объектом
         for (WorldObject o : world.getAllObjects()) {
             if (!o.isCrossable()) {
@@ -29,29 +30,52 @@ public abstract class MovableObject extends WorldObject {
                 double radiuses = o.getRadius() + getRadius();
                 if (distance < radiuses) {
                     // расстояние между объектами слишком мало, пройти нельзя
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
-    boolean notTouchWall(Point newPosition) {
+    Line touchWall(Point newPosition) {
+        // проверить, не уткнулись ли мы с стенку
+        Point p1 = new Point();
+        Point p2 = new Point();
+        for (Line l : room.getAllLines()) {
+            // проверять только непроходимые линии
+            if (!l.isCrossable()) {
+                int n = SpecialMath.lineAndCircleIntersection(l.getStart(), l.getEnd(), newPosition, getRadius(), p1, p2);
+                if (n == 1) {
+                    if (p1.between(l.getStart(), l.getEnd())) {
+                        return l;
+                    }
+                } else if (n == 2) {
+                    if (p1.between(l.getStart(), l.getEnd()) || p2.between(l.getStart(), l.getEnd())) {
+                        return l;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    Line crossWall(Point newPosition) {
         // проверить, не уткнулись ли мы с стенку
         Point p = new Point();
         for (Line l : room.getAllLines()) {
             // проверять только непроходимые линии
             if (!l.isCrossable()) {
-                if (SpecialMath.lineIntersection(l.getStart(), l.getEnd(), newPosition, oldPosition, p)
-                        && p.between(l.getStart(), l.getEnd()) && p.between(newPosition, oldPosition)) {
-                    return false;
+                if (SpecialMath.lineIntersection(l.getStart(), l.getEnd(), newPosition, position, p)) {
+                    if (p.between(l.getStart(), l.getEnd()) && p.between(newPosition, position)) {
+                        return l;
+                    }
                 }
             }
         }
-        return true;
+        return null;
     }
 
-    void checkMoveToOtherRoom(Point newPosition) {
+    Room checkMoveToOtherRoom(Point newPosition) {
         // проверяем, не пересекли ли мы какую-то линию
         Point p = new Point();
         for (Line l : room.getAllLines()) {
@@ -63,28 +87,28 @@ public abstract class MovableObject extends WorldObject {
                 if (nr != null) {
                     // возможно, перешли в другую комнату?
                     if (nr.insideThisRoom(newPosition)) {
-                        room = nr;
-                        break;
+                       return nr;
                     }
                 }
             }
         }
-    }
-
-    boolean canMoveHere(Point newPosition) {
-        return notTouchAnyObject(newPosition) && notTouchWall(newPosition);
+        return null;
     }
 
     public boolean moveBy(double df, double ds) {
+        Point newPosition = new Point(position.getX(), position.getY());
+        // определяем новые координаты
         double deltaX = df * Math.sin(azimuth) + ds * Math.cos(-azimuth);
         double deltaY = df * Math.cos(azimuth) + ds * Math.sin(-azimuth);
-        // определяем новые координаты
-        Point newPosition = new Point(position.getX(), position.getY());
         newPosition.moveBy(deltaX, deltaY);
-        if (!canMoveHere(newPosition)) {
-            return false;
+        if (touchAnyObject(newPosition)) return false;
+        if (touchWall(newPosition) != null || crossWall(newPosition) != null) return false;
+        Room nr = checkMoveToOtherRoom(newPosition);
+        if (nr != null) {
+            room = nr;
+        } else {
+            if (!room.insideThisRoom(newPosition))  return false;
         }
-        checkMoveToOtherRoom(newPosition);
         oldPosition.moveTo(position.getX(), position.getY());
         position.moveTo(newPosition.getX(), newPosition.getY());
         return true;

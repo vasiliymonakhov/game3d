@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d;
 
+import java.awt.Color;
 import org.freeware.monakhov.game3d.objects.nonmovable.Barrel;
 import org.freeware.monakhov.game3d.objects.movable.Hero;
 import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
@@ -7,6 +8,7 @@ import org.freeware.monakhov.game3d.objects.nonmovable.Key;
 import org.freeware.monakhov.game3d.objects.nonmovable.Lamp;
 import org.freeware.monakhov.game3d.objects.nonmovable.Milton;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
@@ -15,6 +17,8 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +40,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() throws ParserConfigurationException, SAXException, IOException {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setAlwaysOnTop(false);
+        setAlwaysOnTop(true);
         setUndecorated(true);
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setSize(new Dimension(rect.width, rect.height));
@@ -47,7 +51,7 @@ public class MainFrame extends javax.swing.JFrame {
         XMLWorldLoader loader = new XMLWorldLoader();
         loader.parse(world, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml"));
         hero.setRoom(world.getRoom("r0"));
-        world.addObject("01", new Barrel(new Point(128, 896)));
+        world.addObject("01", new Barrel(new Point(512, 256)));
         world.addObject("011", new Fire(new Point(128, 128)));
         world.addObject("012", new Fire(new Point(256, 128)));
         world.addObject("013", new Fire(new Point(384, 128)));
@@ -61,42 +65,68 @@ public class MainFrame extends javax.swing.JFrame {
         Timer sec = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.printf("%d FPS%n", frames);
+                fps = String.format("%d FPS%n", frames);
                 frames = 0;
             }
         });
         sec.start();
-        Thread t = new Thread(new Runnable() {
+        final Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    long now = System.nanoTime();
-                    analyseKeys();
                     try {
-                        engine.doCycle();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    frames++;
-                    frameNanoTime = System.nanoTime() - now;                    
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            repaint();
+                        long now = System.nanoTime();
+                        analyseKeysAndMouse();
+                        try {
+                            engine.doCycle();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    });
+                        frames++;
+                        frameNanoTime = System.nanoTime() - now;                    
+                        SwingUtilities.invokeLater(repainter);                        
+                    } 
+                    catch (Throwable th) {
+                    }
+
                 }
             }
         });
-        t.start();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                t.start();
+            }
+            @Override
+            public void windowActivated(WindowEvent e) {
+                java.awt.Point mp = getMousePosition();
+                if (mp == null) return;
+                oldMousePointX = mp.x;        
+                oldMousePointY = mp.y; 
+            }            
+        }) ;
     }
 
+    private final Runnable repainter = new Runnable() {
+
+        @Override
+        public void run() {
+            repaint();
+        }
+    };
+    
+    String fps = "";
+    Font f = new Font("Arial", 0, 20);
+    
     private volatile int frames;
 
     @Override
     public void paint(Graphics g) {
         Rectangle rr = this.getBounds();
         screen.paint(g, 0, 0, rr.width, rr.height);
+        g.setColor(Color.GREEN);
+        g.setFont(f);
+        g.drawString(fps, 25, 25);
     }
 
     private long frameNanoTime;
@@ -111,9 +141,21 @@ public class MainFrame extends javax.swing.JFrame {
     final static double TURN_SPEED = Math.PI / 1000000000.0;
     final static double MOVE_SPEED = 1024 / 1000000000.0;
 
-    void analyseKeys() {
+    int oldMousePointX, oldMousePointY;
+    
+    void analyseKeysAndMouse() {
         double ts = TURN_SPEED * frameNanoTime;
-        double ms = MOVE_SPEED * frameNanoTime;
+        double ms = MOVE_SPEED * frameNanoTime;        
+        java.awt.Point mousePoint = getMousePosition();        
+        if (mousePoint != null) {
+            int mdx = mousePoint.x - oldMousePointX;
+            int mdy = mousePoint.y - oldMousePointY;
+            oldMousePointX = mousePoint.x;
+            oldMousePointY = mousePoint.y;
+            hero.moveBy(ms * -mdy / 64, 0);
+            hero.setAzimuth(hero.getAzimuth() + ts * mdx / 64.0);        
+            
+        }
         if (left) {
             hero.setAzimuth(hero.getAzimuth() - ts);
         }

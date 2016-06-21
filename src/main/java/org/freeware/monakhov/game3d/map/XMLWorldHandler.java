@@ -56,7 +56,7 @@ class XMLWorldHandler extends DefaultHandler {
                 if (loadingRooms) {
                     if (roomID != null) {
                         room.addLine(attr.getValue("id"), new Wall(room.getPoint(attr.getValue("start")), room.getPoint(attr.getValue("end")), 
-                        TextureManager.get(attr.getValue("texture"))));
+                        Texture.get(attr.getValue("texture"))));
                     }
                 }                
                 break;

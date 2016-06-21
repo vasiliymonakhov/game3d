@@ -37,10 +37,10 @@ public class TextureTest {
      */
     @Test
     public void testGetSubImage() {
-        BufferedImage bi = tex.getSubImage(0, 0, 10, 20);
+        BufferedImage bi = tex.getSubImage(0);
         assertNotNull(bi);
-        assertEquals(10, bi.getWidth());
-        assertEquals(20, bi.getHeight());
+        assertEquals(1, bi.getWidth());
+        assertEquals(256, bi.getHeight());
     }
 
 }

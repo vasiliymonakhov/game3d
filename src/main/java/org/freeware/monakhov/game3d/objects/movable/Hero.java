@@ -11,8 +11,8 @@ import org.freeware.monakhov.game3d.map.World;
  */
 public class Hero extends MovableObject {
 
-    public Hero(Point position, World world) {
-        super(position, world);
+    public Hero(World world, Point position) {
+        super(world, position);
     }
 
     @Override

@@ -56,35 +56,23 @@ public class Sprite {
         }
         return spr;
     }
-    
-    static {
-        try {
-            sprites.put("tree", new Sprite("/org/freeware/monakhov/game3d/map/tree.png", 0));
-            sprites.put("green_barrel", new Sprite("/org/freeware/monakhov/game3d/map/green_barrel.png", 124));
-            sprites.put("milton", new Sprite("/org/freeware/monakhov/game3d/map/milton.png", 46));
-            sprites.put("lamp", new Sprite("/org/freeware/monakhov/game3d/map/lamp.png", 0));
-            sprites.put("key", new Sprite("/org/freeware/monakhov/game3d/map/key.png", 122));
-            sprites.put("fire00", new Sprite("/org/freeware/monakhov/game3d/map/fire00.png", 146));
-            sprites.put("fire01", new Sprite("/org/freeware/monakhov/game3d/map/fire01.png", 146));            
-            sprites.put("fire02", new Sprite("/org/freeware/monakhov/game3d/map/fire02.png", 146));
-            sprites.put("fire03", new Sprite("/org/freeware/monakhov/game3d/map/fire03.png", 146));                        
-            sprites.put("fire04", new Sprite("/org/freeware/monakhov/game3d/map/fire04.png", 146));
-            sprites.put("fire05", new Sprite("/org/freeware/monakhov/game3d/map/fire05.png", 146));                        
-            sprites.put("fire06", new Sprite("/org/freeware/monakhov/game3d/map/fire06.png", 146));
-            sprites.put("fire07", new Sprite("/org/freeware/monakhov/game3d/map/fire07.png", 146));                                    
-            sprites.put("fire08", new Sprite("/org/freeware/monakhov/game3d/map/fire08.png", 146));
-            sprites.put("fire09", new Sprite("/org/freeware/monakhov/game3d/map/fire09.png", 146));            
-            sprites.put("fire10", new Sprite("/org/freeware/monakhov/game3d/map/fire10.png", 146));
-            sprites.put("fire11", new Sprite("/org/freeware/monakhov/game3d/map/fire11.png", 146));                        
-            sprites.put("fire12", new Sprite("/org/freeware/monakhov/game3d/map/fire12.png", 146));
-            sprites.put("fire13", new Sprite("/org/freeware/monakhov/game3d/map/fire13.png", 146));                        
-            sprites.put("fire14", new Sprite("/org/freeware/monakhov/game3d/map/fire14.png", 146));
-            sprites.put("fire15", new Sprite("/org/freeware/monakhov/game3d/map/fire15.png", 146));                                    
-        } catch (IOException ex) {
-            Logger.getLogger(Sprite.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
+    /**
+     * Добавляет новый спрайт
+     *
+     * @param id идентификатор спрайта
+     * @param fileName имя файла со спрайтом
+     * @param yOffset смещение спрайта от верха по вертикали
+     * @throws IOException
+     */
+    public static void add(String id, String fileName, int yOffset) throws IOException {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Sprite id is null or empty");
+        }
+        sprites.put(id, new Sprite(fileName, yOffset));
+    }    
+    
+    
     /**
      * @return the width
      */

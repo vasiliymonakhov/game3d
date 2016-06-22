@@ -2,6 +2,7 @@ package org.freeware.monakhov.game3d.objects.nonmovable;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Sprite;
+import org.freeware.monakhov.game3d.map.World;
 
 /**
  * Бочка
@@ -9,9 +10,10 @@ import org.freeware.monakhov.game3d.map.Sprite;
  */
 public class Barrel extends NonMovableObject {
 
-    public Barrel(Point position) {
-        super(position);
+    public Barrel(World world, Point position) {
+        super(world, position);
     }
+
 
     @Override
     public Sprite getSprite() {

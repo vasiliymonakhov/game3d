@@ -2,6 +2,7 @@ package org.freeware.monakhov.game3d.objects.nonmovable;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Sprite;
+import org.freeware.monakhov.game3d.map.World;
 
 /**
  * Ключ
@@ -9,9 +10,10 @@ import org.freeware.monakhov.game3d.map.Sprite;
  */
 public class Key extends CrossableObject {
 
-    public Key(Point position) {
-        super(position);
+    public Key(World world, Point position) {
+        super(world, position);
     }
+
 
     @Override
     public Sprite getSprite() {

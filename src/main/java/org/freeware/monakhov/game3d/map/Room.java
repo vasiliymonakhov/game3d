@@ -3,6 +3,7 @@ package org.freeware.monakhov.game3d.map;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.freeware.monakhov.game3d.SpecialMath;
 
@@ -70,7 +71,7 @@ public class Room {
     
     boolean roomVisibilityAlreadyChecked;
     
-    public boolean checkVisibility(Line[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
+    public boolean checkVisibility(Line[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints, List<Room> visibleRooms) {
         if (isRoomVisibilityAlreadyChecked()) return false;
         roomVisibilityAlreadyChecked = true;
         boolean flag = false;
@@ -86,11 +87,12 @@ public class Room {
                 if (l.checkVisibility(mapLines, viewPoint, rayPoints, intersectPoints)) {
                     Room r = l.getRoomFromPortal();
                     if (r != null) {
-                        flag |= r.checkVisibility(mapLines, viewPoint, rayPoints, intersectPoints);
+                        flag |= r.checkVisibility(mapLines, viewPoint, rayPoints, intersectPoints, visibleRooms);
                     }
                 }
             }
         }        
+        if (flag) visibleRooms.add(this);
         return flag;
     }
 

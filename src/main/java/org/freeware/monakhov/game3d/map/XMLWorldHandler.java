@@ -1,9 +1,12 @@
+
 /**
  * This software is free. You can use it without any limitations, but I don't give any kind of warranties!
  */
 
 package org.freeware.monakhov.game3d.map;
 
+import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.movable.Hero;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -15,9 +18,11 @@ import org.xml.sax.helpers.DefaultHandler;
 class XMLWorldHandler extends DefaultHandler {
     
     private final World world;
+    private final Hero hero;
     
-    XMLWorldHandler(World world) {
+    XMLWorldHandler(World world, Hero hero) {
         this.world = world;
+        this.hero = hero;
     }
 
     private boolean loadingRooms;
@@ -28,6 +33,11 @@ class XMLWorldHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attr)  throws SAXException {
         switch(qName) {
+            case "root":
+                world.setFloor(attr.getValue("floor"));
+                world.setCeiling(attr.getValue("ceiling"));
+                world.setSky(attr.getValue("sky"));
+                break;
             case "rooms" : 
                 loadingRooms = true;
                 break;
@@ -62,6 +72,14 @@ class XMLWorldHandler extends DefaultHandler {
                 break;
             case "portal" :
                 world.getRoom(attr.getValue("from")).getLine(attr.getValue("line")).setPortal(world.getRoom(attr.getValue("to")));
+                break;
+            case "hero" :
+                hero.getPosition().moveTo(Integer.parseInt(attr.getValue("x")), Integer.parseInt(attr.getValue("y")));
+                hero.setRoom(world.getRoom(attr.getValue("room")));
+                hero.setAzimuth(Math.PI * 2 * Integer.parseInt(attr.getValue("azimuth")) / 360);
+                break;
+            case "object":
+                world.addObject(attr.getValue("id"), WorldObject.createFromXML(world, attr));
                 break;
         }
     }        

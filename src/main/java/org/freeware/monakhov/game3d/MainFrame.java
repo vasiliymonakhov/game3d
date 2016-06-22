@@ -1,12 +1,7 @@
 package org.freeware.monakhov.game3d;
 
 import java.awt.Color;
-import org.freeware.monakhov.game3d.objects.nonmovable.Barrel;
 import org.freeware.monakhov.game3d.objects.movable.Hero;
-import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
-import org.freeware.monakhov.game3d.objects.nonmovable.Key;
-import org.freeware.monakhov.game3d.objects.nonmovable.Lamp;
-import org.freeware.monakhov.game3d.objects.nonmovable.Milton;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -27,8 +22,8 @@ import javax.swing.Timer;
 import javax.xml.parsers.ParserConfigurationException;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.map.XMLResourceLoader;
 import org.freeware.monakhov.game3d.map.XMLWorldLoader;
-import org.freeware.monakhov.game3d.objects.nonmovable.Fire;
 import org.xml.sax.SAXException;
 
 public class MainFrame extends javax.swing.JFrame {
@@ -44,23 +39,18 @@ public class MainFrame extends javax.swing.JFrame {
         setUndecorated(true);
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         setSize(new Dimension(rect.width, rect.height));
-        screen = new Screen(rect.width * 2 / 3, rect.height * 2 / 3);
+
+        XMLResourceLoader resLoader = new XMLResourceLoader();
+        resLoader.parse(MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml"));
+
         world = new World();
-        hero = new Hero(new Point(256, 256), world);
-        engine = new GraphicsEngine(world, hero, screen);
+        hero = new Hero(world, new Point());
         XMLWorldLoader loader = new XMLWorldLoader();
-        loader.parse(world, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml"));
-        hero.setRoom(world.getRoom("r0"));
-        world.addObject("01", new Barrel(new Point(512, 256)));
-        world.addObject("011", new Fire(new Point(128, 128)));
-        world.addObject("012", new Fire(new Point(256, 128)));
-        world.addObject("013", new Fire(new Point(384, 128)));
-        world.addObject("014", new Fire(new Point(512, 128)));
-        world.addObject("02", new Milton(new Point(640, 896)));
-        world.addObject("03", new Tree(new Point(2048, 512)));
-        world.addObject("04", new Lamp(new Point(128, 896)));
-        world.addObject("05", new Key(new Point(512, 512)));
-        world.addObject("06", new Fire(new Point(128, 512)));
+        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld2.xml"));
+
+        screen = new Screen(rect.width * 2 / 2, rect.height * 2 / 2);
+        engine = new GraphicsEngine(world, hero, screen);
+
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyDispatcher());
         Timer sec = new Timer(1000, new ActionListener() {
             @Override
@@ -76,7 +66,7 @@ public class MainFrame extends javax.swing.JFrame {
                 while (true) {
                     try {
                         long now = System.nanoTime();
-                        analyseKeysAndMouse();
+                        analyseKeys();
                         try {
                             engine.doCycle();
                         } catch (InterruptedException ex) {
@@ -91,20 +81,11 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
+        t.setPriority(Thread.MAX_PRIORITY);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
                 t.start();
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-                java.awt.Point mp = getMousePosition();
-                if (mp == null) {
-                    return;
-                }
-                oldMousePointX = mp.x;
-                oldMousePointY = mp.y;
             }
         });
     }
@@ -151,45 +132,95 @@ public class MainFrame extends javax.swing.JFrame {
     boolean right;
     boolean forward;
     boolean backward;
-    boolean strifeLeft;
-    boolean strifeRight;
+    boolean strafeLeft;
+    boolean strafeRight;
 
-    final static double TURN_SPEED = Math.PI / 1000000000.0;
-    final static double MOVE_SPEED = 1024 / 1000000000.0;
+    final static double MAX_TURN_SPEED = Math.PI / 1.0e9;
+    final static double TURN_ACCELERATION = Math.PI / 1.0e18;
+    final static double TURN_BREAK = 2 * Math.PI / 1.0e18;
+    final static double STRAFE_SPEED = 1024 / 1.0e9;
+    final static double MAX_FORWARD_MOVE_SPEED = 2048 / 1.0e9;
+    final static double MAX_BACKWARD_MOVE_SPEED = -512 / 1.0e9;
+    final static double MOVE_FORWARD_ACCELERATION = 1280 / 1.0e18;
+    final static double MOVE_BACKWARD_ACCELERATION = -512 / 1.0e18;
+    final static double MOVE_BREAKING = 2048 / 1.0e18;
 
-    int oldMousePointX, oldMousePointY;
+    double moveSpeed = 0;
+    double turnSpeed = 0;
 
-    void analyseKeysAndMouse() {
-        double ts = TURN_SPEED * frameNanoTime;
-        double ms = MOVE_SPEED * frameNanoTime;
-        java.awt.Point mousePoint = getMousePosition();
-        if (mousePoint != null) {
-            int mdx = mousePoint.x - oldMousePointX;
-            int mdy = mousePoint.y - oldMousePointY;
-            oldMousePointX = mousePoint.x;
-            oldMousePointY = mousePoint.y;
-            hero.moveBy(ms * -mdy / 64, 0);
-            hero.setAzimuth(hero.getAzimuth() + ts * mdx / 64.0);
-
-        }
+    void analyseKeys() {
         if (left) {
-            hero.setAzimuth(hero.getAzimuth() - ts);
+            if (turnSpeed > 0) {
+                turnSpeed -= TURN_BREAK * frameNanoTime;
+            } else {
+                turnSpeed -= TURN_ACCELERATION * frameNanoTime;
+            }
+            if (turnSpeed < -MAX_TURN_SPEED) {
+                turnSpeed = -MAX_TURN_SPEED;
+            }
+        } else if (right) {
+            if (turnSpeed < 0) {
+                turnSpeed += TURN_BREAK * frameNanoTime;
+            } else {
+                turnSpeed += TURN_ACCELERATION * frameNanoTime;
+            }
+            if (turnSpeed > MAX_TURN_SPEED) {
+                turnSpeed = MAX_TURN_SPEED;
+            }
+        } else {
+            if (turnSpeed > 0) {
+                turnSpeed -= TURN_BREAK * frameNanoTime;
+                if (turnSpeed < 0) {
+                    turnSpeed = 0;
+                }
+            } else if (turnSpeed < 0) {
+                turnSpeed += TURN_BREAK * frameNanoTime;
+                if (turnSpeed > 0) {
+                    turnSpeed = 0;
+                }
+            }
         }
-        if (right) {
-            hero.setAzimuth(hero.getAzimuth() + ts);
-        }
+        double ts = turnSpeed * frameNanoTime;
+        hero.setAzimuth(hero.getAzimuth() + ts);
         if (forward) {
-            hero.moveBy(ms, 0);
+            if (moveSpeed < 0) {
+                moveSpeed += MOVE_BREAKING * frameNanoTime;
+            } else {
+                moveSpeed += MOVE_FORWARD_ACCELERATION * frameNanoTime;
+            }
+            if (moveSpeed > MAX_FORWARD_MOVE_SPEED) {
+                moveSpeed = MAX_FORWARD_MOVE_SPEED;
+            }
+        } else if (backward) {
+            if (moveSpeed > 0) {
+                moveSpeed -= MOVE_BREAKING * frameNanoTime;
+            } else {
+                moveSpeed += MOVE_BACKWARD_ACCELERATION * frameNanoTime;
+            }
+            if (moveSpeed < MAX_BACKWARD_MOVE_SPEED) {
+                moveSpeed = MAX_BACKWARD_MOVE_SPEED;
+            }
+        } else {
+            if (moveSpeed > 0) {
+                moveSpeed -= MOVE_BREAKING * frameNanoTime;
+                if (moveSpeed < 0) {
+                    moveSpeed = 0;
+                }
+            } else if (moveSpeed < 0) {
+                moveSpeed += MOVE_BREAKING * frameNanoTime;
+                if (moveSpeed > 0) {
+                    moveSpeed = 0;
+                }
+            }
         }
-        if (backward) {
-            hero.moveBy(-ms, 0);
+        double ms = moveSpeed * frameNanoTime;
+        double ss = 0;
+        if (strafeRight) {
+            ss = STRAFE_SPEED * frameNanoTime;
+        } else if (strafeLeft) {
+            ss = -STRAFE_SPEED * frameNanoTime;
         }
-        if (strifeLeft) {
-            hero.moveBy(0, -ms);
-        }
-        if (strifeRight) {
-            hero.moveBy(0, ms);
-        }
+        hero.moveBy(ms, ss);
     }
 
     private class KeyDispatcher implements KeyEventDispatcher {
@@ -213,17 +244,23 @@ public class MainFrame extends javax.swing.JFrame {
                         backward = true;
                         break;
                     case KeyEvent.VK_Z:
-                        strifeLeft = true;
+                        strafeLeft = true;
                         break;
                     case KeyEvent.VK_X:
-                        strifeRight = true;
+                        strafeRight = true;
                         break;
                     case KeyEvent.VK_TAB:
                         engine.toggleMap();
                         break;
                     case KeyEvent.VK_F12:
                         fullScreen = !fullScreen;
-                        break;                        
+                        break;
+                    case KeyEvent.VK_PAGE_UP:
+                        engine.incMapScale();
+                        break;
+                    case KeyEvent.VK_PAGE_DOWN:
+                        engine.decMapScale();
+                        break;
                 }
             }
             if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -241,10 +278,10 @@ public class MainFrame extends javax.swing.JFrame {
                         backward = false;
                         break;
                     case KeyEvent.VK_Z:
-                        strifeLeft = false;
+                        strafeLeft = false;
                         break;
                     case KeyEvent.VK_X:
-                        strifeRight = false;
+                        strafeRight = false;
                         break;
                 }
             }

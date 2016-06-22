@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <textures path = "/org/freeware/monakhov/game3d/graphics/textures/">
+        <texture id = "brick01" file = "brick01.jpg"/>
+        <texture id = "brick02" file = "brick02.jpg"/>
+        <texture id = "brick03" file = "brick03.jpg"/>
+        <texture id = "brick04" file = "brick04.jpg"/>
+        <texture id = "brick05" file = "brick05.jpg"/>
+        <texture id = "brick06" file = "brick06.jpg"/>        
+        <texture id = "metal01" file = "metal01.png"/>
+        <texture id = "metal02" file = "metal02.png"/>
+        <texture id = "metal03" file = "metal03.png"/>
+    </textures>    
+    <sprites path = "/org/freeware/monakhov/game3d/graphics/sprites/fire/">
+        <sprite id = "fire00" file = "fire00.png" y_offset="146"/>
+        <sprite id = "fire01" file = "fire01.png" y_offset="146"/>
+        <sprite id = "fire02" file = "fire02.png" y_offset="146"/>
+        <sprite id = "fire03" file = "fire03.png" y_offset="146"/>
+        <sprite id = "fire04" file = "fire04.png" y_offset="146"/>
+        <sprite id = "fire05" file = "fire05.png" y_offset="146"/>
+        <sprite id = "fire06" file = "fire06.png" y_offset="146"/>
+        <sprite id = "fire07" file = "fire07.png" y_offset="146"/>
+        <sprite id = "fire08" file = "fire08.png" y_offset="146"/>
+        <sprite id = "fire09" file = "fire09.png" y_offset="146"/>
+        <sprite id = "fire10" file = "fire10.png" y_offset="146"/>
+        <sprite id = "fire11" file = "fire11.png" y_offset="146"/>
+        <sprite id = "fire12" file = "fire12.png" y_offset="146"/>
+        <sprite id = "fire13" file = "fire13.png" y_offset="146"/>
+        <sprite id = "fire14" file = "fire14.png" y_offset="146"/>
+        <sprite id = "fire15" file = "fire15.png" y_offset="146"/>
+    </sprites>           
+    <sprites path = "/org/freeware/monakhov/game3d/graphics/sprites/">    
+        <sprite id = "tree" file = "tree.png" y_offset="0"/>
+        <sprite id = "green_barrel" file = "green_barrel.png" y_offset="124"/>
+        <sprite id = "milton" file = "milton.png" y_offset="46"/>
+        <sprite id = "lamp" file = "lamp.png" y_offset="0"/>
+        <sprite id = "key" file = "key.png" y_offset="122"/>
+    </sprites>   
+    <images path = "/org/freeware/monakhov/game3d/graphics/images/">
+        <image id = "floor01" file = "floor01.png"/>
+        <image id = "floor02" file = "floor02.png"/>
+        <image id = "ceiling" file = "ceiling.png"/>
+        <image id = "sky01" file = "sky01.jpg"/>
+        <image id = "sky02" file = "sky02.jpg"/>
+    </images>   
+</root>

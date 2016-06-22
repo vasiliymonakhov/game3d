@@ -7,6 +7,7 @@ package org.freeware.monakhov.game3d.map;
 import java.awt.image.BufferedImage;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 /**
  * 
@@ -14,6 +15,12 @@ import static org.junit.Assert.*;
  */
 public class SpriteTest {
 
+    @Before
+    public void setUp() throws Exception {
+        XMLResourceLoader xmlrl = new XMLResourceLoader();
+        xmlrl.parse(XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml"));
+    }    
+    
     /**
      * Test of getImage method, of class Sprite.
      */

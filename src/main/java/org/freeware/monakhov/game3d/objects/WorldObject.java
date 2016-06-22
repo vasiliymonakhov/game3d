@@ -5,6 +5,14 @@ import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.Sprite;
+import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.nonmovable.Barrel;
+import org.freeware.monakhov.game3d.objects.nonmovable.Fire;
+import org.freeware.monakhov.game3d.objects.nonmovable.Key;
+import org.freeware.monakhov.game3d.objects.nonmovable.Lamp;
+import org.freeware.monakhov.game3d.objects.nonmovable.Milton;
+import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
+import org.xml.sax.Attributes;
 
 /**
  * Объект мира
@@ -17,21 +25,30 @@ abstract public class WorldObject {
     protected final Point oldPosition;
     private final Point left = new Point();
     private final Point right = new Point();
+    protected final World world;    
 
     protected double azimuth;
 
     protected Room room;
 
     /**
+     * @param world
      * @param position the position to set
      */
-    public WorldObject(Point position) {
+    public WorldObject(World world, Point position) {
         if (position == null) {
             throw new IllegalArgumentException("Position may not be null");
         }
         this.position = position;
+        this.world = world;
         oldPosition = new Point();
         oldPosition.moveTo(position.getX(), position.getY());
+        for (Room r : world.getAllRooms()) {
+            if (r.insideThisRoom(position)) {
+                room = r;
+                break;
+            }
+        }        
     }
 
     public void turnSpriteToHero(Hero hero) {
@@ -111,4 +128,23 @@ abstract public class WorldObject {
         return right;
     }
 
+    public static WorldObject createFromXML(World world, Attributes attr) {
+        String clasz = attr.getValue("class");
+        switch (clasz) {
+            case "barrel" :
+                return new Barrel(world, new Point(attr));
+            case "fire" :
+                return new Fire(world, new Point(attr));
+            case "milton" :
+                return new Milton(world, new Point(attr));
+            case "tree" :
+                return new Tree(world, new Point(attr));
+            case "lamp" :
+                return new Lamp(world, new Point(attr));
+            case "key" :
+                return new Key(world, new Point(attr));
+        }
+        return null;        
+    }
+    
 }

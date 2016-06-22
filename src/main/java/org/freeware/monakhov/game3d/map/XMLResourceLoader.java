@@ -12,28 +12,27 @@ import java.io.UnsupportedEncodingException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.freeware.monakhov.game3d.objects.movable.Hero;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Loads the world from XML stream
+ * Loads resources from XML stream
  * 
  * @author Vasily Monakhov 
  */
-public class XMLWorldLoader {
+public class XMLResourceLoader {
 
     private final SAXParser saxParser;    
    
-    public XMLWorldLoader() throws ParserConfigurationException, SAXException {
+    public XMLResourceLoader() throws ParserConfigurationException, SAXException {
         SAXParserFactory spf = SAXParserFactory.newInstance();
         saxParser = spf.newSAXParser();
     }
 
-    public void parse(World world, Hero hero, InputStream is) throws UnsupportedEncodingException, SAXException, IOException {
+    public void parse(InputStream is) throws UnsupportedEncodingException, SAXException, IOException {
         try (InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             BufferedReader bisr = new BufferedReader(isr)) {
-            saxParser.parse(new InputSource(bisr), new XMLWorldHandler(world, hero));
+            saxParser.parse(new InputSource(bisr), new XMLResourceHandler());
         }
     }
     

@@ -11,7 +11,6 @@ import org.freeware.monakhov.game3d.map.Wall;
 import org.freeware.monakhov.game3d.map.World;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  * 
@@ -26,7 +25,7 @@ public class HeroTest {
      */
     @Test
     public void testSetAndGetAsimuth() {
-        Hero h = new Hero(new Point(0, 0), null);
+        Hero h = new Hero(new World(), new Point(0, 0));
         assertEquals(0, h.getAzimuth(), EPSILON);
         h.setAzimuth(1);
         assertEquals(1, h.getAzimuth(), EPSILON);
@@ -43,7 +42,7 @@ public class HeroTest {
      */
     @Test
     public void testSetAndGetRoom1() {
-        Hero h = new Hero(new Point(0, 0), null);
+        Hero h = new Hero(new World(), new Point(0, 0));
         assertNull(h.getRoom());
         Room r1 = new Room();
         h.setRoom(r1);
@@ -60,7 +59,7 @@ public class HeroTest {
      */
     @Test (expected = Exception.class)
     public void testSetAndGetRoom2() {
-        Hero h = new Hero(new Point(0, 0), null);
+        Hero h = new Hero(new World(), new Point(0, 0));
         h.setRoom(null);
     }    
 
@@ -110,7 +109,7 @@ public class HeroTest {
         w.addRoom("r1", r1);
         
         Point p = new Point(500, 500);
-        Hero h = new Hero(p, w);
+        Hero h = new Hero(w, p);
         h.setRoom(r0);
         
         h.moveBy(0, 1000); // strife right
@@ -142,7 +141,7 @@ public class HeroTest {
     @Test
     public void testGetPosition() {
         Point p = new Point(0, 0);
-        Hero h = new Hero(p, null);
+        Hero h = new Hero(new World(), p);
         assertNotNull(h.getPosition());
         assertTrue(p == h.getPosition());
         assertEquals(0, h.getPosition().getX(), EPSILON);
@@ -151,12 +150,12 @@ public class HeroTest {
 
     @Test
     public void testHero1() {
-        assertNotNull(new Hero(new Point(0, 0), null));
+        assertNotNull(new Hero(new World(), new Point(0, 0)));
     }
     
     @Test (expected = Exception.class)
     public void testHero2() {
-        assertNotNull(new Hero(null, null));
+        assertNotNull(new Hero(new World(), null));
     }    
     
 }

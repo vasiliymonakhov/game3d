@@ -134,11 +134,11 @@ public class WorldTest {
     @Test
     public void testGetAllObjects() {
         World w = new World();
-        Barrel b = new Barrel(new Point());
-        Tree t = new Tree(new Point());
+        Barrel b = new Barrel(w, new Point());
+        Tree t = new Tree(w, new Point());
         w.addObject("1", b);
         w.addObject("2", t);
-        Key k = new Key(new Point());
+        Key k = new Key(w, new Point());
         Collection<WorldObject> res = w.getAllObjects();
         assertTrue(res.contains(t));
         assertTrue(res.contains(b));
@@ -151,8 +151,8 @@ public class WorldTest {
     @Test
     public void testAddObject1() {
         World w = new World();
-        Barrel b = new Barrel(new Point());
-        Tree t = new Tree(new Point());
+        Barrel b = new Barrel(w, new Point());
+        Tree t = new Tree(w, new Point());
         w.addObject("1", b);
         w.addObject("2", t);
     }
@@ -163,7 +163,7 @@ public class WorldTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddObject2() {
         World w = new World();
-        Barrel b = new Barrel(new Point());
+        Barrel b = new Barrel(w, new Point());
         w.addObject("", b);
     }    
 
@@ -173,7 +173,7 @@ public class WorldTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddObject3() {
         World w = new World();
-        Barrel b = new Barrel(new Point());
+        Barrel b = new Barrel(w, new Point());
         w.addObject(null, b);
     }    
     
@@ -183,7 +183,6 @@ public class WorldTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddObject4() {
         World w = new World();
-        Barrel b = new Barrel(new Point());
         w.addObject("abarrel", null);
     }    
     

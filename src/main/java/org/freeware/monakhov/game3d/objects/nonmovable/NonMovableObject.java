@@ -1,6 +1,7 @@
 package org.freeware.monakhov.game3d.objects.nonmovable;
 
 import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
@@ -9,8 +10,8 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
  */
 abstract class NonMovableObject extends WorldObject {
 
-    public NonMovableObject(Point position) {
-        super(position);
+    public NonMovableObject(World world, Point position) {
+        super(world, position);
     }
 
 }

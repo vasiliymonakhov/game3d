@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root>
+<root floor = "floor01" ceiling = "ceiling">
     <rooms>
         <room id = "r0">
             <point id = "p0" x="0" y = "0"/>
@@ -40,9 +40,9 @@
             <point id = "p1" x="1280" y = "512"/>
             <point id = "p2" x="1280" y = "0"/>
             <point id = "p3" x="768" y = "0"/>
-            <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
+            <wall id = "w0" start = "p0" end = "p1" texture = "metal01"/>
             <line id = "l1" start = "p1" end = "p2"/>
-            <wall id = "w2" start = "p2" end = "p3" texture = "brick01"/>                           
+            <wall id = "w2" start = "p2" end = "p3" texture = "metal01"/>                           
             <line id = "l3" start = "p3" end = "p0"/>            
         </room>      
         <room id = "r4">
@@ -52,10 +52,10 @@
             <point id = "p3" x="1664" y = "640"/>
             <point id = "p4" x="1664" y = "0"/>
             <line id = "l0" start = "p0" end = "p1"/>
-            <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>
+            <wall id = "w1" start = "p1" end = "p2" texture = "metal02"/>
             <line id = "l2" start = "p2" end = "p3"/>                           
-            <wall id = "w3" start = "p3" end = "p4" texture = "brick02"/>            
-            <wall id = "w4" start = "p4" end = "p0" texture = "brick02"/>                        
+            <wall id = "w3" start = "p3" end = "p4" texture = "metal02"/>            
+            <wall id = "w4" start = "p4" end = "p0" texture = "metal02"/>                        
         </room>                           
         <room id = "r5">
             <point id = "p0" x="1280" y = "1024"/>
@@ -63,10 +63,10 @@
             <point id = "p2" x="2176" y = "640"/>
             <point id = "p3" x="1920" y = "640"/>
             <point id = "p4" x="1664" y = "640"/>
-            <wall id = "w0" start = "p0" end = "p1" texture = "brick03"/>
-            <wall id = "w1" start = "p1" end = "p2" texture = "brick03"/>
+            <wall id = "w0" start = "p0" end = "p1" texture = "metal03"/>
+            <wall id = "w1" start = "p1" end = "p2" texture = "metal03"/>
             <line id = "l2" start = "p2" end = "p3"/>                           
-            <wall id = "w3" start = "p3" end = "p4" texture = "brick03"/>            
+            <wall id = "w3" start = "p3" end = "p4" texture = "metal03"/>            
             <line id = "l4" start = "p4" end = "p0"/>                        
         </room>                                   
         <room id = "r6">
@@ -94,4 +94,16 @@
         <portal from = "r5" line = "l4" to = "r4"/>
         <portal from = "r6" line = "l3" to = "r5"/>        
     </portals>
+    <hero  x = "256" y = "256" room="r0" azimuth = "0"/>    
+    <objects>
+        <object class = "barrel" id = "barrel01" x = "512" y = "256"/>
+        <object class = "fire" id = "fire01" x = "128" y = "128"/>
+        <object class = "fire" id = "fire02" x = "256" y = "128"/>
+        <object class = "fire" id = "fire03" x = "384" y = "128"/>
+        <object class = "fire" id = "fire04" x = "512" y = "128"/>
+        <object class = "milton" id = "milton01" x = "640" y = "896"/>
+        <object class = "tree" id = "tree01" x = "2048" y = "512"/>        
+        <object class = "lamp" id = "lamp01" x = "128" y = "896"/>
+        <object class = "key" id = "key01" x = "512" y = "512"/>        
+    </objects>   
 </root>

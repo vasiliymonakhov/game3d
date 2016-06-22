@@ -14,11 +14,8 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
  */
 public abstract class MovableObject extends WorldObject {
 
-    private final World world;
-
-    public MovableObject(Point position, World world) {
-        super(position);
-        this.world = world;
+    public MovableObject(World world, Point position) {
+        super(world, position);
     }
 
     boolean touchAnyObject(Point newPosition) {

@@ -17,7 +17,7 @@ public class Point {
      * Создаёт точку
      * @param attr аттрибуты точки в XML-файле
      */
-    Point(Attributes attr) {
+    public Point(Attributes attr) {
         this(Double.parseDouble(attr.getValue("x")), Double.parseDouble(attr.getValue("y")));
     }
     

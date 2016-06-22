@@ -15,6 +15,10 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
  */
 public class World {
     
+    private String floor;
+    private String ceiling;
+    private String sky;
+    
     /**
      * Rooms in our map
      */
@@ -65,5 +69,47 @@ public class World {
         }
         objects.put(id, o);
     }    
+
+    /**
+     * @return the floor
+     */
+    public String getFloor() {
+        return floor;
+    }
+
+    /**
+     * @param floor the floorCeiling to set
+     */
+    public void setFloor(String floor) {
+        this.floor = floor;
+    }
+
+    /**
+     * @return the ceiling
+     */
+    public String getCeiling() {
+        return ceiling;
+    }
+
+    /**
+     * @param ceiling the ceiling to set
+     */
+    public void setCeiling(String ceiling) {
+        this.ceiling = ceiling;
+    }
+
+    /**
+     * @return the sky
+     */
+    public String getSky() {
+        return sky;
+    }
+
+    /**
+     * @param sky the sky to set
+     */
+    public void setSky(String sky) {
+        this.sky = sky;
+    }
     
 }

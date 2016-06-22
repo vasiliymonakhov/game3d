@@ -33,10 +33,13 @@ class XMLResourceHandler extends DefaultHandler {
                     path = attr.getValue("path");
                     break;                
                 case "texture" :
-                    Texture.add(attr.getValue("id"), path + attr.getValue("file"));
+                    Texture.add(attr.getValue("id"), path + attr.getValue("file"), Integer.parseInt(attr.getValue("width")));
                     break;
                 case "sprite" :
-                    Sprite.add(attr.getValue("id"), path + attr.getValue("file"), Integer.parseInt(attr.getValue("y_offset")));
+                    Sprite.add(attr.getValue("id"), path + attr.getValue("file"), 
+                            Integer.parseInt(attr.getValue("width")),
+                            Integer.parseInt(attr.getValue("height")),
+                            Integer.parseInt(attr.getValue("y_offset")));
                     break;                
                 case "image" :
                     Image.add(attr.getValue("id"), path + attr.getValue("file"));

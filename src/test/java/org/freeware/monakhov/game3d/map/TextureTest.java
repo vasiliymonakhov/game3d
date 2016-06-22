@@ -18,7 +18,7 @@ public class TextureTest {
     private final Texture tex;
     
     public TextureTest() throws IOException {
-        tex = new Texture("/org/freeware/monakhov/game3d/maps/brick01.jpg");
+        tex = new Texture("/org/freeware/monakhov/game3d/maps/brick01.jpg", 256);
     }
 
     /**

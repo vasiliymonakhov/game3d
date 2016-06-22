@@ -108,7 +108,7 @@ public class MainFrame extends javax.swing.JFrame {
     @Override
     public void paint(Graphics g) {
         Rectangle rr = this.getBounds();
-        if (fullScreen) {
+        if (!fullScreen) {
             int x = (rr.width - screen.getWidth()) / 2;
             int y = (rr.height - screen.getHeight()) / 2;
             g.setColor(Color.BLACK);

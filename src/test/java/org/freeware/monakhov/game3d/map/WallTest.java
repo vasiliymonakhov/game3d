@@ -54,7 +54,7 @@ public class WallTest {
      */
     @Test
     public void testGetSubImage() throws IOException {
-        Wall w = new Wall(new Point(0, 0), new Point(2000, 0), new Texture("/org/freeware/monakhov/game3d/maps/brick01.jpg"));
+        Wall w = new Wall(new Point(0, 0), new Point(2000, 0), new Texture("/org/freeware/monakhov/game3d/maps/brick01.jpg", 256));
         Point p = new Point(10, 0);
         BufferedImage bi = w.getSubImage(p);
         assertNotNull(bi);

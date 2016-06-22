@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <textures path = "/org/freeware/monakhov/game3d/graphics/textures/">
-        <texture id = "brick01" file = "brick01.jpg"/>
-        <texture id = "brick02" file = "brick02.jpg"/>
-        <texture id = "brick03" file = "brick03.jpg"/>
-        <texture id = "brick04" file = "brick04.jpg"/>
-        <texture id = "brick05" file = "brick05.jpg"/>
-        <texture id = "brick06" file = "brick06.jpg"/>        
-        <texture id = "metal01" file = "metal01.png"/>
-        <texture id = "metal02" file = "metal02.png"/>
-        <texture id = "metal03" file = "metal03.png"/>
+        <texture id = "brick01" file = "brick01.jpg" width = "256"/>
+        <texture id = "brick02" file = "brick02.jpg" width = "256"/>
+        <texture id = "brick03" file = "brick03.jpg" width = "256"/>
+        <texture id = "brick04" file = "brick04.jpg" width = "256"/>
+        <texture id = "brick05" file = "brick05.jpg" width = "256"/>
+        <texture id = "brick06" file = "brick06.jpg" width = "256"/>        
+        <texture id = "metal01" file = "metal01.png" width = "11"/>
+        <texture id = "metal02" file = "metal02.png" width = "268"/>
+        <texture id = "metal03" file = "metal03.png" width = "455"/>
     </textures>    
     <sprites path = "/org/freeware/monakhov/game3d/graphics/sprites/fire/">
-        <sprite id = "fire00" file = "fire00.png" y_offset="146"/>
-        <sprite id = "fire01" file = "fire01.png" y_offset="146"/>
-        <sprite id = "fire02" file = "fire02.png" y_offset="146"/>
-        <sprite id = "fire03" file = "fire03.png" y_offset="146"/>
-        <sprite id = "fire04" file = "fire04.png" y_offset="146"/>
-        <sprite id = "fire05" file = "fire05.png" y_offset="146"/>
-        <sprite id = "fire06" file = "fire06.png" y_offset="146"/>
-        <sprite id = "fire07" file = "fire07.png" y_offset="146"/>
-        <sprite id = "fire08" file = "fire08.png" y_offset="146"/>
-        <sprite id = "fire09" file = "fire09.png" y_offset="146"/>
-        <sprite id = "fire10" file = "fire10.png" y_offset="146"/>
-        <sprite id = "fire11" file = "fire11.png" y_offset="146"/>
-        <sprite id = "fire12" file = "fire12.png" y_offset="146"/>
-        <sprite id = "fire13" file = "fire13.png" y_offset="146"/>
-        <sprite id = "fire14" file = "fire14.png" y_offset="146"/>
-        <sprite id = "fire15" file = "fire15.png" y_offset="146"/>
+        <sprite id = "fire00" file = "fire00.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire01" file = "fire01.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire02" file = "fire02.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire03" file = "fire03.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire04" file = "fire04.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire05" file = "fire05.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire06" file = "fire06.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire07" file = "fire07.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire08" file = "fire08.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire09" file = "fire09.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire10" file = "fire10.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire11" file = "fire11.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire12" file = "fire12.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire13" file = "fire13.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire14" file = "fire14.png" width = "100" height = "100" y_offset="146"/>
+        <sprite id = "fire15" file = "fire15.png" width = "100" height = "100" y_offset="146"/>
     </sprites>           
     <sprites path = "/org/freeware/monakhov/game3d/graphics/sprites/">    
-        <sprite id = "tree" file = "tree.png" y_offset="0"/>
-        <sprite id = "green_barrel" file = "green_barrel.png" y_offset="124"/>
-        <sprite id = "milton" file = "milton.png" y_offset="46"/>
-        <sprite id = "lamp" file = "lamp.png" y_offset="0"/>
-        <sprite id = "key" file = "key.png" y_offset="122"/>
-        <sprite id = "grid_fence" file = "grid_fence.png" y_offset="44"/>
-        <sprite id = "prison_wall" file = "prison_wall.png" y_offset="0"/>
+        <sprite id = "tree" file = "tree.png" width = "162" height = "256" y_offset="0"/>
+        <sprite id = "green_barrel" file = "green_barrel.png" width = "80" height = "132" y_offset="124"/>
+        <sprite id = "milton" file = "milton.png" width = "144" height = "210" y_offset="46"/>
+        <sprite id = "lamp" file = "lamp.png" width = "19" height = "10" y_offset="0"/>
+        <sprite id = "key" file = "key.png" width = "27" height = "11" y_offset="122"/>
+        <sprite id = "grid_fence" file = "grid_fence.png" width = "316" height = "212" y_offset="44"/>
+        <sprite id = "prison_wall" file = "prison_wall.png" width = "256" height = "256" y_offset="0"/>
     </sprites>   
     <images path = "/org/freeware/monakhov/game3d/graphics/images/">
         <image id = "floor01" file = "floor01.png"/>

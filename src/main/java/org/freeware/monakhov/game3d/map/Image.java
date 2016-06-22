@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -18,26 +20,34 @@ import javax.imageio.ImageIO;
  */
 public class Image {
 
-    private final BufferedImage image;
+    private final String fileName;
+    private BufferedImage image;
 
     Image(String fileName) throws IOException {
-        BufferedImage bi = ImageIO.read(Image.class.getResourceAsStream(fileName));
-        GraphicsConfiguration gfx_config = GraphicsEnvironment.
-                getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                getDefaultConfiguration();
-        image = gfx_config.createCompatibleImage(bi.getWidth(), bi.getHeight(), 
-                bi.isAlphaPremultiplied() ? Transparency.TRANSLUCENT : Transparency.OPAQUE);
-        Graphics2D g = (Graphics2D) image.getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        g.drawImage(bi, 0, 0, null);
-        g.dispose();
+        this.fileName = fileName;
     }
 
     /**
      * @return the image
      */
     public BufferedImage getImage() {
+        if (image == null) {
+            try {
+                BufferedImage bi = ImageIO.read(Image.class.getResourceAsStream(fileName));
+                GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                        getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                        getDefaultConfiguration();
+                image = gfx_config.createCompatibleImage(bi.getWidth(), bi.getHeight(),
+                        bi.isAlphaPremultiplied() ? Transparency.TRANSLUCENT : Transparency.OPAQUE);
+                Graphics2D g = (Graphics2D) image.getGraphics();
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                g.drawImage(bi, 0, 0, null);            
+                g.dispose();
+            } catch (IOException ex) {
+                Logger.getLogger(Image.class.getName()).log(Level.SEVERE, "Can't load image", ex);
+            }
+        }
         return image;
     }
 

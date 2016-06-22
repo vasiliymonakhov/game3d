@@ -96,7 +96,7 @@
     </portals>
     <hero  x = "256" y = "256" room="r0" azimuth = "0"/>    
     <objects>
-        <object class = "barrel" id = "barrel01" x = "512" y = "256"/>
+        <object class = "barrel" id = "barrel01" x = "128" y = "896"/>
         <object class = "fire" id = "fire01" x = "128" y = "128"/>
         <object class = "fire" id = "fire02" x = "256" y = "128"/>
         <object class = "fire" id = "fire03" x = "384" y = "128"/>
@@ -104,6 +104,7 @@
         <object class = "milton" id = "milton01" x = "640" y = "896"/>
         <object class = "tree" id = "tree01" x = "2048" y = "512"/>        
         <object class = "lamp" id = "lamp01" x = "128" y = "896"/>
-        <object class = "key" id = "key01" x = "512" y = "512"/>        
+        <object class = "key" id = "key01" x = "512" y = "512"/>      
+        <object class = "prison_wall" id = "prison_wall01" start_x = "0" start_y = "768" end_x = "256" end_y = "768"/>          
     </objects>   
 </root>

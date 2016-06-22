@@ -6,6 +6,8 @@ import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.misc.GridFence;
+import org.freeware.monakhov.game3d.objects.misc.PrisonWall;
 import org.freeware.monakhov.game3d.objects.nonmovable.Barrel;
 import org.freeware.monakhov.game3d.objects.nonmovable.Fire;
 import org.freeware.monakhov.game3d.objects.nonmovable.Key;
@@ -143,6 +145,12 @@ abstract public class WorldObject {
                 return new Lamp(world, new Point(attr));
             case "key" :
                 return new Key(world, new Point(attr));
+            case "grid_fence" :
+                return new GridFence(world, new Point(Double.parseDouble(attr.getValue("start_x")), Double.parseDouble(attr.getValue("start_y"))),
+                    new Point(Double.parseDouble(attr.getValue("end_x")), Double.parseDouble(attr.getValue("end_y"))));                
+            case "prison_wall" :
+                return new PrisonWall(world, new Point(Double.parseDouble(attr.getValue("start_x")), Double.parseDouble(attr.getValue("start_y"))),
+                    new Point(Double.parseDouble(attr.getValue("end_x")), Double.parseDouble(attr.getValue("end_y"))));                                
         }
         return null;        
     }

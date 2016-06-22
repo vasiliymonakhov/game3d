@@ -35,6 +35,8 @@
         <sprite id = "milton" file = "milton.png" y_offset="46"/>
         <sprite id = "lamp" file = "lamp.png" y_offset="0"/>
         <sprite id = "key" file = "key.png" y_offset="122"/>
+        <sprite id = "grid_fence" file = "grid_fence.png" y_offset="44"/>
+        <sprite id = "prison_wall" file = "prison_wall.png" y_offset="0"/>
     </sprites>   
     <images path = "/org/freeware/monakhov/game3d/graphics/images/">
         <image id = "floor01" file = "floor01.png"/>

@@ -19,6 +19,8 @@ public abstract class MovableObject extends WorldObject {
     }
 
     boolean touchAnyObject(Point newPosition) {
+        Point p1 = new Point();
+        Point p2 = new Point();
         // проверяем, не столкнулись ли мы с каким-то объектом
         for (WorldObject o : world.getAllObjects()) {
             if (!o.isCrossable()) {
@@ -28,6 +30,16 @@ public abstract class MovableObject extends WorldObject {
                 if (distance < radiuses) {
                     // расстояние между объектами слишком мало, пройти нельзя
                     return true;
+                }
+                int n = SpecialMath.lineAndCircleIntersection(o.getLeft(), o.getRight(), newPosition, getRadius(), p1, p2);
+                if (n == 1) {
+                    if (p1.between(o.getLeft(), o.getRight())) {
+                        return true;
+                    }
+                } else if (n == 2) {
+                    if (p1.between(o.getLeft(), o.getRight()) || p2.between(o.getLeft(), o.getRight())) {
+                        return true;
+                    }
                 }
             }
         }

@@ -46,9 +46,9 @@ public class MainFrame extends javax.swing.JFrame {
         world = new World();
         hero = new Hero(world, new Point());
         XMLWorldLoader loader = new XMLWorldLoader();
-        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld2.xml"));
+        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld3.xml"));
 
-        screen = new Screen(rect.width * 2 / 2, rect.height * 2 / 2);
+        screen = new Screen(rect.width * 2 / 3, rect.height * 2 / 3);
         engine = new GraphicsEngine(world, hero, screen);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyDispatcher());

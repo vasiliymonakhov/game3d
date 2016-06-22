@@ -108,7 +108,7 @@ public class GraphicsEngine {
         Arrays.fill(mapLines, null);
     }
 
-    private List<Room> visibleRooms = new ArrayList<Room>();
+    private final List<Room> visibleRooms = new ArrayList<>();
     
     void checkVisibleRooms() {
         visibleRooms.clear();

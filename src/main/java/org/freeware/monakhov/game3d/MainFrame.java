@@ -46,9 +46,9 @@ public class MainFrame extends javax.swing.JFrame {
         world = new World();
         hero = new Hero(world, new Point());
         XMLWorldLoader loader = new XMLWorldLoader();
-        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld3.xml"));
+        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml"));
 
-        screen = new Screen(rect.width * 2 / 3, rect.height * 2 / 3);
+        screen = new Screen(rect.width * 3 / 4, rect.height * 3 / 4);
         engine = new GraphicsEngine(world, hero, screen);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyDispatcher());
@@ -135,15 +135,15 @@ public class MainFrame extends javax.swing.JFrame {
     boolean strafeLeft;
     boolean strafeRight;
 
-    final static double MAX_TURN_SPEED = Math.PI / 1.0e9;
-    final static double TURN_ACCELERATION = Math.PI / 1.0e18;
-    final static double TURN_BREAK = 2 * Math.PI / 1.0e18;
+    final static double MAX_TURN_SPEED = Math.PI / 2.0e9;
+    final static double TURN_ACCELERATION = 2 * Math.PI / 1.0e18;
+    final static double TURN_BREAK = 3 * Math.PI / 1.0e18;
     final static double STRAFE_SPEED = 1024 / 1.0e9;
-    final static double MAX_FORWARD_MOVE_SPEED = 2048 / 1.0e9;
-    final static double MAX_BACKWARD_MOVE_SPEED = -512 / 1.0e9;
-    final static double MOVE_FORWARD_ACCELERATION = 1280 / 1.0e18;
+    final static double MAX_FORWARD_MOVE_SPEED = 1024 / 1.0e9;
+    final static double MAX_BACKWARD_MOVE_SPEED = -256 / 1.0e9;
+    final static double MOVE_FORWARD_ACCELERATION = 2048 / 1.0e18;
     final static double MOVE_BACKWARD_ACCELERATION = -512 / 1.0e18;
-    final static double MOVE_BREAKING = 2048 / 1.0e18;
+    final static double MOVE_BREAKING = 4096 / 1.0e18;
 
     double moveSpeed = 0;
     double turnSpeed = 0;

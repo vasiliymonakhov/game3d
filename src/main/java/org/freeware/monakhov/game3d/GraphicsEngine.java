@@ -9,7 +9,10 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,7 +95,18 @@ public class GraphicsEngine {
             floorCeilingDrawers[i] = new FloorCeilingDrawer(i * w, w, floor, ceiling);
         }
         if (world.getSky() != null) {
-            sky = Image.get(world.getSky()).getImage();
+            BufferedImage bi = Image.get(world.getSky()).getImage();
+            GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                    getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                    getDefaultConfiguration();
+            int width = bi.getWidth();
+            int height = bi.getHeight();
+            sky = gfx_config.createCompatibleImage(screen.getWidth() * 4, screen.getHeight() / 2, Transparency.OPAQUE);            
+            Graphics2D g2 = (Graphics2D)sky.getGraphics();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2.drawImage(bi, 0, 0, sky.getWidth(), sky.getHeight(), 0, 0, width, height, null);
+            g2.dispose();
             skyDrawers = new SkyDrawer[4];
             w = screen.getWidth() / skyDrawers.length;
             for (int i = 0; i < skyDrawers.length; i++) {

@@ -8,11 +8,11 @@ import org.freeware.monakhov.game3d.map.World;
  *
  * @author Vasily Monakhov 
  */
-public class GridFence extends PlainObject {
+public class GridFence01 extends PlainObject {
 
-    private final static Sprite SPRITE = Sprite.get("grid_fence");
+    private final static Sprite SPRITE = Sprite.get("grid_fence01");
     
-    public GridFence(World world, Point start, Point end) {
+    public GridFence01(World world, Point start, Point end) {
         super(world, start, end);
     }
 

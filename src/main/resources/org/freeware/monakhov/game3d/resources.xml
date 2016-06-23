@@ -71,11 +71,16 @@
             <sprite_file index = "2" file = "green_barrel_2.png"/>            
             <sprite_file index = "3" file = "green_barrel_3.png"/>                        
          </sprite>
-        <sprite id = "grid_fence" count = "3" width = "512" height = "192" y_offset="64">         
-            <sprite_file index = "0" file = "grid_fence_0.png"/>            
-            <sprite_file index = "1" file = "grid_fence_1.png"/>            
-            <sprite_file index = "2" file = "grid_fence_2.png"/>            
+        <sprite id = "grid_fence02" count = "3" width = "512" height = "192" y_offset="64">         
+            <sprite_file index = "0" file = "grid_fence02_0.png"/>            
+            <sprite_file index = "1" file = "grid_fence02_1.png"/>            
+            <sprite_file index = "2" file = "grid_fence02_2.png"/>            
         </sprite>    
+        <sprite id = "grid_fence01" count = "3" width = "512" height = "192" y_offset="64">         
+            <sprite_file index = "0" file = "grid_fence01_0.png"/>            
+            <sprite_file index = "1" file = "grid_fence01_1.png"/>            
+            <sprite_file index = "2" file = "grid_fence01_2.png"/>            
+        </sprite>        
         <sprite id = "pole01" count = "2" width = "4" height = "192" y_offset="64">         
             <sprite_file index = "0" file = "pole01_0.png"/>            
             <sprite_file index = "1" file = "pole01_1.png"/>            

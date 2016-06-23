@@ -8,7 +8,7 @@ import org.freeware.monakhov.game3d.map.World;
  * столб
  * @author Vasily Monakhov 
  */
-public class Pole extends CrossableObject {
+public class Pole extends NonMovableObject {
 
     public Pole(World world, Point position) {
         super(world, position);

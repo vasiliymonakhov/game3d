@@ -22,7 +22,7 @@ public class SpecialMath {
         return Math.sqrt(p * (p - ab) * (p - bc) * (p - ac));
     }
 
-    public final static double EPSILON = 0.0001d;      
+    public final static double EPSILON = 0.01d;      
     
     public static boolean lineIntersection (Point p1, Point p2, Point p3, Point p4, Point i) {
         double a1 = p2.getY() - p1.getY();

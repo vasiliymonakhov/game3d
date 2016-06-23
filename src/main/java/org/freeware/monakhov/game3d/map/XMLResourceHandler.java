@@ -18,6 +18,8 @@ import org.xml.sax.helpers.DefaultHandler;
 class XMLResourceHandler extends DefaultHandler {
     
     private String path;
+    private Texture currentTexture;
+    private Sprite currentSprite;
     
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attr)  throws SAXException {
@@ -33,14 +35,20 @@ class XMLResourceHandler extends DefaultHandler {
                     path = attr.getValue("path");
                     break;                
                 case "texture" :
-                    Texture.add(attr.getValue("id"), path + attr.getValue("file"), Integer.parseInt(attr.getValue("width")));
+                    currentTexture = Texture.add(attr.getValue("id"), Integer.parseInt(attr.getValue("width")), Integer.parseInt(attr.getValue("count")));
                     break;
+                case "texture_file" :
+                    currentTexture.addFile(Integer.parseInt(attr.getValue("index")), path + attr.getValue("file"));
+                    break;                    
                 case "sprite" :
-                    Sprite.add(attr.getValue("id"), path + attr.getValue("file"), 
+                    currentSprite = Sprite.add(attr.getValue("id"), Integer.parseInt(attr.getValue("count")),
                             Integer.parseInt(attr.getValue("width")),
                             Integer.parseInt(attr.getValue("height")),
                             Integer.parseInt(attr.getValue("y_offset")));
                     break;                
+                case "sprite_file" :
+                    currentSprite.addFile(Integer.parseInt(attr.getValue("index")), path + attr.getValue("file"));
+                    break;                    
                 case "image" :
                     Image.add(attr.getValue("id"), path + attr.getValue("file"));
                     break;                
@@ -50,5 +58,17 @@ class XMLResourceHandler extends DefaultHandler {
             Logger.getLogger(XMLResourceHandler.class.getName()).log(Level.SEVERE, "Error loading resource", ex);
         }
     }        
-
+    
+    @Override
+    public void endElement(String uri, String localName, String qName)  throws SAXException {
+            switch(qName) {
+                case "texture" :
+                    currentTexture = null;
+                    break;
+                case "sprite" :
+                    currentSprite = null;
+                    break;                    
+            }            
+    }            
+    
 }

@@ -5,7 +5,6 @@
 package org.freeware.monakhov.game3d.map;
 
 import java.awt.image.BufferedImage;
-import org.freeware.monakhov.game3d.GraphicsEngine;
 import org.freeware.monakhov.game3d.SpecialMath;
 
 /**
@@ -58,9 +57,9 @@ public class Wall extends Line {
     }
     
     @Override
-    public BufferedImage getSubImage(Point p) {
+    public BufferedImage getSubImage(Point p, double height) {
         int xOffset = (int)Math.round(SpecialMath.lineLength(start, p));
-        return texture.getSubImage(xOffset);
+        return texture.getSubImage(xOffset, height);
     }
     
     

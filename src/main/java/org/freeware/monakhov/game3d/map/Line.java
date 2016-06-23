@@ -104,13 +104,13 @@ public class Line {
         Point p = new Point();
         for (int i = 0; i < mapLines.length; i++) {
             if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, p)) {
-                if (p.between(start, end) && p.between(rayPoints[i], viewPoint)) return true;
+                if (p.between(start, end) && p.between(viewPoint, rayPoints[i])) return true;
             }
         }
         return false;
     }
 
-    public BufferedImage getSubImage(Point p) {
+    public BufferedImage getSubImage(Point p, double height) {
         return null;
     }
     

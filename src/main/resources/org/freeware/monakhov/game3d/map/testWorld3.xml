@@ -6,18 +6,18 @@
             <point id = "p1" x="0" y = "10000"/>
             <point id = "p2" x="10000" y = "10000"/>
             <point id = "p3" x="10000" y = "0"/>
-            <wall id = "w0" start = "p0" end = "p1" texture = "brick04"/>
+            <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
             <line id = "l1" start = "p1" end = "p2"/>            
             <line id = "l2" start = "p2" end = "p3"/>
-            <wall id = "w3" start = "p3" end = "p0" texture = "brick04"/>                           
+            <wall id = "w3" start = "p3" end = "p0" texture = "block01"/>                           
         </room>   
         <room id = "r1">
             <point id = "p0" x="0" y = "10000"/>
             <point id = "p1" x="0" y = "20000"/>
             <point id = "p2" x="10000" y = "20000"/>
             <point id = "p3" x="10000" y = "10000"/>
-            <wall id = "w0" start = "p0" end = "p1" texture = "brick05"/>
-            <wall id = "w1" start = "p1" end = "p2" texture = "brick05"/>            
+            <wall id = "w0" start = "p0" end = "p1" texture = "beton01"/>
+            <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>            
             <line id = "l2" start = "p2" end = "p3"/>
             <line id = "l3" start = "p3" end = "p0"/>                           
         </room>        
@@ -30,10 +30,10 @@
             <point id = "p5" x="20000" y = "0"/>
             <line id = "l0" start = "p0" end = "p1"/>
             <line id = "l1" start = "p1" end = "p2"/>                                       
-            <wall id = "w3" start = "p2" end = "p3" texture = "brick06"/>
-            <wall id = "w4" start = "p3" end = "p4" texture = "brick06"/>            
-            <wall id = "w5" start = "p4" end = "p5" texture = "brick06"/>
-            <wall  id = "w6" start = "p5" end = "p0" texture = "brick06"/>                           
+            <wall id = "w3" start = "p2" end = "p3" texture = "brick03"/>
+            <wall id = "w4" start = "p3" end = "p4" texture = "brick03"/>            
+            <wall id = "w5" start = "p4" end = "p5" texture = "brick03"/>
+            <wall  id = "w6" start = "p5" end = "p0" texture = "brick03"/>                           
         </room>                
     </rooms>
     <portals>
@@ -44,80 +44,88 @@
         <portal from = "r1" line = "l2" to = "r2"/>
         <portal from = "r2" line = "l1" to = "r1"/>
     </portals>    
-    <hero  x = "256" y = "256" room = "r0" azimuth = "180"/>    
+    <hero  x = "256" y = "256" room = "r0" azimuth = "45"/>    
     <objects>
-        <object class = "milton" id = "milton00" x = "10000" y = "10000"/>
-        <object class = "milton" id = "milton01" x = "10000" y = "11000"/>
-        <object class = "milton" id = "milton02" x = "10000" y = "12000"/>
-        <object class = "milton" id = "milton03" x = "10000" y = "13000"/>
-        <object class = "milton" id = "milton04" x = "10000" y = "14000"/>
-        <object class = "milton" id = "milton05" x = "10000" y = "15000"/>
-        <object class = "milton" id = "milton06" x = "10000" y = "16000"/>
-        <object class = "milton" id = "milton07" x = "10000" y = "17000"/>
-        <object class = "milton" id = "milton08" x = "10000" y = "18000"/>
-        <object class = "milton" id = "milton09" x = "10000" y = "19000"/>
-        <object class = "milton" id = "milton10" x = "11000" y = "10000"/>
-        <object class = "milton" id = "milton11" x = "11000" y = "11000"/>
-        <object class = "milton" id = "milton12" x = "11000" y = "12000"/>
-        <object class = "milton" id = "milton13" x = "11000" y = "13000"/>
-        <object class = "milton" id = "milton14" x = "11000" y = "14000"/>
-        <object class = "milton" id = "milton15" x = "11000" y = "15000"/>
-        <object class = "milton" id = "milton16" x = "11000" y = "16000"/>
-        <object class = "milton" id = "milton17" x = "11000" y = "17000"/>
-        <object class = "milton" id = "milton18" x = "11000" y = "18000"/>
-        <object class = "milton" id = "milton19" x = "11000" y = "19000"/>        
+        <object class = "tree" id = "tree00" x = "10000" y = "10000"/>
+        <object class = "tree" id = "tree01" x = "10000" y = "11000"/>
+        <object class = "tree" id = "tree02" x = "10000" y = "12000"/>
+        <object class = "tree" id = "tree03" x = "10000" y = "13000"/>
+        <object class = "tree" id = "tree04" x = "10000" y = "14000"/>
+        <object class = "tree" id = "tree05" x = "10000" y = "15000"/>
+        <object class = "tree" id = "tree06" x = "10000" y = "16000"/>
+        <object class = "tree" id = "tree07" x = "10000" y = "17000"/>
+        <object class = "tree" id = "tree08" x = "10000" y = "18000"/>
+        <object class = "tree" id = "tree09" x = "10000" y = "19000"/>
+        <object class = "tree" id = "tree10" x = "11000" y = "10000"/>
+        <object class = "tree" id = "tree11" x = "11000" y = "11000"/>
+        <object class = "tree" id = "tree12" x = "11000" y = "12000"/>
+        <object class = "tree" id = "tree13" x = "11000" y = "13000"/>
+        <object class = "tree" id = "tree14" x = "11000" y = "14000"/>
+        <object class = "tree" id = "tree15" x = "11000" y = "15000"/>
+        <object class = "tree" id = "tree16" x = "11000" y = "16000"/>
+        <object class = "tree" id = "tree17" x = "11000" y = "17000"/>
+        <object class = "tree" id = "tree18" x = "11000" y = "18000"/>
+        <object class = "tree" id = "tree19" x = "11000" y = "19000"/>        
         
         
-        <object class = "milton" id = "milton20" x = "12000" y = "10000"/>
-        <object class = "milton" id = "milton21" x = "12000" y = "11000"/>
-        <object class = "milton" id = "milton22" x = "12000" y = "12000"/>
-        <object class = "milton" id = "milton23" x = "12000" y = "13000"/>
-        <object class = "milton" id = "milton24" x = "12000" y = "14000"/>
-        <object class = "milton" id = "milton25" x = "12000" y = "15000"/>
-        <object class = "milton" id = "milton26" x = "12000" y = "16000"/>
-        <object class = "milton" id = "milton27" x = "12000" y = "17000"/>
-        <object class = "milton" id = "milton28" x = "12000" y = "18000"/>
-        <object class = "milton" id = "milton29" x = "12000" y = "19000"/>        
+        <object class = "tree" id = "tree20" x = "12000" y = "10000"/>
+        <object class = "tree" id = "tree21" x = "12000" y = "11000"/>
+        <object class = "tree" id = "tree22" x = "12000" y = "12000"/>
+        <object class = "tree" id = "tree23" x = "12000" y = "13000"/>
+        <object class = "tree" id = "tree24" x = "12000" y = "14000"/>
+        <object class = "tree" id = "tree25" x = "12000" y = "15000"/>
+        <object class = "tree" id = "tree26" x = "12000" y = "16000"/>
+        <object class = "tree" id = "tree27" x = "12000" y = "17000"/>
+        <object class = "tree" id = "tree28" x = "12000" y = "18000"/>
+        <object class = "tree" id = "tree29" x = "12000" y = "19000"/>        
         
-        <object class = "milton" id = "milton30" x = "13000" y = "10000"/>
-        <object class = "milton" id = "milton31" x = "13000" y = "11000"/>
-        <object class = "milton" id = "milton32" x = "13000" y = "12000"/>
-        <object class = "milton" id = "milton33" x = "13000" y = "13000"/>
-        <object class = "milton" id = "milton34" x = "13000" y = "14000"/>
-        <object class = "milton" id = "milton35" x = "13000" y = "15000"/>
-        <object class = "milton" id = "milton36" x = "13000" y = "16000"/>
-        <object class = "milton" id = "milton37" x = "13000" y = "17000"/>
-        <object class = "milton" id = "milton38" x = "13000" y = "18000"/>
-        <object class = "milton" id = "milton39" x = "13000" y = "19000"/>        
+        <object class = "tree" id = "tree30" x = "13000" y = "10000"/>
+        <object class = "tree" id = "tree31" x = "13000" y = "11000"/>
+        <object class = "tree" id = "tree32" x = "13000" y = "12000"/>
+        <object class = "tree" id = "tree33" x = "13000" y = "13000"/>
+        <object class = "tree" id = "tree34" x = "13000" y = "14000"/>
+        <object class = "tree" id = "tree35" x = "13000" y = "15000"/>
+        <object class = "tree" id = "tree36" x = "13000" y = "16000"/>
+        <object class = "tree" id = "tree37" x = "13000" y = "17000"/>
+        <object class = "tree" id = "tree38" x = "13000" y = "18000"/>
+        <object class = "tree" id = "tree39" x = "13000" y = "19000"/>        
         
-        <object class = "milton" id = "milton40" x = "14000" y = "10000"/>
-        <object class = "milton" id = "milton41" x = "14000" y = "11000"/>
-        <object class = "milton" id = "milton42" x = "14000" y = "12000"/>
-        <object class = "milton" id = "milton43" x = "14000" y = "13000"/>
-        <object class = "milton" id = "milton44" x = "14000" y = "14000"/>
-        <object class = "milton" id = "milton45" x = "14000" y = "15000"/>
-        <object class = "milton" id = "milton46" x = "14000" y = "16000"/>
-        <object class = "milton" id = "milton47" x = "14000" y = "17000"/>
-        <object class = "milton" id = "milton48" x = "14000" y = "18000"/>
-        <object class = "milton" id = "milton49" x = "14000" y = "19000"/>        
+        <object class = "tree" id = "tree40" x = "14000" y = "10000"/>
+        <object class = "tree" id = "tree41" x = "14000" y = "11000"/>
+        <object class = "tree" id = "tree42" x = "14000" y = "12000"/>
+        <object class = "tree" id = "tree43" x = "14000" y = "13000"/>
+        <object class = "tree" id = "tree44" x = "14000" y = "14000"/>
+        <object class = "tree" id = "tree45" x = "14000" y = "15000"/>
+        <object class = "tree" id = "tree46" x = "14000" y = "16000"/>
+        <object class = "tree" id = "tree47" x = "14000" y = "17000"/>
+        <object class = "tree" id = "tree48" x = "14000" y = "18000"/>
+        <object class = "tree" id = "tree49" x = "14000" y = "19000"/>        
         
-        <object class = "milton" id = "milton50" x = "15000" y = "10000"/>
-        <object class = "milton" id = "milton51" x = "15000" y = "11000"/>
-        <object class = "milton" id = "milton52" x = "15000" y = "12000"/>
-        <object class = "milton" id = "milton53" x = "15000" y = "13000"/>
-        <object class = "milton" id = "milton54" x = "15000" y = "14000"/>
-        <object class = "milton" id = "milton55" x = "15000" y = "15000"/>
-        <object class = "milton" id = "milton56" x = "15000" y = "16000"/>
-        <object class = "milton" id = "milton57" x = "15000" y = "17000"/>
-        <object class = "milton" id = "milton58" x = "15000" y = "18000"/>
-        <object class = "milton" id = "milton59" x = "15000" y = "19000"/>                                
+        <object class = "tree" id = "tree50" x = "15000" y = "10000"/>
+        <object class = "tree" id = "tree51" x = "15000" y = "11000"/>
+        <object class = "tree" id = "tree52" x = "15000" y = "12000"/>
+        <object class = "tree" id = "tree53" x = "15000" y = "13000"/>
+        <object class = "tree" id = "tree54" x = "15000" y = "14000"/>
+        <object class = "tree" id = "tree55" x = "15000" y = "15000"/>
+        <object class = "tree" id = "tree56" x = "15000" y = "16000"/>
+        <object class = "tree" id = "tree57" x = "15000" y = "17000"/>
+        <object class = "tree" id = "tree58" x = "15000" y = "18000"/>
+        <object class = "tree" id = "tree59" x = "15000" y = "19000"/>                                
         
+        <object class = "green_barrel" id = "green_barrel60" x = "1256" y = "1256"/>
+        <object class = "green_barrel" id = "green_barrel61" x = "1800" y = "1800"/>
+        <object class = "green_barrel" id = "green_barrel62" x = "1700" y = "1700"/>
+        <object class = "green_barrel" id = "green_barrel63" x = "1356" y = "1356"/> 
         
-        <object class = "grid_fence" id = "grid_fence01" start_x = "1000" start_y = "1000" end_x = "1000" end_y = "1316"/>
-        <object class = "grid_fence" id = "grid_fence02" start_x = "1000" start_y = "1316" end_x = "1316" end_y = "1316"/>
-        <object class = "grid_fence" id = "grid_fence03" start_x = "1316" start_y = "1316" end_x = "1316" end_y = "1000"/>
-        <object class = "grid_fence" id = "grid_fence04" start_x = "1316" start_y = "1000" end_x = "1000" end_y = "1000"/>
-        
-        
+        <object class = "grid_fence" id = "grid_fence01" start_x = "1000" start_y = "1000" end_x = "1000" end_y = "1512"/>
+        <object class = "grid_fence" id = "grid_fence02" start_x = "1000" start_y = "1512" end_x = "1512" end_y = "1512"/>
+        <object class = "grid_fence" id = "grid_fence03" start_x = "1512" start_y = "1512" end_x = "1512" end_y = "1000"/>
+
+        <object class = "pole01" id = "pole01_0" x = "1000" y = "1000"/>
+        <object class = "pole01" id = "pole01_1" x = "1000" y = "1512"/>
+        <object class = "pole01" id = "pole01_2" x = "1512" y = "1512"/>
+        <object class = "pole01" id = "pole01_3" x = "1512" y = "1000"/>         
+                
+                
     </objects>   
 </root>

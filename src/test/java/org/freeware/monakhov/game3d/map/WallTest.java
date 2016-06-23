@@ -9,6 +9,7 @@ import java.io.IOException;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -18,6 +19,12 @@ import org.junit.Test;
 public class WallTest {
 
     final static double EPSILON = 0.0001d;    
+    
+    @Before
+    public void setUp() throws Exception {
+        XMLResourceLoader xmlrl = new XMLResourceLoader();
+        xmlrl.parse(XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml"));
+    }    
     
     /**
      * Test of getStart method, of class Wall.
@@ -54,12 +61,16 @@ public class WallTest {
      */
     @Test
     public void testGetSubImage() throws IOException {
-        Wall w = new Wall(new Point(0, 0), new Point(2000, 0), new Texture("/org/freeware/monakhov/game3d/maps/brick01.jpg", 256));
+        Wall w = new Wall(new Point(0, 0), new Point(2000, 0), Texture.get("brick01"));
         Point p = new Point(10, 0);
-        BufferedImage bi = w.getSubImage(p);
+        BufferedImage bi = w.getSubImage(p, 256);
         assertNotNull(bi);
         assertEquals(1, bi.getWidth());
         assertEquals(256, bi.getHeight());
+        bi = w.getSubImage(p, 100);
+        assertNotNull(bi);
+        assertEquals(1, bi.getWidth());
+        assertEquals(64, bi.getHeight());        
     }
 
 }

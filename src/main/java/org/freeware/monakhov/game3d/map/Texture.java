@@ -19,40 +19,57 @@ import javax.imageio.ImageIO;
  */
 public class Texture {
 
-    private BufferedImage image;
-
-    private final String fileName;
-    private final static int SIZE = 256;
+    private final BufferedImage[] images;
+    private final String[] fileNames;
+    
+    public final static int SIZE = 256;
+    private final static double min[] = {256, 128, 64, 32, 16, 8, 4, 2, 1, 0};
+    private final static double max[] = {Double.MAX_VALUE, 256, 128, 64, 32, 16, 8, 4, 2, 1};
+    
     private final int width;
 
-    Texture(String fileName, int width) {
-        this.fileName = fileName;
+    Texture(int width, int count) {
+        fileNames = new String[count];
+        images = new BufferedImage[count];
         this.width = width;
     }
 
+    void addFile(int index, String fileName) {
+        fileNames[index] = fileName;
+    }
+    
     /**
+     * @param index
      * @return the image
      */
-    public BufferedImage getImage() {
-        if (image == null) {
+    public BufferedImage getImage(int index) {
+        if (images[index] == null) {
             try {
-                BufferedImage bi = ImageIO.read(Texture.class.getResourceAsStream(fileName));
+                BufferedImage bi = ImageIO.read(Texture.class.getResourceAsStream(fileNames[index]));
                 GraphicsConfiguration gfx_config = GraphicsEnvironment.
                         getLocalGraphicsEnvironment().getDefaultScreenDevice().
                         getDefaultConfiguration();
-                image = gfx_config.createCompatibleImage(width, SIZE, Transparency.OPAQUE);
-                Graphics2D g = (Graphics2D) image.getGraphics();
-                g.drawImage(bi, 0, 0, width, SIZE, null);            
+                images[index] = gfx_config.createCompatibleImage(width >> index, SIZE >> index, Transparency.OPAQUE);
+                Graphics2D g = (Graphics2D) images[index].getGraphics();
+                g.drawImage(bi, 0, 0, null);            
                 g.dispose();
             } catch (IOException ex) {
                 Logger.getLogger(Texture.class.getName()).log(Level.SEVERE, "Can not load image", ex);
             }
         }
-        return image;
+        return images[index];
     }
 
-    public BufferedImage getSubImage(int x) {
-        return getImage().getSubimage(x % width, 0, 1, SIZE);
+    public BufferedImage getSubImage(int x, double height) {
+        int index = 0;
+        for (int i = 0; i < min.length; i++) {
+            if (height < max[i] && height > min[i]) {
+                index = i;
+                break;
+            }
+        }
+        if (index >= images.length) index = images.length - 1;
+        return getImage(index).getSubimage((x % width) >> index, 0, 1, SIZE >> index);
     }
 
     /**
@@ -64,15 +81,18 @@ public class Texture {
      * Добавляет новую текстуру
      *
      * @param id идентификатор текстуры
-     * @param fileName имя файла с текстурой
+     * @param count
      * @param width
+     * @return 
      * @throws IOException
      */
-    public static void add(String id, String fileName, int width) throws IOException {
+    public static Texture add(String id, int width, int count) throws IOException {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("Texture id is null or empty");
         }
-        textures.put(id, new Texture(fileName, width));
+        Texture tex = new Texture(width, count);
+        textures.put(id, tex);
+        return tex;
     }
 
     public static Texture get(String id) {

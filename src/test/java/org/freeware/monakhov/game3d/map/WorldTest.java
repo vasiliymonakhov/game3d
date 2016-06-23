@@ -6,8 +6,8 @@ package org.freeware.monakhov.game3d.map;
 
 import java.util.Collection;
 import org.freeware.monakhov.game3d.objects.WorldObject;
-import org.freeware.monakhov.game3d.objects.nonmovable.Barrel;
-import org.freeware.monakhov.game3d.objects.nonmovable.Key;
+import org.freeware.monakhov.game3d.objects.nonmovable.GreenBarrel;
+import org.freeware.monakhov.game3d.objects.nonmovable.Pole;
 import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -134,15 +134,15 @@ public class WorldTest {
     @Test
     public void testGetAllObjects() {
         World w = new World();
-        Barrel b = new Barrel(w, new Point());
+        GreenBarrel b = new GreenBarrel(w, new Point());
         Tree t = new Tree(w, new Point());
         w.addObject("1", b);
         w.addObject("2", t);
-        Key k = new Key(w, new Point());
+        Pole p = new Pole(w, new Point());
         Collection<WorldObject> res = w.getAllObjects();
         assertTrue(res.contains(t));
         assertTrue(res.contains(b));
-        assertFalse(res.contains(k));
+        assertFalse(res.contains(p));
     }
 
     /**
@@ -151,7 +151,7 @@ public class WorldTest {
     @Test
     public void testAddObject1() {
         World w = new World();
-        Barrel b = new Barrel(w, new Point());
+        GreenBarrel b = new GreenBarrel(w, new Point());
         Tree t = new Tree(w, new Point());
         w.addObject("1", b);
         w.addObject("2", t);
@@ -163,7 +163,7 @@ public class WorldTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddObject2() {
         World w = new World();
-        Barrel b = new Barrel(w, new Point());
+        GreenBarrel b = new GreenBarrel(w, new Point());
         w.addObject("", b);
     }    
 
@@ -173,7 +173,7 @@ public class WorldTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddObject3() {
         World w = new World();
-        Barrel b = new Barrel(w, new Point());
+        GreenBarrel b = new GreenBarrel(w, new Point());
         w.addObject(null, b);
     }    
     

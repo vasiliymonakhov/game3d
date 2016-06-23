@@ -5,10 +5,12 @@ import org.freeware.monakhov.game3d.objects.movable.Hero;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -46,12 +48,13 @@ public class MainFrame extends javax.swing.JFrame {
         world = new World();
         hero = new Hero(world, new Point());
         XMLWorldLoader loader = new XMLWorldLoader();
-        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml"));
+        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld3.xml"));
 
         screen = new Screen(rect.width * 3 / 4, rect.height * 3 / 4);
         engine = new GraphicsEngine(world, hero, screen);
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyDispatcher());
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
+        
         Timer sec = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -66,7 +69,7 @@ public class MainFrame extends javax.swing.JFrame {
                 while (true) {
                     try {
                         long now = System.nanoTime();
-                        analyseKeys();
+                        hero.analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), frameNanoTime);
                         try {
                             engine.doCycle();
                         } catch (InterruptedException ex) {
@@ -90,6 +93,8 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
 
+    final KeyDispatcher ked = new KeyDispatcher();    
+    
     private final Runnable repainter = new Runnable() {
 
         @Override
@@ -106,8 +111,12 @@ public class MainFrame extends javax.swing.JFrame {
     private boolean fullScreen = true;
 
     @Override
-    public void paint(Graphics g) {
+    public void paint(Graphics gr) {
         Rectangle rr = this.getBounds();
+        Graphics2D g = (Graphics2D)gr;
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
         if (!fullScreen) {
             int x = (rr.width - screen.getWidth()) / 2;
             int y = (rr.height - screen.getHeight()) / 2;
@@ -128,102 +137,14 @@ public class MainFrame extends javax.swing.JFrame {
 
     private long frameNanoTime;
 
-    boolean left;
-    boolean right;
-    boolean forward;
-    boolean backward;
-    boolean strafeLeft;
-    boolean strafeRight;
-
-    final static double MAX_TURN_SPEED = Math.PI / 2.0e9;
-    final static double TURN_ACCELERATION = 2 * Math.PI / 1.0e18;
-    final static double TURN_BREAK = 3 * Math.PI / 1.0e18;
-    final static double STRAFE_SPEED = 1024 / 1.0e9;
-    final static double MAX_FORWARD_MOVE_SPEED = 1024 / 1.0e9;
-    final static double MAX_BACKWARD_MOVE_SPEED = -256 / 1.0e9;
-    final static double MOVE_FORWARD_ACCELERATION = 2048 / 1.0e18;
-    final static double MOVE_BACKWARD_ACCELERATION = -512 / 1.0e18;
-    final static double MOVE_BREAKING = 4096 / 1.0e18;
-
-    double moveSpeed = 0;
-    double turnSpeed = 0;
-
-    void analyseKeys() {
-        if (left) {
-            if (turnSpeed > 0) {
-                turnSpeed -= TURN_BREAK * frameNanoTime;
-            } else {
-                turnSpeed -= TURN_ACCELERATION * frameNanoTime;
-            }
-            if (turnSpeed < -MAX_TURN_SPEED) {
-                turnSpeed = -MAX_TURN_SPEED;
-            }
-        } else if (right) {
-            if (turnSpeed < 0) {
-                turnSpeed += TURN_BREAK * frameNanoTime;
-            } else {
-                turnSpeed += TURN_ACCELERATION * frameNanoTime;
-            }
-            if (turnSpeed > MAX_TURN_SPEED) {
-                turnSpeed = MAX_TURN_SPEED;
-            }
-        } else {
-            if (turnSpeed > 0) {
-                turnSpeed -= TURN_BREAK * frameNanoTime;
-                if (turnSpeed < 0) {
-                    turnSpeed = 0;
-                }
-            } else if (turnSpeed < 0) {
-                turnSpeed += TURN_BREAK * frameNanoTime;
-                if (turnSpeed > 0) {
-                    turnSpeed = 0;
-                }
-            }
-        }
-        double ts = turnSpeed * frameNanoTime;
-        hero.setAzimuth(hero.getAzimuth() + ts);
-        if (forward) {
-            if (moveSpeed < 0) {
-                moveSpeed += MOVE_BREAKING * frameNanoTime;
-            } else {
-                moveSpeed += MOVE_FORWARD_ACCELERATION * frameNanoTime;
-            }
-            if (moveSpeed > MAX_FORWARD_MOVE_SPEED) {
-                moveSpeed = MAX_FORWARD_MOVE_SPEED;
-            }
-        } else if (backward) {
-            if (moveSpeed > 0) {
-                moveSpeed -= MOVE_BREAKING * frameNanoTime;
-            } else {
-                moveSpeed += MOVE_BACKWARD_ACCELERATION * frameNanoTime;
-            }
-            if (moveSpeed < MAX_BACKWARD_MOVE_SPEED) {
-                moveSpeed = MAX_BACKWARD_MOVE_SPEED;
-            }
-        } else {
-            if (moveSpeed > 0) {
-                moveSpeed -= MOVE_BREAKING * frameNanoTime;
-                if (moveSpeed < 0) {
-                    moveSpeed = 0;
-                }
-            } else if (moveSpeed < 0) {
-                moveSpeed += MOVE_BREAKING * frameNanoTime;
-                if (moveSpeed > 0) {
-                    moveSpeed = 0;
-                }
-            }
-        }
-        double ms = moveSpeed * frameNanoTime;
-        double ss = 0;
-        if (strafeRight) {
-            ss = STRAFE_SPEED * frameNanoTime;
-        } else if (strafeLeft) {
-            ss = -STRAFE_SPEED * frameNanoTime;
-        }
-        hero.moveBy(ms, ss);
-    }
-
-    private class KeyDispatcher implements KeyEventDispatcher {
+    class KeyDispatcher implements KeyEventDispatcher {
+        
+        private boolean strafeLeft;
+        private boolean right;
+        private boolean forward;
+        private boolean backward;
+        private boolean strafeRight;
+        private boolean left;
 
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
@@ -232,22 +153,22 @@ public class MainFrame extends javax.swing.JFrame {
                     case KeyEvent.VK_ESCAPE:
                         System.exit(0);
                     case KeyEvent.VK_LEFT:
-                        left = true;
+                        this.left = true;
                         break;
                     case KeyEvent.VK_RIGHT:
-                        right = true;
+                        this.right = true;
                         break;
                     case KeyEvent.VK_UP:
-                        forward = true;
+                        this.forward = true;
                         break;
                     case KeyEvent.VK_DOWN:
-                        backward = true;
+                        this.backward = true;
                         break;
                     case KeyEvent.VK_Z:
-                        strafeLeft = true;
+                        this.strafeLeft = true;
                         break;
                     case KeyEvent.VK_X:
-                        strafeRight = true;
+                        this.strafeRight = true;
                         break;
                     case KeyEvent.VK_TAB:
                         engine.toggleMap();
@@ -266,26 +187,68 @@ public class MainFrame extends javax.swing.JFrame {
             if (e.getID() == KeyEvent.KEY_RELEASED) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT:
-                        left = false;
+                        this.left = false;
                         break;
                     case KeyEvent.VK_RIGHT:
-                        right = false;
+                        this.right = false;
                         break;
                     case KeyEvent.VK_UP:
-                        forward = false;
+                        this.forward = false;
                         break;
                     case KeyEvent.VK_DOWN:
-                        backward = false;
+                        this.backward = false;
                         break;
                     case KeyEvent.VK_Z:
-                        strafeLeft = false;
+                        this.strafeLeft = false;
                         break;
                     case KeyEvent.VK_X:
-                        strafeRight = false;
+                        this.strafeRight = false;
                         break;
                 }
             }
             return false;
+        }
+
+        /**
+         * @return the strafeLeft
+         */
+        boolean isStrafeLeft() {
+            return strafeLeft;
+        }
+
+        /**
+         * @return the right
+         */
+        boolean isRight() {
+            return right;
+        }
+
+        /**
+         * @return the forward
+         */
+        boolean isForward() {
+            return forward;
+        }
+
+        /**
+         * @return the backward
+         */
+        boolean isBackward() {
+            return backward;
+        }
+
+        /**
+         * @return the strafeRight
+         */
+        boolean isStrafeRight() {
+            return strafeRight;
+        }
+
+        /**
+         * @return the left
+         */
+        boolean isLeft() {
+            return left;
         }
     }
 }

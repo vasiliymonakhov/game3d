@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -28,6 +27,7 @@ import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.misc.PlainObject;
 
 /**
  * This is a Graphics Engine
@@ -155,9 +155,9 @@ public class GraphicsEngine {
                 Line l = mapLines[index];
                 if (l != null) {
                     double dist = SpecialMath.lineLength(hero.getPosition(), wallsIntersectPoints[index]);
-                    double h = k[index] / dist;
-                    int ch = (int) ((screen.getHeight() - h) / 2);
-                    g.drawImage(l.getSubImage(wallsIntersectPoints[index], h), index, ch, 1, (int) h, null);
+                    int h = (int) Math.round(k[index] / dist);
+                    int ch = (int) Math.round((screen.getHeight() - h) / 2);
+                    g.drawImage(l.getSubImage(wallsIntersectPoints[index], h), index, ch, 1, h, null);
                 }
             } finally {
                 doneSignal.countDown();
@@ -167,8 +167,8 @@ public class GraphicsEngine {
 
     void renderWalls() throws InterruptedException {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
         for (int i = 0; i < mapLines.length; i++) {
             wallColumnDrawers[i].set(g, doneSignal);
@@ -312,18 +312,59 @@ public class GraphicsEngine {
                     if (p.between(wo.getLeft(), wo.getRight()) && p.between(hero.getPosition(), wallsIntersectPoints[index])) {
                         double dist = SpecialMath.lineLength(hero.getPosition(), p);
                         double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[index]);
-                        double h = GraphicsEngine.WALL_SIZE * k / (dist * GraphicsEngine.KORRECTION);
-                        double sh = h * wo.getSprite().getHeight() / GraphicsEngine.WALL_SIZE;
-                        double syo = h * wo.getSprite().getYOffset() / GraphicsEngine.WALL_SIZE;
-                        double ch = (int) ((screen.getHeight() - h) / 2);
+                        int h = (int) Math.round(GraphicsEngine.WALL_SIZE * k / (dist * GraphicsEngine.KORRECTION));
+                        int sh = (int) Math.round(h * wo.getSprite().getHeight() / GraphicsEngine.WALL_SIZE);
+                        int syo = (int) Math.round(h * wo.getSprite().getYOffset() / GraphicsEngine.WALL_SIZE);
+                        int ch = (screen.getHeight() - h) / 2;
                         long xOffset = (long) SpecialMath.lineLength(wo.getLeft(), p);
                         int spriteXOffset = (int) (xOffset % wo.getSprite().getWidth());
-                        g.drawImage(wo.getSprite().getSubImage(spriteXOffset, 0, h), index, (int) (ch + syo), 1, (int) sh, null);
-                    }                    
+                        g.drawImage(wo.getSprite().getSubImage(spriteXOffset, 0, h), index, ch + syo, 1, sh, null);
+                    }
                 }
             } finally {
                 doneSignal.countDown();
             }
+        }
+    }
+
+    private final Point rsp = new Point();
+    
+    void renderSprite(Graphics2D g, WorldObject wo) {
+        int spriteXStartOffset = -1;
+        int spriteXEndOffset = -1;
+        int spriteXStart = -1;
+        int spriteXEnd = -1;
+        int h = 0;
+        int sh = 0;
+        int syo = 0;
+        int ch = 0;
+        long xOffset;
+        for (int i = 0; i < transformedRayPoints.length; i++) {
+            if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), hero.getPosition(), wallsIntersectPoints[i], rsp)) {
+                if (rsp.between(wo.getLeft(), wo.getRight()) && rsp.between(hero.getPosition(), wallsIntersectPoints[i])) {
+                    if (spriteXStartOffset == -1) {
+                        double dist = SpecialMath.lineLength(hero.getPosition(), rsp);
+                        double kk = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[i]);
+                        h = (int) Math.round(GraphicsEngine.WALL_SIZE * kk / (dist * GraphicsEngine.KORRECTION));
+                        sh = (int) Math.round(h * wo.getSprite().getHeight() / GraphicsEngine.WALL_SIZE);
+                        syo = (int) Math.round(h * wo.getSprite().getYOffset() / GraphicsEngine.WALL_SIZE);
+                        ch = (screen.getHeight() - h) / 2;
+                    }
+                    xOffset = (long) SpecialMath.lineLength(wo.getLeft(), rsp);                    
+                    if (spriteXStartOffset == -1) {
+                        spriteXStartOffset = (int) (xOffset % wo.getSprite().getWidth());
+                        spriteXStart = i;
+                    }
+                    if (spriteXStartOffset != -1) {
+                        spriteXEndOffset = (int) (xOffset % wo.getSprite().getWidth());
+                        spriteXEnd = i;
+                    }
+                }
+            }
+        }
+        if (spriteXStart != -1) {
+            g.drawImage(wo.getSprite().getSubImage(spriteXStartOffset, 0, spriteXEndOffset - spriteXStartOffset + 1, h), 
+                    spriteXStart, ch + syo, spriteXEnd - spriteXStart + 1, sh, null);
         }
     }
 
@@ -348,12 +389,16 @@ public class GraphicsEngine {
         }
         Collections.sort(objectsSortList, objectsSortComparator);
         for (WorldObject wobj : objectsSortList) {
-            CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
-            for (int i = 0; i < transformedRayPoints.length; i++) {
-                spriteColumnDrawers[i].set(g, wobj, doneSignal);
-                EXECUTOR.execute(spriteColumnDrawers[i]);
+            if (wobj instanceof PlainObject) {
+                CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
+                for (int i = 0; i < transformedRayPoints.length; i++) {
+                    spriteColumnDrawers[i].set(g, wobj, doneSignal);
+                    EXECUTOR.execute(spriteColumnDrawers[i]);
+                }
+                doneSignal.await();
+            } else {
+                renderSprite(g, wobj);
             }
-            doneSignal.await();
         }
     }
 

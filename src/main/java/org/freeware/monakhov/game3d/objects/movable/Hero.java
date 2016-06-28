@@ -38,7 +38,7 @@ public class Hero extends MovableObject {
 
     @Override
     public double getRadius() {
-        return 64;
+        return 32;
     }
 
     private void analyseTurn(boolean left, boolean right, long frameNanoTime) {

@@ -65,11 +65,10 @@
             <sprite_file index = "2" file = "tree_2.png"/>
             <sprite_file index = "3" file = "tree_3.png"/>
         </sprite>    
-        <sprite id = "green_barrel" count = "4" width = "80" height = "132" y_offset="124">        
+        <sprite id = "green_barrel" count = "3" width = "40" height = "66" y_offset="190">        
             <sprite_file index = "0" file = "green_barrel_0.png"/>            
             <sprite_file index = "1" file = "green_barrel_1.png"/>            
             <sprite_file index = "2" file = "green_barrel_2.png"/>            
-            <sprite_file index = "3" file = "green_barrel_3.png"/>                        
          </sprite>
         <sprite id = "grid_fence02" count = "3" width = "512" height = "192" y_offset="64">         
             <sprite_file index = "0" file = "grid_fence02_0.png"/>            

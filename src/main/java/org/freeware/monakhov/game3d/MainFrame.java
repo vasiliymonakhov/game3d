@@ -50,7 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
         XMLWorldLoader loader = new XMLWorldLoader();
         loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld3.xml"));
 
-        screen = new Screen(rect.width * 3 / 4, rect.height * 3 / 4);
+        screen = new Screen(rect.width * 4 / 4, rect.height * 4 / 4);
         engine = new GraphicsEngine(world, hero, screen);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);

@@ -30,8 +30,8 @@ public class SpriteTest {
         assertNotNull(spr);
         BufferedImage bi = spr.getImage(0);
         assertNotNull(bi);
-        assertEquals(80, bi.getWidth());
-        assertEquals(132, bi.getHeight());
+        assertEquals(40, bi.getWidth());
+        assertEquals(66, bi.getHeight());
     }
 
     /**
@@ -44,11 +44,11 @@ public class SpriteTest {
         BufferedImage bi = spr.getSubImage(10, 0, 340);
         assertNotNull(bi);
         assertEquals(1, bi.getWidth());
-        assertEquals(132, bi.getHeight());        
+        assertEquals(66, bi.getHeight());        
         bi = spr.getSubImage(10, 0, 200);
         assertNotNull(bi);
         assertEquals(1, bi.getWidth());
-        assertEquals(66, bi.getHeight());                
+        assertEquals(33, bi.getHeight());                
     }
 
     /**
@@ -97,9 +97,9 @@ public class SpriteTest {
     public void testGetParams() {
         Sprite spr = Sprite.get("green_barrel");
         assertNotNull(spr);
-        assertEquals(80, spr.getWidth());
-        assertEquals(132, spr.getHeight());  
-        assertEquals(124, spr.getYOffset());  
+        assertEquals(40, spr.getWidth());
+        assertEquals(66, spr.getHeight());  
+        assertEquals(190, spr.getYOffset());  
     }
 
 }

@@ -97,20 +97,21 @@ public class Line {
         return true;
     }
 
+    private final Point lcp = new Point();
+    
     /**
      * Проверяет видимость линии на экране
      */
     boolean checkVisibility(Line[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
-        Point p = new Point();
         for (int i = 0; i < mapLines.length; i++) {
-            if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, p)) {
-                if (p.between(start, end) && p.between(viewPoint, rayPoints[i])) return true;
+            if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, lcp)) {
+                if (lcp.between(start, end) && lcp.between(viewPoint, rayPoints[i])) return true;
             }
         }
         return false;
     }
 
-    public BufferedImage getSubImage(Point p, double height) {
+    public BufferedImage getSubImage(Point p, int height) {
         return null;
     }
     

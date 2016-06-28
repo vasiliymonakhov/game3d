@@ -44,7 +44,7 @@
         <portal from = "r1" line = "l2" to = "r2"/>
         <portal from = "r2" line = "l1" to = "r1"/>
     </portals>    
-    <hero  x = "1024" y = "256" room = "r0" azimuth = "0"/>    
+    <hero  x = "10240" y = "10240" room = "r2" azimuth = "45"/>    
     <objects>
         <object class = "tree" id = "tree00" x = "10000" y = "10000"/>
         <object class = "tree" id = "tree01" x = "10000" y = "11000"/>
@@ -112,7 +112,20 @@
         <object class = "tree" id = "tree58" x = "15000" y = "18000"/>
         <object class = "tree" id = "tree59" x = "15000" y = "19000"/>                                
         
-        <object class = "green_barrel" id = "green_barrel60" x = "456" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel601" x = "456" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel602" x = "456" y = "156"/>
+        <object class = "green_barrel" id = "green_barrel603" x = "456" y = "356"/>
+        <object class = "green_barrel" id = "green_barrel604" x = "256" y = "156"/>
+        <object class = "green_barrel" id = "green_barrel605" x = "256" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel606" x = "256" y = "356"/>                                        
+        <object class = "green_barrel" id = "green_barrel607" x = "356" y = "156"/>
+        <object class = "green_barrel" id = "green_barrel608" x = "356" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel609" x = "356" y = "356"/>                                        
+        <object class = "green_barrel" id = "green_barrel610" x = "556" y = "156"/>
+        <object class = "green_barrel" id = "green_barrel611" x = "556" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel612" x = "556" y = "356"/>                                                
+                
+        
         <object class = "green_barrel" id = "green_barrel61" x = "10800" y = "1800"/>
         <object class = "green_barrel" id = "green_barrel62" x = "10700" y = "1800"/>
         

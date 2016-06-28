@@ -22,7 +22,7 @@ public class GreenBarrel extends NonMovableObject {
 
     @Override
     public double getRadius() {
-        return 40;
+        return 25;
     }
 
 }

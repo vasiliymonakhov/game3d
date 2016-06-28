@@ -64,6 +64,9 @@ public class MainFrame extends javax.swing.JFrame {
         });
         sec.start();
         final Thread t = new Thread(new Runnable() {
+            
+            int iter;
+            
             @Override
             public void run() {
                 while (true) {
@@ -72,6 +75,7 @@ public class MainFrame extends javax.swing.JFrame {
                         hero.analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), frameNanoTime);
                         try {
                             engine.doCycle();
+                            if (++iter % 10 == 0) System.gc();
                         } catch (InterruptedException ex) {
                             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -114,8 +118,8 @@ public class MainFrame extends javax.swing.JFrame {
     public void paint(Graphics gr) {
         Rectangle rr = this.getBounds();
         Graphics2D g = (Graphics2D)gr;
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
         if (!fullScreen) {
             int x = (rr.width - screen.getWidth()) / 2;

@@ -167,8 +167,8 @@ public class GraphicsEngine {
 
     void renderWalls() throws InterruptedException {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
         for (int i = 0; i < mapLines.length; i++) {
             wallColumnDrawers[i].set(g, doneSignal);
@@ -329,7 +329,7 @@ public class GraphicsEngine {
 
     private final Point rsp = new Point();
     
-    void renderSprite(Graphics2D g, WorldObject wo) {
+    void renderObject(Graphics2D g, WorldObject wo) {
         int spriteXStartOffset = -1;
         int spriteXEndOffset = -1;
         int spriteXStart = -1;
@@ -397,7 +397,7 @@ public class GraphicsEngine {
                 }
                 doneSignal.await();
             } else {
-                renderSprite(g, wobj);
+                renderObject(g, wobj);
             }
         }
     }

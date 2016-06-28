@@ -9,6 +9,7 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This is a screen
@@ -33,14 +34,26 @@ class Screen {
         drawImage = gfx_config.createCompatibleImage(width, height, Transparency.OPAQUE);
     }
 
+    private final ReentrantLock lock = new ReentrantLock();
+
     void paint(Graphics g, int screenX, int screenY, int screenW, int screenH) {
-        g.drawImage(screenImage, screenX, screenY, screenW, screenH, null);
+        try {
+            lock.lock();
+            g.drawImage(screenImage, screenX, screenY, screenW, screenH, null);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void swapBuffers() {
-        BufferedImage bi = screenImage;
-        screenImage = drawImage;
-        drawImage = bi;
+        try {
+            lock.lock();
+            BufferedImage bi = screenImage;
+            screenImage = drawImage;
+            drawImage = bi;
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**

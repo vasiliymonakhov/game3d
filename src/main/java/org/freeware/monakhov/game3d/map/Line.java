@@ -1,7 +1,10 @@
 package org.freeware.monakhov.game3d.map;
 
 import java.awt.image.BufferedImage;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.freeware.monakhov.game3d.SpecialMath;
+import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
  * Линия комнаты на карте
@@ -25,17 +28,21 @@ public class Line {
     /**
      * Эта линия может быть порталом в другую комнату
      */
-    private Room portalTo;
+    private Set<Room> portalToRooms;
+    
+    protected final World world;
 
     /**
      * Создаёт линию
      *
      * @param start начальная точка
      * @param end конечная точка
+     * @param world
      */
-    public Line(Point start, Point end) {
+    public Line(Point start, Point end, World world) {
         this.start = start;
         this.end = end;
+        this.world = world;
     }
 
     /**
@@ -62,7 +69,10 @@ public class Line {
      * @param portalTo в какую комнату ведёт портал
      */
     public void setPortal(Room portalTo) {
-        this.portalTo = portalTo;
+        if (portalToRooms == null) {
+            portalToRooms = new LinkedHashSet<>();
+        }
+        portalToRooms.add(portalTo);
     }
 
     /**
@@ -70,16 +80,24 @@ public class Line {
      *
      * @return комната, в которую ведёт этот портал
      */
-    public Room getRoomFromPortal() {
-        return portalTo;
+    public Set<Room> getRoomsFromPortal() {
+        return portalToRooms;
     }
 
+    public boolean isPortal() {
+        return portalToRooms!= null; 
+    }
+    
     /**
      * Сообщает, видима ли эта линия
      *
      * @return true - линия видима
      */
     public boolean isVisible() {
+        return false;
+    }
+    
+    public boolean pointIsVisible(Point p) {
         return false;
     }
     
@@ -113,6 +131,12 @@ public class Line {
 
     public BufferedImage getSubImage(Point p, int height) {
         return null;
+    }
+    
+    public void onInteractWith(WorldObject wo) {
+    }
+    
+    public void doSomething(long frameNanoTime) {
     }
     
 }

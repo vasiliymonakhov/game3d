@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root floor = "floor01" ceiling = "ceiling">
+    <points>
+        <point id = "p0" x="0" y = "0"/>
+        <point id = "p1" x="0" y = "256"/>
+        <point id = "p2" x="0" y = "2048"/>
+        <point id = "p3" x="768" y = "2048"/>        
+        <point id = "p4" x="768" y = "256"/>
+        <point id = "p5" x="768" y = "0"/>
+        <point id = "p6" x="256" y = "256"/>
+        <point id = "p7" x="512" y = "256"/>            
+    </points>    
+    <lines>
+        <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
+        <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>
+        <wall id = "w2" start = "p2" end = "p3" texture = "brick03"/>                
+        <wall id = "w3" start = "p3" end = "p4" texture = "brick01"/>
+        <wall id = "w4" start = "p4" end = "p5" texture = "brick02"/>                
+        <wall id = "w5" start = "p5" end = "p0" texture = "brick03"/>
+        <wall id = "w6" start = "p1" end = "p6" texture = "brick01"/>                                
+        <wall id = "w7" start = "p4" end = "p7" texture = "brick01"/>
+        <door id = "d0" start = "p6" end = "p7" texture = "door01"/>
+    </lines>    
+    <rooms>
+        <room id = "r0">
+            <line id = "w0"/>            
+            <line id = "w6"/>            
+            <line id = "d0"/>            
+            <line id = "w7"/>            
+            <line id = "w4"/>            
+            <line id = "w5"/>                                                
+        </room>   
+        <room id = "r1">
+            <line id = "w1"/>            
+            <line id = "w2"/>            
+            <line id = "d0"/>            
+            <line id = "w3"/>            
+            <line id = "w7"/>            
+            <line id = "w6"/>                                                
+        </room>        
+    </rooms>
+    <portals>
+        <portal from = "r0" line = "d0" to = "r1"/>
+    </portals>    
+    <hero  x = "384" y = "128" room = "r0" azimuth = "0"/>    
+    <objects>
+        <object class = "tree" id = "tree00" x = "128" y = "384"/>
+        <object class = "tree" id = "tree01" x = "640" y = "384"/>
+    </objects>   
+</root>

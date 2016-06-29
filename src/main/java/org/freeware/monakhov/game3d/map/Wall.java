@@ -13,15 +13,20 @@ import org.freeware.monakhov.game3d.SpecialMath;
  */
 public class Wall extends Line {
 
-    private final Texture texture;
+    protected final Texture texture;
     
-    public Wall(Point start, Point end, Texture texture) {
-        super(start, end);
+    public Wall(Point start, Point end, Texture texture, World world) {
+        super(start, end, world);
         this.texture = texture;
     }
     
     @Override
     public boolean isVisible() {
+        return true;
+    }
+    
+    @Override
+    public boolean pointIsVisible(Point p) {
         return true;
     }
     
@@ -45,10 +50,12 @@ public class Wall extends Line {
             if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, p)) {
                 if (p.between(start, end) && p.between(rayPoints[i], viewPoint)) {
                     if (mapLines[i] == null) {
-                        flag = true;
-                        mapLines[i] = this;
-                        everSeen = true;
-                        intersectPoints[i].moveTo(p.getX(), p.getY());
+                        flag = true;                        
+                        if (pointIsVisible(p)) {
+                            mapLines[i] = this;
+                            everSeen = true;
+                            intersectPoints[i].moveTo(p.getX(), p.getY());
+                        }
                     }
                 }
             }

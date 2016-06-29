@@ -15,79 +15,21 @@ import static org.junit.Assert.*;
 public class RoomTest {
 
     final static double EPSILON = 0.0001d;
-    
-    /**
-     * Test of addPoint method, of class Room.
-     */
-    @Test
-    public void testAddAndGetPoint1() {
-        Room r = new Room();
-        r.addPoint("p0", new Point(10, 20));
-        r.addPoint("p1", new Point(30, 40));
-        r.addPoint("p2", new Point(50, 60));
-        
-        Point p = r.getPoint("p0");
-        assertEquals(10, p.getX(), EPSILON);
-        assertEquals(20, p.getY(), EPSILON);
-        p = r.getPoint("p1");
-        assertEquals(30, p.getX(), EPSILON);
-        assertEquals(40, p.getY(), EPSILON);
-        p = r.getPoint("p2");
-        assertEquals(50, p.getX(), EPSILON);
-        assertEquals(60, p.getY(), EPSILON);
-        p = r.getPoint("p3");
-        assertNull(p);
-    }
-
-    /**
-     * Test of addPoint method, of class Room.
-     */
-    @Test (expected = IllegalArgumentException.class)
-    public void testAddPoint() {
-        Room r = new Room();
-        r.addPoint("p0", new Point(10, 20));
-        r.addPoint("p0", new Point(30, 40));
-    }    
-    
-    /**
-     * Test of addPoint method, of class Room.
-     */
-    @Test (expected = IllegalArgumentException.class)
-    public void testAddPoint2() {
-        Room r = new Room();
-        r.addPoint("", new Point(10, 20));
-    }    
-
-    /**
-     * Test of addPoint method, of class Room.
-     */
-    @Test (expected = IllegalArgumentException.class)
-    public void testAddPoint3() {
-        Room r = new Room();
-        r.addPoint(null, new Point(10, 20));
-    }        
-    
-    /**
-     * Test of addPoint method, of class Room.
-     */
-    @Test (expected = IllegalArgumentException.class)
-    public void testAddPoint4() {
-        Room r = new Room();
-        r.addPoint("p0", null);
-    }        
-    
+   
+   
     /**
      * Test of addLine method, of class Room.
      */
     @Test
     public void testAddAndGetWall1() {
+        World w = new World();
         Room r = new Room();
-        r.addPoint("p0", new Point(10, 20));
-        r.addPoint("p1", new Point(30, 40));
-        r.addPoint("p2", new Point(50, 60));
-        r.addLine("w0", new Wall(r.getPoint("p0"), r.getPoint("p1"), null));
-        r.addLine("w1", new Wall(r.getPoint("p1"), r.getPoint("p2"), null));
-        r.addLine("w2", new Wall(r.getPoint("p2"), r.getPoint("p0"), null));
+        w.addPoint("p0", new Point(10, 20));
+        w.addPoint("p1", new Point(30, 40));
+        w.addPoint("p2", new Point(50, 60));
+        r.addLine("w0", new Wall(w.getPoint("p0"), w.getPoint("p1"), null, w));
+        r.addLine("w1", new Wall(w.getPoint("p1"), w.getPoint("p2"), null, w));
+        r.addLine("w2", new Wall(w.getPoint("p2"), w.getPoint("p0"), null, w));
         assertEquals(10, r.getLine("w0").getStart().getX(), EPSILON);
         assertEquals(20, r.getLine("w0").getStart().getY(), EPSILON);
         assertEquals(30, r.getLine("w0").getEnd().getX(), EPSILON);
@@ -108,39 +50,9 @@ public class RoomTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddAndGetWall2() {
         Room r = new Room();
-        r.addLine("w0", new Wall(null, null, null));
-        r.addLine("w0", new Wall(null, null, null));
+        r.addLine("w0", new Wall(null, null, null, null));
+        r.addLine("w0", new Wall(null, null, null, null));
     }    
-
-    /**
-     * Test of getPoint method, of class Room.
-     */
-    @Test
-    public void testGetPoint() {
-        Room r = new Room();
-        r.addPoint("p0", new Point(10, 20));
-        Point p = r.getPoint("p0");
-        assertEquals(10, p.getX(), EPSILON);
-        assertEquals(20, p.getY(), EPSILON);
-    }
-
-    /**
-     * Test of getAllPoints method, of class Room.
-     */
-    @Test
-    public void testGetAllPoints() {
-        Room r = new Room();
-        Point p0 = new Point(10, 20);
-        Point p1 = new Point(30, 40);
-        Point p2 = new Point(50, 60);
-        r.addPoint("p0", p0);
-        r.addPoint("p1", p1);
-        r.addPoint("p2", p2);
-        Collection<Point> points = r.getAllPoints();
-        assertTrue(points.contains(p0));
-        assertTrue(points.contains(p1));
-        assertTrue(points.contains(p2));
-    }
 
     /**
      * Test of getAllLines method, of class Room.
@@ -148,8 +60,8 @@ public class RoomTest {
     @Test
     public void testGetAllLines() {
         Room r = new Room();
-        Line l1 = new Line(new Point (), new Point());
-        Line l2 = new Line(new Point (), new Point());
+        Line l1 = new Line(new Point (), new Point(), null);
+        Line l2 = new Line(new Point (), new Point(), null);
         r.addLine("l1", l1);
         r.addLine("l2", l2);  
         Collection<Line> res = r.getAllLines();
@@ -164,7 +76,7 @@ public class RoomTest {
     @Test
     public void testAddLine() {
         Room r = new Room();
-        Line l = new Line(new Point (), new Point());
+        Line l = new Line(new Point (), new Point(), null);
         r.addLine("l0", l);
         Line lr = r.getLine("l0");
         assertNotNull(lr);
@@ -177,7 +89,7 @@ public class RoomTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddLine1() {
         Room r = new Room();
-        Line l = new Line(new Point (), new Point());
+        Line l = new Line(new Point (), new Point(), null);
         r.addLine("l0", l);
         r.addLine("l0", l);
     }    
@@ -188,7 +100,7 @@ public class RoomTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddLine2() {
         Room r = new Room();
-        Line l = new Line(new Point (), new Point());
+        Line l = new Line(new Point (), new Point(), null);
         r.addLine("", l);
     }
     
@@ -198,7 +110,7 @@ public class RoomTest {
     @Test (expected = IllegalArgumentException.class)
     public void testAddLine3() {
         Room r = new Room();
-        Line l = new Line(new Point (), new Point());
+        Line l = new Line(new Point (), new Point(), null);
         r.addLine(null, l);
     }
     
@@ -218,8 +130,8 @@ public class RoomTest {
     @Test
     public void testGetLine() {
         Room r = new Room();
-        Line l1 = new Line(new Point (), new Point());
-        Line l2 = new Line(new Point (), new Point());
+        Line l1 = new Line(new Point (), new Point(), null);
+        Line l2 = new Line(new Point (), new Point(), null);
         r.addLine("l1", l1);
         r.addLine("l2", l2);        
         Line lr1 = r.getLine("l1");
@@ -237,8 +149,8 @@ public class RoomTest {
     @Test
     public void testClearRoomVisibilityAlreadyChecked() {
         Room r = new Room();
-        Line l1 = new Line(new Point (), new Point());
-        Line l2 = new Line(new Point (), new Point());
+        Line l1 = new Line(new Point (), new Point(), null);
+        Line l2 = new Line(new Point (), new Point(), null);
         r.addLine("l1", l1);
         r.addLine("l2", l2);   
         r.roomVisibilityAlreadyChecked = true;
@@ -250,19 +162,20 @@ public class RoomTest {
      */
     @Test
     public void testInsideThisRoom() {
+        World w = new World();
         Room r = new Room();
         Point p0 = new Point(-10, 10);
         Point p1 = new Point(10, 10);
         Point p2 = new Point(10, -10);
         Point p3 = new Point(-10, -10);        
-        r.addPoint("p0", p0);
-        r.addPoint("p1", p1);
-        r.addPoint("p2", p2);
-        r.addPoint("p3", p3);        
-        r.addLine("l0", new Line(p0, p1));
-        r.addLine("l1", new Line(p1, p2));
-        r.addLine("l2", new Line(p2, p3));
-        r.addLine("l3", new Line(p3, p0));        
+        w.addPoint("p0", p0);
+        w.addPoint("p1", p1);
+        w.addPoint("p2", p2);
+        w.addPoint("p3", p3);        
+        r.addLine("l0", new Line(p0, p1, w));
+        r.addLine("l1", new Line(p1, p2, w));
+        r.addLine("l2", new Line(p2, p3, w));
+        r.addLine("l3", new Line(p3, p0, w));        
         Point pt0 = new Point(0, 0);
         assertTrue(r.insideThisRoom(pt0));
         Point pt1 = new Point(20, 0);

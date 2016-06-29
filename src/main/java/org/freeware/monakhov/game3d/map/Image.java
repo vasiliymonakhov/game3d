@@ -29,24 +29,21 @@ public class Image {
 
     /**
      * @return the image
+     * @throws java.io.IOException
      */
-    public BufferedImage getImage() {
+    public BufferedImage getImage() throws IOException {
         if (image == null) {
-            try {
-                BufferedImage bi = ImageIO.read(Image.class.getResourceAsStream(fileName));
-                GraphicsConfiguration gfx_config = GraphicsEnvironment.
-                        getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                        getDefaultConfiguration();
-                image = gfx_config.createCompatibleImage(bi.getWidth(), bi.getHeight(),
-                        bi.isAlphaPremultiplied() ? Transparency.TRANSLUCENT : Transparency.OPAQUE);
-                Graphics2D g = (Graphics2D) image.getGraphics();
-                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-                g.drawImage(bi, 0, 0, null);            
-                g.dispose();
-            } catch (IOException ex) {
-                Logger.getLogger(Image.class.getName()).log(Level.SEVERE, "Can't load image", ex);
-            }
+            BufferedImage bi = ImageIO.read(Image.class.getResourceAsStream(fileName));
+            GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                    getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                    getDefaultConfiguration();
+            image = gfx_config.createCompatibleImage(bi.getWidth(), bi.getHeight(),
+                    bi.isAlphaPremultiplied() ? Transparency.TRANSLUCENT : Transparency.OPAQUE);
+            Graphics2D g = (Graphics2D) image.getGraphics();
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g.drawImage(bi, 0, 0, null);
+            g.dispose();
         }
         return image;
     }

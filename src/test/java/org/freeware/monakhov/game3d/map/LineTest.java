@@ -20,7 +20,7 @@ public class LineTest {
      */
     @Test
     public void testGetStart() {
-        Line w = new Line(new Point(10, 20), new Point(30, 40));
+        Line w = new Line(new Point(10, 20), new Point(30, 40), null);
         assertEquals(10, w.getStart().getX(), EPSILON);
         assertEquals(20, w.getStart().getY(), EPSILON);
     }
@@ -30,7 +30,7 @@ public class LineTest {
      */
     @Test
     public void testGetEnd() {
-        Line w = new Line(new Point(10, 20), new Point(30, 40));
+        Line w = new Line(new Point(10, 20), new Point(30, 40), null);
         assertEquals(30, w.getEnd().getX(), EPSILON);
         assertEquals(40, w.getEnd().getY(), EPSILON);
     }

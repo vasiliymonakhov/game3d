@@ -1,47 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root floor = "floor02" sky = "sky02">
+    <points>
+        <point id = "p0" x="0" y = "0"/>
+        <point id = "p1" x="0" y = "10000"/>
+        <point id = "p2" x="0" y = "20000"/>
+        <point id = "p3" x="10000" y = "20000"/>        
+        <point id = "p4" x="10000" y = "10000"/>
+        <point id = "p5" x="10000" y = "0"/>
+        <point id = "p6" x="20000" y = "0"/>
+        <point id = "p7" x="20000" y = "20000"/>            
+    </points>    
+    <lines>
+        <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
+        <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>
+        <wall id = "w2" start = "p2" end = "p3" texture = "brick03"/>                
+        <wall id = "w3" start = "p3" end = "p7" texture = "brick01"/>
+        <wall id = "w4" start = "p7" end = "p6" texture = "brick02"/>                
+        <wall id = "w5" start = "p6" end = "p5" texture = "brick03"/>
+        <wall id = "w6" start = "p5" end = "p0" texture = "brick01"/>                                
+        <line id = "l0" start = "p1" end = "p4"/>
+        <line id = "l1" start = "p3" end = "p4"/>                                       
+        <line id = "l2" start = "p4" end = "p5"/>
+    </lines>    
     <rooms>
         <room id = "r0">
-            <point id = "p0" x="0" y = "0"/>
-            <point id = "p1" x="0" y = "10000"/>
-            <point id = "p2" x="10000" y = "10000"/>
-            <point id = "p3" x="10000" y = "0"/>
-            <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
-            <line id = "l1" start = "p1" end = "p2"/>            
-            <line id = "l2" start = "p2" end = "p3"/>
-            <wall id = "w3" start = "p3" end = "p0" texture = "block01"/>                           
+            <line id = "w0"/>            
+            <line id = "l0"/>                        
+            <line id = "l2"/>            
+            <line id = "w6"/>                                    
         </room>   
         <room id = "r1">
-            <point id = "p0" x="0" y = "10000"/>
-            <point id = "p1" x="0" y = "20000"/>
-            <point id = "p2" x="10000" y = "20000"/>
-            <point id = "p3" x="10000" y = "10000"/>
-            <wall id = "w0" start = "p0" end = "p1" texture = "beton01"/>
-            <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>            
-            <line id = "l2" start = "p2" end = "p3"/>
-            <line id = "l3" start = "p3" end = "p0"/>                           
+            <line id = "w1"/>                           
+            <line id = "w2"/>                           
+            <line id = "l1"/>                           
+            <line id = "l0"/>                                                               
         </room>        
         <room id = "r2">
-            <point id = "p0" x="10000" y = "0"/>
-            <point id = "p1" x="10000" y = "10000"/>
-            <point id = "p2" x="10000" y = "20000"/>
-            <point id = "p3" x="20000" y = "20000"/>
-            <point id = "p4" x="20000" y = "10000"/>
-            <point id = "p5" x="20000" y = "0"/>
-            <line id = "l0" start = "p0" end = "p1"/>
-            <line id = "l1" start = "p1" end = "p2"/>                                       
-            <wall id = "w3" start = "p2" end = "p3" texture = "brick03"/>
-            <wall id = "w4" start = "p3" end = "p4" texture = "brick03"/>            
-            <wall id = "w5" start = "p4" end = "p5" texture = "brick03"/>
-            <wall  id = "w6" start = "p5" end = "p0" texture = "brick03"/>                           
+            <line id = "w3"/>
+            <line id = "w4"/>
+            <line id = "w5"/>                        
+            <line id = "l2"/>
+            <line id = "l1"/>            
         </room>                
     </rooms>
     <portals>
-        <portal from = "r0" line = "l1" to = "r1"/>
-        <portal from = "r1" line = "l3" to = "r0"/>
+        <portal from = "r0" line = "l0" to = "r1"/>
+        <portal from = "r1" line = "l0" to = "r0"/>
         <portal from = "r0" line = "l2" to = "r2"/>
-        <portal from = "r2" line = "l0" to = "r0"/>
-        <portal from = "r1" line = "l2" to = "r2"/>
+        <portal from = "r2" line = "l2" to = "r0"/>
+        <portal from = "r1" line = "l1" to = "r2"/>
         <portal from = "r2" line = "l1" to = "r1"/>
     </portals>    
     <hero  x = "1024" y = "256" room = "r0" azimuth = "45"/>    
@@ -129,15 +136,5 @@
         <object class = "green_barrel" id = "green_barrel61" x = "10800" y = "1800"/>
         <object class = "green_barrel" id = "green_barrel62" x = "10700" y = "1800"/>
         
-        <object class = "grid_fence02" id = "grid_fence01" start_x = "200" start_y = "1024" end_x = "200" end_y = "512"/>
-        <object class = "grid_fence01" id = "grid_fence02" start_x = "712" start_y = "512" end_x = "200" end_y = "512"/>
-        <object class = "grid_fence02" id = "grid_fence03" start_x = "712" start_y = "512" end_x = "712" end_y = "0"/>
-
-        <object class = "pole01" id = "pole01_0" x = "200" y = "1024"/>
-        <object class = "pole01" id = "pole01_1" x = "200" y = "512"/>
-        <object class = "pole01" id = "pole01_2" x = "712" y = "512"/>
-        <object class = "pole01" id = "pole01_3" x = "712" y = "0"/>         
-                
-                
     </objects>   
 </root>

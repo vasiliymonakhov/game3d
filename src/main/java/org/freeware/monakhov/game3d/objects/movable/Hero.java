@@ -1,15 +1,17 @@
 package org.freeware.monakhov.game3d.objects.movable;
 
 import org.freeware.monakhov.game3d.map.Point;
-import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 
 /**
- * This is who are You! :)
  *
- * @author Vasily Monakhov
+ * @author Vasily Monakhov 
  */
-public class Hero extends MovableObject {
+public class Hero extends ViewPoint {
+
+    public Hero(World world, Point position) {
+        super(world, position);
+    }
     
     public static final double MAX_BACKWARD_MOVE_SPEED = -256 / 1.0E9;
     public static final double STRAFE_ACCELERATION = 512 / 1.0E18;
@@ -26,21 +28,7 @@ public class Hero extends MovableObject {
     private double strafeSpeed = 0;
     private double moveSpeed = 0;
     private double turnSpeed = 0;
-
-    public Hero(World world, Point position) {
-        super(world, position);
-    }
-
-    @Override
-    public Sprite getSprite() {
-        return null;
-    }
-
-    @Override
-    public double getRadius() {
-        return 32;
-    }
-
+    
     private void analyseTurn(boolean left, boolean right, long frameNanoTime) {
         if (left) {
             if (turnSpeed > 0) {
@@ -57,17 +45,17 @@ public class Hero extends MovableObject {
             } else {
                 turnSpeed = turnSpeed + TURN_ACCELERATION * frameNanoTime;
             }
-            if (turnSpeed > Hero.MAX_TURN_SPEED) {
-                turnSpeed = Hero.MAX_TURN_SPEED;
+            if (turnSpeed > MAX_TURN_SPEED) {
+                turnSpeed = MAX_TURN_SPEED;
             }
         } else {
             if (turnSpeed > 0) {
-                turnSpeed = turnSpeed - Hero.TURN_BREAK * frameNanoTime;
+                turnSpeed = turnSpeed - TURN_BREAK * frameNanoTime;
                 if (turnSpeed < 0) {
                     turnSpeed = 0;
                 }
             } else if (turnSpeed < 0) {
-                turnSpeed = turnSpeed + Hero.TURN_BREAK * frameNanoTime;
+                turnSpeed = turnSpeed + TURN_BREAK * frameNanoTime;
                 if (turnSpeed > 0) {
                     turnSpeed = 0;
                 }
@@ -78,30 +66,30 @@ public class Hero extends MovableObject {
     private void analyseMove(boolean forward, boolean backward, long frameNanoTime) {
         if (forward) {
             if (moveSpeed < 0) {
-                moveSpeed = moveSpeed + Hero.MOVE_BREAKING * frameNanoTime;
+                moveSpeed = moveSpeed + MOVE_BREAKING * frameNanoTime;
             } else {
-                moveSpeed = moveSpeed + Hero.MOVE_FORWARD_ACCELERATION * frameNanoTime;
+                moveSpeed = moveSpeed + MOVE_FORWARD_ACCELERATION * frameNanoTime;
             }
-            if (moveSpeed > Hero.MAX_FORWARD_MOVE_SPEED) {
-                moveSpeed = Hero.MAX_FORWARD_MOVE_SPEED;
+            if (moveSpeed > MAX_FORWARD_MOVE_SPEED) {
+                moveSpeed = MAX_FORWARD_MOVE_SPEED;
             }
         } else if (backward) {
             if (moveSpeed > 0) {
-                moveSpeed = moveSpeed - Hero.MOVE_BREAKING * frameNanoTime;
+                moveSpeed = moveSpeed - MOVE_BREAKING * frameNanoTime;
             } else {
-                moveSpeed = moveSpeed + Hero.MOVE_BACKWARD_ACCELERATION * frameNanoTime;
+                moveSpeed = moveSpeed + MOVE_BACKWARD_ACCELERATION * frameNanoTime;
             }
-            if (moveSpeed < Hero.MAX_BACKWARD_MOVE_SPEED) {
-                moveSpeed = Hero.MAX_BACKWARD_MOVE_SPEED;
+            if (moveSpeed < MAX_BACKWARD_MOVE_SPEED) {
+                moveSpeed = MAX_BACKWARD_MOVE_SPEED;
             }
         } else {
             if (moveSpeed > 0) {
-                moveSpeed = moveSpeed - Hero.MOVE_BREAKING * frameNanoTime;
+                moveSpeed = moveSpeed - MOVE_BREAKING * frameNanoTime;
                 if (moveSpeed < 0) {
                     moveSpeed = 0;
                 }
             } else if (moveSpeed < 0) {
-                moveSpeed = moveSpeed + Hero.MOVE_BREAKING * frameNanoTime;
+                moveSpeed = moveSpeed + MOVE_BREAKING * frameNanoTime;
                 if (moveSpeed > 0) {
                     moveSpeed = 0;
                 }
@@ -112,30 +100,30 @@ public class Hero extends MovableObject {
     private void analyseStrafe(boolean strafeLeft, boolean strafeRight, long frameNanoTime) {
         if (strafeLeft) {
             if (strafeSpeed > 0) {
-                strafeSpeed = strafeSpeed - Hero.STRAFE_BREAKING * frameNanoTime;
+                strafeSpeed = strafeSpeed - STRAFE_BREAKING * frameNanoTime;
             } else {
-                strafeSpeed = strafeSpeed - Hero.STRAFE_ACCELERATION * frameNanoTime;
+                strafeSpeed = strafeSpeed - STRAFE_ACCELERATION * frameNanoTime;
             }
-            if (strafeSpeed < -Hero.MAX_STRAFE_SPEED) {
-                strafeSpeed = -Hero.MAX_STRAFE_SPEED;
+            if (strafeSpeed < -MAX_STRAFE_SPEED) {
+                strafeSpeed = -MAX_STRAFE_SPEED;
             }
         } else if (strafeRight) {
             if (strafeSpeed < 0) {
-                strafeSpeed = strafeSpeed + Hero.STRAFE_BREAKING * frameNanoTime;
+                strafeSpeed = strafeSpeed + STRAFE_BREAKING * frameNanoTime;
             } else {
-                strafeSpeed = strafeSpeed + Hero.STRAFE_ACCELERATION * frameNanoTime;
+                strafeSpeed = strafeSpeed + STRAFE_ACCELERATION * frameNanoTime;
             }
-            if (strafeSpeed > Hero.MAX_STRAFE_SPEED) {
-                strafeSpeed = Hero.MAX_STRAFE_SPEED;
+            if (strafeSpeed > MAX_STRAFE_SPEED) {
+                strafeSpeed = MAX_STRAFE_SPEED;
             }
         } else {
             if (strafeSpeed > 0) {
-                strafeSpeed = strafeSpeed - Hero.STRAFE_BREAKING * frameNanoTime;
+                strafeSpeed = strafeSpeed - STRAFE_BREAKING * frameNanoTime;
                 if (strafeSpeed < 0) {
                     strafeSpeed = 0;
                 }
             } else if (strafeSpeed < 0) {
-                strafeSpeed = strafeSpeed + Hero.STRAFE_BREAKING * frameNanoTime;
+                strafeSpeed = strafeSpeed + STRAFE_BREAKING * frameNanoTime;
                 if (strafeSpeed > 0) {
                     strafeSpeed = 0;
                 }
@@ -145,7 +133,7 @@ public class Hero extends MovableObject {
     
     public void analyseKeys(boolean left, boolean right, boolean forward, boolean backward, boolean strafeLeft, boolean strafeRight, long frameNanoTime) {
         analyseTurn(left, right, frameNanoTime);
-        setAzimuth(azimuth + turnSpeed * frameNanoTime);
+        setAzimuth(getAzimuth() + turnSpeed * frameNanoTime);
         analyseMove(forward, backward, frameNanoTime);
         analyseStrafe(strafeLeft, strafeRight, frameNanoTime);
         moveBy(moveSpeed * frameNanoTime, strafeSpeed * frameNanoTime);

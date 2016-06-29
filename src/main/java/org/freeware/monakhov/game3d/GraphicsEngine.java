@@ -4,7 +4,7 @@
  */
 package org.freeware.monakhov.game3d;
 
-import org.freeware.monakhov.game3d.objects.movable.Hero;
+import org.freeware.monakhov.game3d.objects.movable.ViewPoint;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -14,6 +14,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +28,6 @@ import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.World;
-import org.freeware.monakhov.game3d.objects.misc.PlainObject;
 
 /**
  * This is a Graphics Engine
@@ -38,7 +38,7 @@ public class GraphicsEngine {
 
     private final World world;
 
-    private final Hero hero;
+    private final ViewPoint viewPoint;
 
     private final Screen screen;
 
@@ -50,7 +50,6 @@ public class GraphicsEngine {
     private final Point[] wallsIntersectPoints;
     private final double[] k;
     private final WallColumnDrawer[] wallColumnDrawers;
-    private final SpriteColumnDrawer[] spriteColumnDrawers;
     private final FloorCeilingDrawer[] floorCeilingDrawers;
     private final SkyDrawer[] skyDrawers;
 
@@ -62,9 +61,9 @@ public class GraphicsEngine {
 
     BufferedImage sky;
 
-    GraphicsEngine(World world, Hero hero, Screen screen) {
+    GraphicsEngine(World world, ViewPoint viewPoint, Screen screen) throws IOException {
         this.world = world;
-        this.hero = hero;
+        this.viewPoint = viewPoint;
         this.screen = screen;
         mapLines = new Line[screen.getWidth()];
         farFarFrontier = KORRECTION * screen.getWidth() / 2;
@@ -78,7 +77,7 @@ public class GraphicsEngine {
         }
         k = new double[screen.getWidth()];
         for (int i = 0; i < screen.getWidth(); i++) {
-            k[i] = WALL_SIZE * SpecialMath.lineLength(hero.getPosition(), rayPoints[i]) / KORRECTION;
+            k[i] = WALL_SIZE * SpecialMath.lineLength(viewPoint.getPosition(), rayPoints[i]) / KORRECTION;
         }
         transformedRayPoints = new Point[screen.getWidth()];
         wallsIntersectPoints = new Point[screen.getWidth()];
@@ -87,10 +86,8 @@ public class GraphicsEngine {
             transformedRayPoints[i] = new Point();
         }
         wallColumnDrawers = new WallColumnDrawer[screen.getWidth()];
-        spriteColumnDrawers = new SpriteColumnDrawer[screen.getWidth()];
         for (int i = 0; i < screen.getWidth(); i++) {
             wallColumnDrawers[i] = new WallColumnDrawer(i);
-            spriteColumnDrawers[i] = new SpriteColumnDrawer(i);
         }
         floorCeilingDrawers = new FloorCeilingDrawer[4];
         int w = screen.getWidth() / floorCeilingDrawers.length;
@@ -131,7 +128,7 @@ public class GraphicsEngine {
 
     void checkVisibleRooms() {
         visibleRooms.clear();
-        hero.getRoom().checkVisibility(mapLines, hero.getPosition(), transformedRayPoints, wallsIntersectPoints, visibleRooms);
+        viewPoint.getRoom().checkVisibility(mapLines, viewPoint.getPosition(), transformedRayPoints, wallsIntersectPoints, visibleRooms);
     }
 
     private class WallColumnDrawer implements Runnable {
@@ -154,7 +151,7 @@ public class GraphicsEngine {
             try {
                 Line l = mapLines[index];
                 if (l != null) {
-                    double dist = SpecialMath.lineLength(hero.getPosition(), wallsIntersectPoints[index]);
+                    double dist = SpecialMath.lineLength(viewPoint.getPosition(), wallsIntersectPoints[index]);
                     int h = (int) Math.round(k[index] / dist);
                     int ch = (int) Math.round((screen.getHeight() - h) / 2);
                     g.drawImage(l.getSubImage(wallsIntersectPoints[index], h), index, ch, 1, h, null);
@@ -229,7 +226,7 @@ public class GraphicsEngine {
         if (skyDrawers != null) {
             doneSignal = new CountDownLatch(floorCeilingDrawers.length);
             double pi2 = Math.PI * 2;
-            int a = (int) (sky.getWidth() * ((hero.getAzimuth() + pi2) % pi2) / pi2);
+            int a = (int) (sky.getWidth() * ((viewPoint.getAzimuth() + pi2) % pi2) / pi2);
             for (SkyDrawer skyDrawer : skyDrawers) {
                 skyDrawer.set(g, a, doneSignal);
                 EXECUTOR.execute(skyDrawer);
@@ -283,49 +280,9 @@ public class GraphicsEngine {
     Comparator<WorldObject> objectsSortComparator = new Comparator<WorldObject>() {
         @Override
         public int compare(WorldObject o1, WorldObject o2) {
-            return (int) (o2.distanceTo(hero.getPosition()) - o1.distanceTo(hero.getPosition()));
+            return (int) (o2.distanceTo(viewPoint.getPosition()) - o1.distanceTo(viewPoint.getPosition()));
         }
     };
-
-    private class SpriteColumnDrawer implements Runnable {
-
-        SpriteColumnDrawer(int index) {
-            this.index = index;
-        }
-
-        void set(Graphics2D g, WorldObject wo, CountDownLatch doneSignal) {
-            this.g = g;
-            this.wo = wo;
-            this.doneSignal = doneSignal;
-        }
-
-        private CountDownLatch doneSignal;
-        private Graphics2D g;
-        private final int index;
-        private final Point p = new Point();
-        private WorldObject wo;
-
-        @Override
-        public synchronized void run() {
-            try {
-                if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), hero.getPosition(), wallsIntersectPoints[index], p)) {
-                    if (p.between(wo.getLeft(), wo.getRight()) && p.between(hero.getPosition(), wallsIntersectPoints[index])) {
-                        double dist = SpecialMath.lineLength(hero.getPosition(), p);
-                        double k = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[index]);
-                        int h = (int) Math.round(GraphicsEngine.WALL_SIZE * k / (dist * GraphicsEngine.KORRECTION));
-                        int sh = (int) Math.round(h * wo.getSprite().getHeight() / GraphicsEngine.WALL_SIZE);
-                        int syo = (int) Math.round(h * wo.getSprite().getYOffset() / GraphicsEngine.WALL_SIZE);
-                        int ch = (screen.getHeight() - h) / 2;
-                        long xOffset = (long) SpecialMath.lineLength(wo.getLeft(), p);
-                        int spriteXOffset = (int) (xOffset % wo.getSprite().getWidth());
-                        g.drawImage(wo.getSprite().getSubImage(spriteXOffset, 0, h), index, ch + syo, 1, sh, null);
-                    }
-                }
-            } finally {
-                doneSignal.countDown();
-            }
-        }
-    }
 
     private final Point rsp = new Point();
     
@@ -340,11 +297,11 @@ public class GraphicsEngine {
         int ch = 0;
         long xOffset;
         for (int i = 0; i < transformedRayPoints.length; i++) {
-            if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), hero.getPosition(), wallsIntersectPoints[i], rsp)) {
-                if (rsp.between(wo.getLeft(), wo.getRight()) && rsp.between(hero.getPosition(), wallsIntersectPoints[i])) {
+            if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), viewPoint.getPosition(), wallsIntersectPoints[i], rsp)) {
+                if (rsp.between(wo.getLeft(), wo.getRight()) && rsp.between(viewPoint.getPosition(), wallsIntersectPoints[i])) {
                     if (spriteXStartOffset == -1) {
-                        double dist = SpecialMath.lineLength(hero.getPosition(), rsp);
-                        double kk = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[i]);
+                        double dist = SpecialMath.lineLength(viewPoint.getPosition(), rsp);
+                        double kk = SpecialMath.lineLength(viewPoint.getPosition(), transformedRayPoints[i]);
                         h = (int) Math.round(GraphicsEngine.WALL_SIZE * kk / (dist * GraphicsEngine.KORRECTION));
                         sh = (int) Math.round(h * wo.getSprite().getHeight() / GraphicsEngine.WALL_SIZE);
                         syo = (int) Math.round(h * wo.getSprite().getYOffset() / GraphicsEngine.WALL_SIZE);
@@ -375,7 +332,7 @@ public class GraphicsEngine {
 //        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
         objectsSortList.clear();
         for (WorldObject wobj : world.getAllObjects()) {
-            wobj.turnSpriteToHero(hero);
+            wobj.turnSpriteToViewPoint(viewPoint);
             boolean flag = false;
             for (Room r : visibleRooms) {
                 if (r.insideThisRoom(wobj.getLeft()) || r.insideThisRoom(wobj.getRight())) {
@@ -389,16 +346,7 @@ public class GraphicsEngine {
         }
         Collections.sort(objectsSortList, objectsSortComparator);
         for (WorldObject wobj : objectsSortList) {
-            if (wobj instanceof PlainObject) {
-                CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
-                for (int i = 0; i < transformedRayPoints.length; i++) {
-                    spriteColumnDrawers[i].set(g, wobj, doneSignal);
-                    EXECUTOR.execute(spriteColumnDrawers[i]);
-                }
-                doneSignal.await();
-            } else {
-                renderObject(g, wobj);
-            }
+            renderObject(g, wobj);
         }
     }
 
@@ -418,13 +366,13 @@ public class GraphicsEngine {
     }
 
     void transform() {
-        double sin = Math.sin(-hero.getAzimuth());
-        double cos = Math.cos(-hero.getAzimuth());
+        double sin = Math.sin(-viewPoint.getAzimuth());
+        double cos = Math.cos(-viewPoint.getAzimuth());
         for (int i = 0; i < screen.getWidth(); i++) {
             double x = rayPoints[i].getX();
             double y = rayPoints[i].getY();
-            double new_x = x * cos - y * sin + hero.getPosition().getX();
-            double new_y = y * cos + x * sin + hero.getPosition().getY();
+            double new_x = x * cos - y * sin + viewPoint.getPosition().getX();
+            double new_y = y * cos + x * sin + viewPoint.getPosition().getY();
             transformedRayPoints[i].moveTo(new_x, new_y);
         }
     }
@@ -458,11 +406,11 @@ public class GraphicsEngine {
         g.setColor(Color.red);
         g.fillOval(dx - 5, dy - 5, 10, 10);
         g.setStroke(WALL);
-        int rx = (int) (20 * Math.sin(hero.getAzimuth()));
-        int ry = (int) (20 * Math.cos(hero.getAzimuth()));
+        int rx = (int) (20 * Math.sin(viewPoint.getAzimuth()));
+        int ry = (int) (20 * Math.cos(viewPoint.getAzimuth()));
         g.drawLine(dx, dy, dx + rx, dy - ry);
-        dx += -(int) hero.getPosition().getX() * mapScale;
-        dy += (int) hero.getPosition().getY() * mapScale;
+        dx += -(int) viewPoint.getPosition().getX() * mapScale;
+        dy += (int) viewPoint.getPosition().getY() * mapScale;
         g.setColor(Color.GREEN);
         for (Room r : world.getAllRooms()) {
             for (Line l : r.getAllLines()) {

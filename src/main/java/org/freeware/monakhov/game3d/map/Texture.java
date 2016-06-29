@@ -8,8 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -34,20 +32,16 @@ public class Texture {
         this.width = width;
     }
 
-    void addFile(int index, String fileName) {
+    void addFile(int index, String fileName) throws IOException {
         fileNames[index] = fileName;
-        try {
-            BufferedImage bi = ImageIO.read(Texture.class.getResourceAsStream(fileNames[index]));
-            GraphicsConfiguration gfx_config = GraphicsEnvironment.
-                    getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                    getDefaultConfiguration();
-            images[index] = gfx_config.createCompatibleImage(width >> index, SIZE >> index, Transparency.OPAQUE);
-            Graphics2D g = (Graphics2D) images[index].getGraphics();
-            g.drawImage(bi, 0, 0, null);
-            g.dispose();
-        } catch (IOException ex) {
-            Logger.getLogger(Texture.class.getName()).log(Level.SEVERE, "Can not load image", ex);
-        }
+        BufferedImage bi = ImageIO.read(Texture.class.getResourceAsStream(fileNames[index]));
+        GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                getDefaultConfiguration();
+        images[index] = gfx_config.createCompatibleImage(width >> index, SIZE >> index, Transparency.OPAQUE);
+        Graphics2D g = (Graphics2D) images[index].getGraphics();
+        g.drawImage(bi, 0, 0, null);
+        g.dispose();
     }
 
     /**

@@ -19,8 +19,6 @@ public abstract class MovableObject extends WorldObject {
     }
 
     boolean touchAnyObject(Point newPosition) {
-        Point p1 = new Point();
-        Point p2 = new Point();
         // проверяем, не столкнулись ли мы с каким-то объектом
         for (WorldObject o : world.getAllObjects()) {
             if (!o.isCrossable()) {
@@ -30,16 +28,6 @@ public abstract class MovableObject extends WorldObject {
                 if (distance < radiuses) {
                     // расстояние между объектами слишком мало, пройти нельзя
                     return true;
-                }
-                int n = SpecialMath.lineAndCircleIntersection(o.getLeft(), o.getRight(), newPosition, getRadius(), p1, p2);
-                if (n == 1) {
-                    if (p1.between(o.getLeft(), o.getRight())) {
-                        return true;
-                    }
-                } else if (n == 2) {
-                    if (p1.between(o.getLeft(), o.getRight()) || p2.between(o.getLeft(), o.getRight())) {
-                        return true;
-                    }
                 }
             }
         }
@@ -53,16 +41,7 @@ public abstract class MovableObject extends WorldObject {
         for (Line l : room.getAllLines()) {
             // проверять только непроходимые линии
             if (!l.isCrossable()) {
-                int n = SpecialMath.lineAndCircleIntersection(l.getStart(), l.getEnd(), newPosition, getRadius(), p1, p2);
-                if (n == 1) {
-                    if (p1.between(l.getStart(), l.getEnd())) {
-                        return l;
-                    }
-                } else if (n == 2) {
-                    if (p1.between(l.getStart(), l.getEnd()) || p2.between(l.getStart(), l.getEnd())) {
-                        return l;
-                    }
-                }
+                if (SpecialMath.lineAndCircleIntersects(l.getStart(), l.getEnd(), newPosition, getRadius())) return l;
             }
         }
         return null;
@@ -92,11 +71,12 @@ public abstract class MovableObject extends WorldObject {
                     && SpecialMath.lineIntersection(l.getStart(), l.getEnd(), newPosition, position, p)
                     && p.between(l.getStart(), l.getEnd()) && p.between(newPosition, position)) {
                 // пересекли линию и её можно пересекать
-                Room nr = l.getRoomFromPortal();
-                if (nr != null) {
-                    // возможно, перешли в другую комнату?
-                    if (nr.insideThisRoom(newPosition)) {
-                       return nr;
+                for (Room nr : l.getRoomsFromPortal()) {
+                    if (nr != room) {
+                        // возможно, перешли в другую комнату?
+                        if (nr.insideThisRoom(newPosition)) {
+                            return nr;
+                        }
                     }
                 }
             }
@@ -110,13 +90,19 @@ public abstract class MovableObject extends WorldObject {
         double deltaX = df * Math.sin(azimuth) + ds * Math.cos(-azimuth);
         double deltaY = df * Math.cos(azimuth) + ds * Math.sin(-azimuth);
         newPosition.moveBy(deltaX, deltaY);
-        if (touchAnyObject(newPosition)) return false;
-        if (touchWall(newPosition) != null || crossWall(newPosition) != null) return false;
+        if (touchAnyObject(newPosition)) {
+            return false;
+        }
+        if (touchWall(newPosition) != null || crossWall(newPosition) != null) {
+            return false;
+        }
         Room nr = checkMoveToOtherRoom(newPosition);
         if (nr != null) {
             room = nr;
         } else {
-            if (!room.insideThisRoom(newPosition))  return false;
+            if (!room.insideThisRoom(newPosition)) {
+                return false;
+            }
         }
         oldPosition.moveTo(position.getX(), position.getY());
         position.moveTo(newPosition.getX(), newPosition.getY());

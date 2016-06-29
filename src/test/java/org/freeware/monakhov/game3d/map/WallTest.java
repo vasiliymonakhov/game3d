@@ -31,7 +31,7 @@ public class WallTest {
      */
     @Test
     public void testGetStart() {
-        Line w = new Wall(new Point(10, 20), new Point(30, 40), null);
+        Line w = new Wall(new Point(10, 20), new Point(30, 40), null, null);
         assertEquals(10, w.getStart().getX(), EPSILON);
         assertEquals(20, w.getStart().getY(), EPSILON);
     }
@@ -41,7 +41,7 @@ public class WallTest {
      */
     @Test
     public void testGetEnd() {
-        Line w = new Wall(new Point(10, 20), new Point(30, 40), null);
+        Line w = new Wall(new Point(10, 20), new Point(30, 40), null, null);
         assertEquals(30, w.getEnd().getX(), EPSILON);
         assertEquals(40, w.getEnd().getY(), EPSILON);
     }
@@ -51,7 +51,7 @@ public class WallTest {
      */
     @Test
     public void testIsVisible() {
-        Wall w = new Wall(null, null, null);
+        Wall w = new Wall(null, null, null, null);
         assertTrue(w.isVisible());
     }
 
@@ -61,7 +61,7 @@ public class WallTest {
      */
     @Test
     public void testGetSubImage() throws IOException {
-        Wall w = new Wall(new Point(0, 0), new Point(2000, 0), Texture.get("brick01"));
+        Wall w = new Wall(new Point(0, 0), new Point(2000, 0), Texture.get("brick01"), null);
         Point p = new Point(10, 0);
         BufferedImage bi = w.getSubImage(p, 256);
         assertNotNull(bi);

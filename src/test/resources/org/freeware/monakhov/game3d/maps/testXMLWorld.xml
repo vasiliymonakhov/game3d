@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
+    <points>
+            <point id = "p00" x="-1" y = "-1"/>
+            <point id = "p10" x="-1" y = "1"/>
+            <point id = "p20" x="1" y = "1"/>
+            <point id = "p30" x="1" y = "-1"/>        
+            <point id = "p01" x="1" y = "-1"/>
+            <point id = "p11" x="1" y = "1"/>
+            <point id = "p21" x="3" y = "1"/>
+            <point id = "p31" x="3" y = "-1"/>            
+    </points>
+    <lines>   
+            <wall id = "w00" start = "p00" end = "p10" texture = "brick01"/>
+            <wall id = "w10" start = "p10" end = "p20" texture = "brick01"/>
+            <line id = "l20" start = "p20" end = "p30"/>
+            <wall id = "w30" start = "p30" end = "p00" texture = "brick01"/>                                   
+            <line id = "l01" start = "p01" end = "p11"/>
+            <wall id = "w11" start = "p11" end = "p21" texture = "brick01"/>
+            <wall id = "w21" start = "p21" end = "p31" texture = "brick01"/>
+            <wall id = "w31" start = "p31" end = "p01" texture = "brick01"/>                                       
+    </lines>    
     <rooms>
         <room id = "r0">
-            <point id = "p0" x="-1" y = "-1"/>
-            <point id = "p1" x="-1" y = "1"/>
-            <point id = "p2" x="1" y = "1"/>
-            <point id = "p3" x="1" y = "-1"/>
-            <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
-            <wall id = "w1" start = "p1" end = "p2" texture = "brick01"/>
-            <line id = "l2" start = "p2" end = "p3"/>
-            <wall id = "w3" start = "p3" end = "p0" texture = "brick01"/>                           
+            <line id = "w00"/>
+            <line id = "w10"/>
+            <line id = "l20"/>
+            <line id = "w30"/>                           
         </room>   
         <room id = "r1">
-            <point id = "p0" x="1" y = "-1"/>
-            <point id = "p1" x="1" y = "1"/>
-            <point id = "p2" x="3" y = "1"/>
-            <point id = "p3" x="3" y = "-1"/>
-            <line id = "l0" start = "p0" end = "p1"/>
-            <wall id = "w1" start = "p1" end = "p2" texture = "brick01"/>
-            <wall id = "w2" start = "p2" end = "p3" texture = "brick01"/>
-            <wall id = "w3" start = "p3" end = "p0" texture = "brick01"/>                           
+            <line id = "l01"/>
+            <line id = "w11"/>
+            <line id = "w21"/>
+            <line id = "w31"/>                           
         </room>   
     </rooms>
     <portals>
-        <portal from = "r0" line = "l2" to = "r1"/>
-        <portal from = "r1" line = "l0" to = "r0"/>
+        <portal from = "r0" line = "l20" to = "r1"/>
+        <portal from = "r1" line = "l01" to = "r0"/>
     </portals>
 </root>

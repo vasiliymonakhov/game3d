@@ -4,6 +4,7 @@
 
 package org.freeware.monakhov.game3d.map;
 
+import java.util.Set;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,14 +33,14 @@ public class XMLWorldLoaderTest {
         XMLWorldLoader wl = new XMLWorldLoader();
         wl.parse(w, null, XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testXMLWorld.xml"));
         Room r0 = w.getRoom("r0");
-        Point p0 = r0.getPoint("p0");
-        Point p1 = r0.getPoint("p1");
-        Point p2 = r0.getPoint("p2");
-        Point p3 = r0.getPoint("p3");
-        Line w0 = r0.getLine("w0");
-        Line w1 = r0.getLine("w1");
-        Line w2 = r0.getLine("l2");
-        Line w3 = r0.getLine("w3");
+        Point p0 = w.getPoint("p00");
+        Point p1 = w.getPoint("p10");
+        Point p2 = w.getPoint("p20");
+        Point p3 = w.getPoint("p30");
+        Line w0 = r0.getLine("w00");
+        Line w1 = r0.getLine("w10");
+        Line w2 = r0.getLine("l20");
+        Line w3 = r0.getLine("w30");
         assertEquals(-1, p0.getX(), EPSILON);
         assertEquals(-1, p0.getY(), EPSILON);
         assertEquals(-1, p1.getX(), EPSILON);
@@ -58,14 +59,14 @@ public class XMLWorldLoaderTest {
         assertTrue(w3.getEnd() == p0);
         
         Room r1 = w.getRoom("r1");
-        p0 = r1.getPoint("p0");
-        p1 = r1.getPoint("p1");
-        p2 = r1.getPoint("p2");
-        p3 = r1.getPoint("p3");
-        w0 = r1.getLine("l0");
-        w1 = r1.getLine("w1");
-        w2 = r1.getLine("w2");
-        w3 = r1.getLine("w3");
+        p0 = w.getPoint("p01");
+        p1 = w.getPoint("p11");
+        p2 = w.getPoint("p21");
+        p3 = w.getPoint("p31");
+        w0 = r1.getLine("l01");
+        w1 = r1.getLine("w11");
+        w2 = r1.getLine("w21");
+        w3 = r1.getLine("w31");
         assertEquals(1, p0.getX(), EPSILON);
         assertEquals(-1, p0.getY(), EPSILON);
         assertEquals(1, p1.getX(), EPSILON);
@@ -83,10 +84,10 @@ public class XMLWorldLoaderTest {
         assertTrue(w3.getStart() == p3);
         assertTrue(w3.getEnd() == p0);
         
-        Room pfr0 = w.getRoom("r0").getLine("l2").getRoomFromPortal();
-        Room pfr1 = w.getRoom("r1").getLine("l0").getRoomFromPortal();
-        assertTrue(pfr0 == r1);
-        assertTrue(pfr1 == r0);
+        Set<Room> pfr0 = w.getRoom("r0").getLine("l20").getRoomsFromPortal();
+        Set<Room> pfr1 = w.getRoom("r1").getLine("l01").getRoomsFromPortal();
+        assertTrue(pfr0.contains(r1));
+        assertTrue(pfr1.contains(r0));
         
     }
 

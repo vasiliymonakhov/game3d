@@ -1,15 +1,12 @@
 package org.freeware.monakhov.game3d.objects;
 
-import org.freeware.monakhov.game3d.objects.movable.Hero;
+import org.freeware.monakhov.game3d.objects.movable.ViewPoint;
 import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
-import org.freeware.monakhov.game3d.objects.misc.GridFence01;
-import org.freeware.monakhov.game3d.objects.misc.GridFence02;
 import org.freeware.monakhov.game3d.objects.nonmovable.GreenBarrel;
-import org.freeware.monakhov.game3d.objects.nonmovable.Pole;
 import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
 import org.xml.sax.Attributes;
 
@@ -50,7 +47,7 @@ abstract public class WorldObject {
         }        
     }
 
-    public void turnSpriteToHero(Hero hero) {
+    public void turnSpriteToViewPoint(ViewPoint hero) {
         int sw2 = getSprite().getWidth() / 2;
         double deltaX = sw2 * Math.cos(-hero.getAzimuth());
         double deltaY = sw2 * Math.sin(-hero.getAzimuth());
@@ -112,6 +109,8 @@ abstract public class WorldObject {
      * @return
      */
     abstract public double getRadius();
+    
+    abstract public double getInteractRadius();
 
     /**
      * @return the left
@@ -134,16 +133,12 @@ abstract public class WorldObject {
                 return new GreenBarrel(world, new Point(attr));
             case "tree" :
                 return new Tree(world, new Point(attr));
-            case "pole01" :
-                return new Pole(world, new Point(attr));
-            case "grid_fence01" :
-                return new GridFence01(world, new Point(Double.parseDouble(attr.getValue("start_x")), Double.parseDouble(attr.getValue("start_y"))),
-                    new Point(Double.parseDouble(attr.getValue("end_x")), Double.parseDouble(attr.getValue("end_y"))));                
-            case "grid_fence02" :
-                return new GridFence02(world, new Point(Double.parseDouble(attr.getValue("start_x")), Double.parseDouble(attr.getValue("start_y"))),
-                    new Point(Double.parseDouble(attr.getValue("end_x")), Double.parseDouble(attr.getValue("end_y"))));                                
         }
         return null;        
     }
+    
+    public abstract void onInteractWith(WorldObject wo);
+    
+    public abstract void doSomething(long frameNanoTime);
     
 }

@@ -1,7 +1,7 @@
 package org.freeware.monakhov.game3d;
 
-import java.awt.Color;
 import org.freeware.monakhov.game3d.objects.movable.Hero;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -10,7 +10,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -30,10 +29,11 @@ import org.xml.sax.SAXException;
 
 public class MainFrame extends javax.swing.JFrame {
 
-    GraphicsEngine engine;
-    World world;
-    Screen screen;
-    Hero hero;
+    final GraphicsEngine graphicsEngine;
+    final GameEngine gameEngine;
+    final World world;
+    final Screen screen;
+    final Hero hero;
 
     public MainFrame() throws ParserConfigurationException, SAXException, IOException {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -47,14 +47,16 @@ public class MainFrame extends javax.swing.JFrame {
 
         world = new World();
         hero = new Hero(world, new Point());
+        world.setHero(hero);
         XMLWorldLoader loader = new XMLWorldLoader();
-        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld3.xml"));
+        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml"));
 
         screen = new Screen(rect.width * 4 / 4, rect.height * 4 / 4);
-        engine = new GraphicsEngine(world, hero, screen);
+        graphicsEngine = new GraphicsEngine(world, hero, screen);
+        gameEngine = new GameEngine(world, hero);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
-        
+
         Timer sec = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,27 +66,27 @@ public class MainFrame extends javax.swing.JFrame {
         });
         sec.start();
         final Thread t = new Thread(new Runnable() {
-            
-            int iter;
-            
+
+            // int iter;
             @Override
             public void run() {
                 while (true) {
-                    try {
-                        long now = System.nanoTime();
-                        hero.analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), frameNanoTime);
-                        try {
-                            engine.doCycle();
-                            if (++iter % 10 == 0) System.gc();
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        frames++;
-                        frameNanoTime = System.nanoTime() - now;
-                        SwingUtilities.invokeLater(repainter);
-                    } catch (Throwable th) {
+                    long now = System.nanoTime();
+                    hero.analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), frameNanoTime);
+                    if (ked.isInteract()) {
+                        gameEngine.interactWithHero();
+                        ked.setInteract(false);
                     }
-
+                    gameEngine.doCycle(frameNanoTime);
+                    try {
+                        graphicsEngine.doCycle();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    // if (++iter % 10 == 0) System.gc();
+                    frames++;
+                    frameNanoTime = System.nanoTime() - now;
+                    SwingUtilities.invokeLater(repainter);
                 }
             }
         });
@@ -97,8 +99,8 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
 
-    final KeyDispatcher ked = new KeyDispatcher();    
-    
+    final KeyDispatcher ked = new KeyDispatcher();
+
     private final Runnable repainter = new Runnable() {
 
         @Override
@@ -117,7 +119,7 @@ public class MainFrame extends javax.swing.JFrame {
     @Override
     public void paint(Graphics gr) {
         Rectangle rr = this.getBounds();
-        Graphics2D g = (Graphics2D)gr;
+        Graphics2D g = (Graphics2D) gr;
 //        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 //        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
@@ -142,13 +144,14 @@ public class MainFrame extends javax.swing.JFrame {
     private long frameNanoTime;
 
     class KeyDispatcher implements KeyEventDispatcher {
-        
+
         private boolean strafeLeft;
         private boolean right;
         private boolean forward;
         private boolean backward;
         private boolean strafeRight;
         private boolean left;
+        private boolean interact;
 
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
@@ -175,16 +178,19 @@ public class MainFrame extends javax.swing.JFrame {
                         this.strafeRight = true;
                         break;
                     case KeyEvent.VK_TAB:
-                        engine.toggleMap();
+                        graphicsEngine.toggleMap();
                         break;
                     case KeyEvent.VK_F12:
                         fullScreen = !fullScreen;
                         break;
                     case KeyEvent.VK_PAGE_UP:
-                        engine.incMapScale();
+                        graphicsEngine.incMapScale();
                         break;
                     case KeyEvent.VK_PAGE_DOWN:
-                        engine.decMapScale();
+                        graphicsEngine.decMapScale();
+                        break;
+                    case KeyEvent.VK_SPACE:
+                        interact = true;
                         break;
                 }
             }
@@ -207,6 +213,9 @@ public class MainFrame extends javax.swing.JFrame {
                         break;
                     case KeyEvent.VK_X:
                         this.strafeRight = false;
+                        break;
+                    case KeyEvent.VK_SPACE:
+                        interact = false;
                         break;
                 }
             }
@@ -253,6 +262,20 @@ public class MainFrame extends javax.swing.JFrame {
          */
         boolean isLeft() {
             return left;
+        }
+
+        /**
+         * @return the interact
+         */
+        boolean isInteract() {
+            return interact;
+        }
+
+        /**
+         * @param interact the interact to set
+         */
+        void setInteract(boolean interact) {
+            this.interact = interact;
         }
     }
 }

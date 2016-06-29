@@ -5,9 +5,9 @@
 package org.freeware.monakhov.game3d.map;
 
 import java.util.Collection;
+import static org.freeware.monakhov.game3d.map.RoomTest.EPSILON;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.GreenBarrel;
-import org.freeware.monakhov.game3d.objects.nonmovable.Pole;
 import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -18,6 +18,65 @@ import static org.junit.Assert.*;
  */
 public class WorldTest {
 
+    /**
+     * Test of addPoint method, of class Room.
+     */
+    @Test
+    public void testAddAndGetPoint1() {
+        World w = new World();
+        w.addPoint("p0", new Point(10, 20));
+        w.addPoint("p1", new Point(30, 40));
+        w.addPoint("p2", new Point(50, 60));
+        
+        Point p = w.getPoint("p0");
+        assertEquals(10, p.getX(), EPSILON);
+        assertEquals(20, p.getY(), EPSILON);
+        p = w.getPoint("p1");
+        assertEquals(30, p.getX(), EPSILON);
+        assertEquals(40, p.getY(), EPSILON);
+        p = w.getPoint("p2");
+        assertEquals(50, p.getX(), EPSILON);
+        assertEquals(60, p.getY(), EPSILON);
+        p = w.getPoint("p3");
+        assertNull(p);
+    }
+    /**
+     * Test of addPoint method, of class Room.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testAddPoint() {
+        World w = new World();
+        w.addPoint("p0", new Point(10, 20));
+        w.addPoint("p0", new Point(30, 40));
+    }    
+    
+    /**
+     * Test of addPoint method, of class Room.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testAddPoint2() {
+        World w = new World();
+        w.addPoint("", new Point(10, 20));
+    }    
+
+    /**
+     * Test of addPoint method, of class Room.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testAddPoint3() {
+        World w = new World();
+        w.addPoint(null, new Point(10, 20));
+    }        
+    
+    /**
+     * Test of addPoint method, of class Room.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testAddPoint4() {
+        World w = new World();
+        w.addPoint("p0", null);
+    }            
+    
     /**
      * Test of addRoom method, of class World.
      */
@@ -138,11 +197,9 @@ public class WorldTest {
         Tree t = new Tree(w, new Point());
         w.addObject("1", b);
         w.addObject("2", t);
-        Pole p = new Pole(w, new Point());
         Collection<WorldObject> res = w.getAllObjects();
         assertTrue(res.contains(t));
         assertTrue(res.contains(b));
-        assertFalse(res.contains(p));
     }
 
     /**
@@ -185,6 +242,36 @@ public class WorldTest {
         World w = new World();
         w.addObject("abarrel", null);
     }    
+    
+    /**
+     * Test of getPoint method, of class Room.
+     */
+    @Test
+    public void testGetPoint() {
+        World w = new World();
+        w.addPoint("p0", new Point(10, 20));
+        Point p = w.getPoint("p0");
+        assertEquals(10, p.getX(), EPSILON);
+        assertEquals(20, p.getY(), EPSILON);
+    }
+
+    /**
+     * Test of getAllPoints method, of class Room.
+     */
+    @Test
+    public void testGetAllPoints() {
+        World w = new World();
+        Point p0 = new Point(10, 20);
+        Point p1 = new Point(30, 40);
+        Point p2 = new Point(50, 60);
+        w.addPoint("p0", p0);
+        w.addPoint("p1", p1);
+        w.addPoint("p2", p2);
+        Collection<Point> points = w.getAllPoints();
+        assertTrue(points.contains(p0));
+        assertTrue(points.contains(p1));
+        assertTrue(points.contains(p2));
+    }
     
     
 }

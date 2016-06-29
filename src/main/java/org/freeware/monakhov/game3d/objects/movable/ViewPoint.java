@@ -1,4 +1,4 @@
-package org.freeware.monakhov.game3d.objects.nonmovable;
+package org.freeware.monakhov.game3d.objects.movable;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Sprite;
@@ -6,23 +6,24 @@ import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
- * Бочка
- * @author Vasily Monakhov 
+ * This is who are You! :)
+ *
+ * @author Vasily Monakhov
  */
-public class GreenBarrel extends NonMovableObject {
-
-    public GreenBarrel(World world, Point position) {
+public class ViewPoint extends MovableObject {
+    
+    public ViewPoint(World world, Point position) {
         super(world, position);
     }
 
     @Override
     public Sprite getSprite() {
-        return Sprite.get("green_barrel");
+        return null;
     }
 
     @Override
     public double getRadius() {
-        return 25;
+        return 48;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class GreenBarrel extends NonMovableObject {
 
     @Override
     public double getInteractRadius() {
-        return 0;
+        return 96;
     }
 
 }

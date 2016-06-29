@@ -8,8 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -35,23 +33,20 @@ public class Sprite {
         this.yOffset = yOffset;
     }
 
-    void addFile(int index, String fileName) {
+    void addFile(int index, String fileName) throws IOException {
         fileNames[index] = fileName;
-        try {
-            BufferedImage bi = ImageIO.read(Texture.class.getResourceAsStream(fileNames[index]));
-            GraphicsConfiguration gfx_config = GraphicsEnvironment.
-                    getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                    getDefaultConfiguration();
-            images[index] = gfx_config.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
-            Graphics g = images[index].getGraphics();
-            g.drawImage(bi, 0, 0, null);
-            g.dispose();
-        } catch (IOException ex) {
-            Logger.getLogger(Sprite.class.getName()).log(Level.SEVERE, "Can't load sprite", ex);
-        }
+        BufferedImage bi = ImageIO.read(Sprite.class.getResourceAsStream(fileNames[index]));
+        GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                getDefaultConfiguration();
+        images[index] = gfx_config.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+        Graphics g = images[index].getGraphics();
+        g.drawImage(bi, 0, 0, null);
+        g.dispose();
     }
 
     /**
+     * @param index
      * @return the image
      */
     public BufferedImage getImage(int index) {

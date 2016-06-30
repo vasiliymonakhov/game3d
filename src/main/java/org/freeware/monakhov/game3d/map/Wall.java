@@ -13,11 +13,15 @@ import org.freeware.monakhov.game3d.SpecialMath;
  */
 public class Wall extends Line {
 
-    protected final Texture texture;
+    private final Texture texture;
     
     public Wall(Point start, Point end, Texture texture, World world) {
         super(start, end, world);
         this.texture = texture;
+    }
+    
+    public Texture getTexture() {
+        return texture;
     }
     
     @Override
@@ -66,7 +70,7 @@ public class Wall extends Line {
     @Override
     public BufferedImage getSubImage(Point p, int height) {
         int xOffset = (int)Math.round(SpecialMath.lineLength(start, p));
-        return texture.getSubImage(xOffset, height);
+        return getTexture().getSubImage(xOffset, height);
     }
     
     

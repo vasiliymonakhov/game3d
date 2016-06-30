@@ -49,8 +49,6 @@ public class Texture {
      * @return the image
      */
     public BufferedImage getImage(int index) {
-        if (images[index] == null) {
-        }
         return images[index];
     }
 

@@ -18,9 +18,12 @@ public class Door extends Wall {
     private int state = CLOSED;
     private double opened;
     private final double width;
-
-    public Door(Point start, Point end, Texture texture, World world) {
-        super(start, end, texture, world);
+    
+    private final static Texture OPEN_TEXTURE = Texture.get("door_open01");
+    private final static Texture CLOSED_TEXTURE = Texture.get("door_closed01");
+    
+    public Door(Point start, Point end, World world) {
+        super(start, end, null, world);
         width = SpecialMath.lineLength(start, end);
     }
 
@@ -46,9 +49,15 @@ public class Door extends Wall {
     }
 
     @Override
+    public Texture getTexture() {
+        if (state == OPEN || state == OPENING) return OPEN_TEXTURE;
+        return CLOSED_TEXTURE;
+    }    
+    
+    @Override
     public BufferedImage getSubImage(Point p, int height) {
         int xOffset = (int) Math.round(SpecialMath.lineLength(start, p) - width * opened);
-        return texture.getSubImage(xOffset, height);
+        return getTexture().getSubImage(xOffset, height);
     }
 
     private long openedTime;

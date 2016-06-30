@@ -4,6 +4,7 @@
 
 package org.freeware.monakhov.game3d.map;
 
+import java.io.InputStream;
 import java.util.Set;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -20,7 +21,9 @@ public class XMLWorldLoaderTest {
     @Before
     public void setUp() throws Exception {
         XMLResourceLoader xmlrl = new XMLResourceLoader();
-        xmlrl.parse(XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml"));
+        try (InputStream is = XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml")) {
+            xmlrl.parse(is);
+        }
     }
     
     /**
@@ -31,7 +34,10 @@ public class XMLWorldLoaderTest {
     public void testParse() throws Exception {
         World w = new World();
         XMLWorldLoader wl = new XMLWorldLoader();
-        wl.parse(w, null, XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testXMLWorld.xml"));
+        try (InputStream is = XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testXMLWorld.xml")) {
+            wl.parse(w, null, is);
+        }
+        
         Room r0 = w.getRoom("r0");
         Point p0 = w.getPoint("p00");
         Point p1 = w.getPoint("p10");

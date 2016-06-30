@@ -64,7 +64,8 @@ class XMLWorldHandler extends DefaultHandler {
                 break;
             case "door" :
                 if (loadingLines) {
-                    world.addLine(attr.getValue("id"), new Door(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("texture")), world));
+                    world.addLine(attr.getValue("id"), new Door(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), world));
+                    break;
                 }
             case "rooms" : 
                 loadingRooms = true;

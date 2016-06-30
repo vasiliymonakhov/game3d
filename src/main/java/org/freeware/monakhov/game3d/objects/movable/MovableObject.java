@@ -36,19 +36,21 @@ public abstract class MovableObject extends WorldObject {
 
     Line touchWall(Point newPosition) {
         // проверить, не уткнулись ли мы с стенку
-        Point p1 = new Point();
-        Point p2 = new Point();
         for (Line l : room.getAllLines()) {
             // проверять только непроходимые линии
             if (!l.isCrossable()) {
-                if (SpecialMath.lineAndCircleIntersects(l.getStart(), l.getEnd(), newPosition, getRadius())) return l;
+                // площади треугольников, которые образуют точки старой позиции и новой позиции и линия
+                double ps = SpecialMath.triangleSquare(position, l.getStart(), l.getEnd());
+                double ns = SpecialMath.triangleSquare(newPosition, l.getStart(), l.getEnd());
+                // если площадь треугольника со старой позицией больше, чем с новой, то мы приближаемся к линии
+                if (ps > ns && SpecialMath.lineAndCircleIntersects(l.getStart(), l.getEnd(), newPosition, getRadius())) return l;
             }
         }
         return null;
     }
 
     Line crossWall(Point newPosition) {
-        // проверить, не уткнулись ли мы с стенку
+        // проверить, не пересекли ли мы с стенку
         Point p = new Point();
         for (Line l : room.getAllLines()) {
             // проверять только непроходимые линии

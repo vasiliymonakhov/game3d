@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import org.freeware.monakhov.game3d.map.Door;
 import org.freeware.monakhov.game3d.map.Image;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
@@ -153,7 +154,7 @@ public class GraphicsEngine {
                 if (l != null) {
                     double dist = SpecialMath.lineLength(viewPoint.getPosition(), wallsIntersectPoints[index]);
                     int h = (int) Math.round(k[index] / dist);
-                    int ch = (int) Math.round((screen.getHeight() - h) / 2);
+                    int ch = (int) Math.round(((double)screen.getHeight() - h) / 2);
                     g.drawImage(l.getSubImage(wallsIntersectPoints[index], h), index, ch, 1, h, null);
                 }
             } finally {
@@ -416,6 +417,11 @@ public class GraphicsEngine {
             for (Line l : r.getAllLines()) {
                 if (!l.isEverSeen()) {
                     continue;
+                }
+                if (l instanceof Door) {
+                    g.setStroke(LINE);
+                } else {
+                    g.setStroke(WALL);
                 }
                 g.drawLine(dx + (int) (l.getStart().getX() * mapScale), dy - (int) (l.getStart().getY() * mapScale),
                         dx + (int) (l.getEnd().getX() * mapScale), dy - (int) (l.getEnd().getY() * mapScale));

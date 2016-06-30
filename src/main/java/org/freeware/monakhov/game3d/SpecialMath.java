@@ -85,22 +85,5 @@ public class SpecialMath {
         }
 
     }
-
-    public static double angleBetweenLines(Point p1, Point p2, Point p3, Point p4) {
-        double a1 = p2.getY() - p1.getY();
-        double b1 = p1.getX() - p2.getX();
-        double c1 = -p1.getX() * (p2.getY() - p1.getY()) + p1.getY() * (p2.getX() - p1.getX());
-
-        double a2 = p4.getY() - p3.getY();
-        double b2 = p3.getX() - p4.getX();
-        double c2 = -p3.getX() * (p4.getY() - p3.getY()) + p3.getY() * (p4.getX() - p3.getX());
-
-        double aabb = a1 * a2 + b1 * b2;
-
-        if (aabb < EPSILON) {
-            return Math.PI / 4;
-        }
-        return Math.atan((a1 * b2 - a2 * b1) / aabb);
-    }
-
+    
 }

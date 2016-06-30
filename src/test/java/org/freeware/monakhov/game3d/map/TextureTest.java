@@ -5,7 +5,7 @@
 package org.freeware.monakhov.game3d.map;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.InputStream;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -19,7 +19,10 @@ public class TextureTest {
     @Before
     public void setUp() throws Exception {
         XMLResourceLoader xmlrl = new XMLResourceLoader();
-        xmlrl.parse(XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml"));
+        try (InputStream is = XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml")) {
+            xmlrl.parse(is);
+        }
+        
     }    
     
     /**

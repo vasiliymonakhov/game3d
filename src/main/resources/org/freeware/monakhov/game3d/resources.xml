@@ -41,14 +41,28 @@
             <texture_file index = "4" file = "brick03_4.png"/>
             <texture_file index = "5" file = "brick03_5.png"/>
         </texture>                
-        <texture id = "door01" width = "256" count = "6">
-            <texture_file index = "0" file = "door01_0.png"/>
-            <texture_file index = "1" file = "door01_1.png"/>
-            <texture_file index = "2" file = "door01_2.png"/>
-            <texture_file index = "3" file = "door01_3.png"/>
-            <texture_file index = "4" file = "door01_4.png"/>
-            <texture_file index = "5" file = "door01_5.png"/>
+        <texture id = "door_border_left01" width = "32" count = "3">
+            <texture_file index = "0" file = "door_border_left01_0.png"/>
+            <texture_file index = "1" file = "door_border_left01_1.png"/>
+            <texture_file index = "2" file = "door_border_left01_2.png"/>
+        </texture>            
+        <texture id = "door_border_right01" width = "32" count = "3">
+            <texture_file index = "0" file = "door_border_right01_0.png"/>
+            <texture_file index = "1" file = "door_border_right01_1.png"/>
+            <texture_file index = "2" file = "door_border_right01_2.png"/>
         </texture>        
+        <texture id = "door_closed01" width = "256" count = "4">
+            <texture_file index = "0" file = "door_closed01_0.png"/>
+            <texture_file index = "1" file = "door_closed01_1.png"/>
+            <texture_file index = "2" file = "door_closed01_2.png"/>
+            <texture_file index = "3" file = "door_closed01_3.png"/>
+        </texture>        
+        <texture id = "door_open01" width = "256" count = "4">
+            <texture_file index = "0" file = "door_open01_0.png"/>
+            <texture_file index = "1" file = "door_open01_1.png"/>
+            <texture_file index = "2" file = "door_open01_2.png"/>
+            <texture_file index = "3" file = "door_open01_3.png"/>
+        </texture>    
         <texture id = "metal01" width = "12" count = "3">
             <texture_file index = "0" file = "metal01_0.png"/>
             <texture_file index = "1" file = "metal01_1.png"/>

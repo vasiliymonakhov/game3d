@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -43,14 +44,18 @@ public class MainFrame extends javax.swing.JFrame {
         setSize(new Dimension(rect.width, rect.height));
 
         XMLResourceLoader resLoader = new XMLResourceLoader();
-        resLoader.parse(MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml"));
+        try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml")) {
+            resLoader.parse(is);
+        }
 
         world = new World();
         hero = new Hero(world, new Point());
         world.setHero(hero);
         XMLWorldLoader loader = new XMLWorldLoader();
-        loader.parse(world, hero, MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml"));
-
+        try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml")) {
+            loader.parse(world, hero, is);
+        }
+        
         screen = new Screen(rect.width * 4 / 4, rect.height * 4 / 4);
         graphicsEngine = new GraphicsEngine(world, hero, screen);
         gameEngine = new GameEngine(world, hero);

@@ -97,10 +97,6 @@ public class Line {
         return false;
     }
     
-    public boolean pointIsVisible(Point p) {
-        return false;
-    }
-    
     protected boolean everSeen = false;    
     
     public boolean isEverSeen() {
@@ -120,17 +116,13 @@ public class Line {
     /**
      * Проверяет видимость линии на экране
      */
-    boolean checkVisibility(Line[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
+    boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
         for (int i = 0; i < mapLines.length; i++) {
             if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, lcp)) {
                 if (lcp.between(start, end) && lcp.between(viewPoint, rayPoints[i])) return true;
             }
         }
         return false;
-    }
-
-    public BufferedImage getSubImage(Point p, int height) {
-        return null;
     }
     
     public void onInteractWith(WorldObject wo) {

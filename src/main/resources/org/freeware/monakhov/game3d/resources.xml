@@ -63,6 +63,11 @@
             <texture_file index = "2" file = "door_open01_2.png"/>
             <texture_file index = "3" file = "door_open01_3.png"/>
         </texture>    
+        <texture id = "fence01" width = "256" count = "3">
+            <texture_file index = "0" file = "fence01_0.png"/>
+            <texture_file index = "1" file = "fence01_1.png"/>
+            <texture_file index = "2" file = "fence01_2.png"/>
+        </texture>         
         <texture id = "metal01" width = "12" count = "3">
             <texture_file index = "0" file = "metal01_0.png"/>
             <texture_file index = "1" file = "metal01_1.png"/>

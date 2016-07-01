@@ -28,6 +28,7 @@ import org.freeware.monakhov.game3d.map.Image;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
+import org.freeware.monakhov.game3d.map.VisibleLine;
 import org.freeware.monakhov.game3d.map.World;
 
 /**
@@ -45,7 +46,7 @@ public class GraphicsEngine {
 
     private final double farFarFrontier;
 
-    private final Line[] mapLines;
+    private final VisibleLine[] mapLines;
     private final Point[] rayPoints;
     private final Point[] transformedRayPoints;
     private final Point[] wallsIntersectPoints;
@@ -66,15 +67,12 @@ public class GraphicsEngine {
         this.world = world;
         this.viewPoint = viewPoint;
         this.screen = screen;
-        mapLines = new Line[screen.getWidth()];
+        mapLines = new VisibleLine[screen.getWidth()];
         farFarFrontier = KORRECTION * screen.getWidth() / 2;
         rayPoints = new Point[screen.getWidth()];
-        int index1 = screen.getWidth() / 2 - 1;
-        int index2 = index1 + 1;
-        int steps = index2;
-        for (int i = 0; i < steps; i++) {
-            rayPoints[index1 - i] = new Point(-0.5 - i * KORRECTION, farFarFrontier);
-            rayPoints[index2 + i] = new Point(0.5 + i * KORRECTION, farFarFrontier);
+        int ix = screen.getWidth() / 2 - 1;
+        for (int i = 0; i < screen.getWidth(); i++) {
+            rayPoints[i] = new Point((i - ix) * KORRECTION, farFarFrontier);
         }
         k = new double[screen.getWidth()];
         for (int i = 0; i < screen.getWidth(); i++) {
@@ -150,7 +148,7 @@ public class GraphicsEngine {
         @Override
         public void run() {
             try {
-                Line l = mapLines[index];
+                VisibleLine l = mapLines[index];
                 if (l != null) {
                     double dist = SpecialMath.lineLength(viewPoint.getPosition(), wallsIntersectPoints[index]);
                     int h = (int) Math.round(k[index] / dist);
@@ -400,11 +398,14 @@ public class GraphicsEngine {
         mapScale /= 2;
     }
 
+    private final Color WALL_COLOR = new Color(0, 255, 0, 128);
+    private final Color VIEWPOINT_COLOR = new Color(255, 0, 0, 128);
+    
     void drawMap() {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
         int dx = screen.getImage().getWidth() / 2;
         int dy = screen.getImage().getHeight() / 2;
-        g.setColor(Color.red);
+        g.setColor(VIEWPOINT_COLOR);
         g.fillOval(dx - 5, dy - 5, 10, 10);
         g.setStroke(WALL);
         int rx = (int) (20 * Math.sin(viewPoint.getAzimuth()));
@@ -412,7 +413,7 @@ public class GraphicsEngine {
         g.drawLine(dx, dy, dx + rx, dy - ry);
         dx += -(int) viewPoint.getPosition().getX() * mapScale;
         dy += (int) viewPoint.getPosition().getY() * mapScale;
-        g.setColor(Color.GREEN);
+        g.setColor(WALL_COLOR);
         for (Room r : world.getAllRooms()) {
             for (Line l : r.getAllLines()) {
                 if (!l.isEverSeen()) {
@@ -427,7 +428,7 @@ public class GraphicsEngine {
                         dx + (int) (l.getEnd().getX() * mapScale), dy - (int) (l.getEnd().getY() * mapScale));
             }
         }
-
+        
     }
 
 }

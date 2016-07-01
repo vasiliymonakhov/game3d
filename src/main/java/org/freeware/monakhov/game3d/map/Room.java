@@ -46,7 +46,7 @@ public class Room {
 
     boolean roomVisibilityAlreadyChecked;
 
-    public boolean checkVisibility(Line[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints, List<Room> visibleRooms) {
+    public boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints, List<Room> visibleRooms) {
         if (isRoomVisibilityAlreadyChecked()) {
             return false;
         }

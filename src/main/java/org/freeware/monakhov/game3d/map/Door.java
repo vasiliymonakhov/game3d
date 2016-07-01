@@ -8,7 +8,7 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
  *
  * @author Vasily Monakhov
  */
-public class Door extends Wall {
+public class Door extends VisibleLine {
 
     final static int CLOSED = 0;
     final static int OPENING = 1;
@@ -23,7 +23,7 @@ public class Door extends Wall {
     private final static Texture CLOSED_TEXTURE = Texture.get("door_closed01");
     
     public Door(Point start, Point end, World world) {
-        super(start, end, null, world);
+        super(start, end, world);
         width = SpecialMath.lineLength(start, end);
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root floor = "floor01" ceiling = "ceiling">
+<root floor = "floor02" sky = "sky02">
     <points>
         <point id = "p01" x="0" y = "0"/>
         <point id = "p02" x="0" y = "256"/>
@@ -22,9 +22,9 @@
         <wall id = "w2" start = "p03" end = "p04" texture = "door_border_left01"/>                
         <wall id = "w3" start = "p04" end = "p05" texture = "door_border_right01"/>
         <wall id = "w4" start = "p05" end = "p06" texture = "brick02"/>                
-        <wall id = "w5" start = "p06" end = "p07" texture = "brick02"/>
-        <wall id = "w6" start = "p07" end = "p08" texture = "brick02"/>                                
-        <wall id = "w7" start = "p08" end = "p09" texture = "brick02"/>
+        <wall id = "w5" start = "p06" end = "p07" texture = "fence01"/>
+        <wall id = "w6" start = "p07" end = "p08" texture = "fence01"/>                                
+        <wall id = "w7" start = "p08" end = "p09" texture = "fence01"/>
         <wall id = "w8" start = "p09" end = "p10" texture = "brick02"/>
         <wall id = "w9" start = "p10" end = "p11" texture = "door_border_left01"/>
         <wall id = "w10" start = "p11" end = "p12" texture = "door_border_right01"/>
@@ -70,7 +70,7 @@
         <portal line = "d0" from = "r1" to = "r2"/>
         <portal line = "l1" from = "r2" to = "r3"/>
     </portals>    
-    <hero  x = "256" y = "128" room = "r0" azimuth = "0"/>    
+    <hero  x = "256" y = "3840" room = "r3" azimuth = "180"/>    
     <objects>
         <object class = "tree" id = "tree00" x = "64" y = "384"/>
         <object class = "tree" id = "tree01" x = "448" y = "384"/>

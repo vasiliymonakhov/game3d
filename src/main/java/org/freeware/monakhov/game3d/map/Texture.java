@@ -3,7 +3,6 @@ package org.freeware.monakhov.game3d.map;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -38,7 +37,8 @@ public class Texture {
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();
-        images[index] = gfx_config.createCompatibleImage(width >> index, SIZE >> index, Transparency.OPAQUE);
+        images[index] = gfx_config.createCompatibleImage(width >> index, SIZE >> index,
+                bi.getColorModel().getTransparency());
         Graphics2D g = (Graphics2D) images[index].getGraphics();
         g.drawImage(bi, 0, 0, null);
         g.dispose();

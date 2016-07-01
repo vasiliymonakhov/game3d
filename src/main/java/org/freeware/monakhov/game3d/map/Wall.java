@@ -11,7 +11,7 @@ import org.freeware.monakhov.game3d.SpecialMath;
  * Wall in a map
  * @author Vasily Monakhov 
  */
-public class Wall extends Line {
+public class Wall extends VisibleLine {
 
     private final Texture texture;
     
@@ -20,6 +20,7 @@ public class Wall extends Line {
         this.texture = texture;
     }
     
+    @Override
     public Texture getTexture() {
         return texture;
     }
@@ -43,30 +44,6 @@ public class Wall extends Line {
         return false;
     }    
 
-    /**
-     * Проверяет видимость линии на экране
-     */
-    @Override
-    boolean checkVisibility(Line[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
-        Point p = new Point();
-        boolean flag = false;
-        for (int i = 0; i < mapLines.length; i++) {
-            if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, p)) {
-                if (p.between(start, end) && p.between(rayPoints[i], viewPoint)) {
-                    if (mapLines[i] == null) {
-                        flag = true;                        
-                        if (pointIsVisible(p)) {
-                            mapLines[i] = this;
-                            everSeen = true;
-                            intersectPoints[i].moveTo(p.getX(), p.getY());
-                        }
-                    }
-                }
-            }
-        }
-        return flag;
-    }
-    
     @Override
     public BufferedImage getSubImage(Point p, int height) {
         int xOffset = (int)Math.round(SpecialMath.lineLength(start, p));

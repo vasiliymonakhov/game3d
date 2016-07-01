@@ -3,7 +3,6 @@ package org.freeware.monakhov.game3d.map;
 import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -39,7 +38,7 @@ public class Sprite {
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();
-        images[index] = gfx_config.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+        images[index] = gfx_config.createCompatibleImage(width, height, bi.getColorModel().getTransparency());
         Graphics g = images[index].getGraphics();
         g.drawImage(bi, 0, 0, null);
         g.dispose();

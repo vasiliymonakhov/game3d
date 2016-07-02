@@ -57,7 +57,7 @@ public class SpecialMath {
                 return true;
             }
         }
-        return false;
+        return r > SpecialMath.lineLength(o, p1) || r > SpecialMath.lineLength(o, p2);
     }
 
     public static int lineAndCircleIntersection(Point p1, Point p2, Point o, double r, Point pr1, Point pr2) {

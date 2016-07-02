@@ -1,6 +1,5 @@
 package org.freeware.monakhov.game3d.map;
 
-import java.awt.image.BufferedImage;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.freeware.monakhov.game3d.SpecialMath;

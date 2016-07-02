@@ -57,7 +57,7 @@ public class TextureTest {
         assertEquals(256, bi.getHeight());
         bi = tex.getSubImage(0, 100);
         assertNotNull(bi);
-        assertEquals(1, bi.getWidth());
+        assertEquals(1, bi.getWidth(), 2);
         assertEquals(64, bi.getHeight());
     }
 

@@ -64,9 +64,24 @@ class XMLWorldHandler extends DefaultHandler {
                 break;
             case "door" :
                 if (loadingLines) {
-                    world.addLine(attr.getValue("id"), new Door(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), world));
+                    world.addLine(attr.getValue("id"), new Door(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("open_texture")), Texture.get(attr.getValue("closed_texture")), world));
                     break;
                 }
+            case "secret_door" :
+                if (loadingLines) {
+                    world.addLine(attr.getValue("id"), new SecretDoor(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("texture")), world));
+                    break;
+                }            
+            case "door_open_switch" :
+                if (loadingLines) {
+                    world.addLine(attr.getValue("id"), new DoorOpenSwitch(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("on_texture")), Texture.get(attr.getValue("off_texture")), world.getLine(attr.getValue("door")), world));
+                    break;
+                }            
+            case "simple_switch" :
+                if (loadingLines) {
+                    world.addLine(attr.getValue("id"), new SimpleSwitch(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("on_texture")), Texture.get(attr.getValue("off_texture")), world));
+                    break;
+                }            
             case "rooms" : 
                 loadingRooms = true;
                 break;

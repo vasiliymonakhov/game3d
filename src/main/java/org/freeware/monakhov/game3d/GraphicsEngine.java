@@ -70,19 +70,19 @@ public class GraphicsEngine {
         mapLines = new VisibleLine[screen.getWidth()];
         farFarFrontier = KORRECTION * screen.getWidth() / 2;
         rayPoints = new Point[screen.getWidth()];
+        transformedRayPoints = new Point[screen.getWidth()];
         int ix = screen.getWidth() / 2 - 1;
-        for (int i = 0; i < screen.getWidth(); i++) {
+        for (int i = 0; i < rayPoints.length; i++) {
             rayPoints[i] = new Point((i - ix) * KORRECTION, farFarFrontier);
+            transformedRayPoints[i] = new Point();
         }
         k = new double[screen.getWidth()];
         for (int i = 0; i < screen.getWidth(); i++) {
             k[i] = WALL_SIZE * SpecialMath.lineLength(viewPoint.getPosition(), rayPoints[i]) / KORRECTION;
         }
-        transformedRayPoints = new Point[screen.getWidth()];
         wallsIntersectPoints = new Point[screen.getWidth()];
         for (int i = 0; i < screen.getWidth(); i++) {
             wallsIntersectPoints[i] = new Point();
-            transformedRayPoints[i] = new Point();
         }
         wallColumnDrawers = new WallColumnDrawer[screen.getWidth()];
         for (int i = 0; i < screen.getWidth(); i++) {
@@ -152,7 +152,7 @@ public class GraphicsEngine {
                 if (l != null) {
                     double dist = SpecialMath.lineLength(viewPoint.getPosition(), wallsIntersectPoints[index]);
                     int h = (int) Math.round(k[index] / dist);
-                    int ch = (int) Math.round(((double)screen.getHeight() - h) / 2);
+                    int ch = (int) Math.round(((double) screen.getHeight() - h) / 2);
                     g.drawImage(l.getSubImage(wallsIntersectPoints[index], h), index, ch, 1, h, null);
                 }
             } finally {
@@ -163,8 +163,8 @@ public class GraphicsEngine {
 
     void renderWalls() throws InterruptedException {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
         for (int i = 0; i < mapLines.length; i++) {
             wallColumnDrawers[i].set(g, doneSignal);
@@ -214,8 +214,8 @@ public class GraphicsEngine {
 
     void renderFloor() throws InterruptedException {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-        // g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);        
-        // g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         CountDownLatch doneSignal = new CountDownLatch(floorCeilingDrawers.length);
         for (FloorCeilingDrawer floorCeilingDrawer : floorCeilingDrawers) {
             floorCeilingDrawer.set(g, doneSignal);
@@ -284,21 +284,22 @@ public class GraphicsEngine {
     };
 
     private final Point rsp = new Point();
-    
+
     void renderObject(Graphics2D g, WorldObject wo) {
-        int spriteXStartOffset = -1;
-        int spriteXEndOffset = -1;
-        int spriteXStart = -1;
-        int spriteXEnd = -1;
+        int spriteXStartOffset = 0;
+        int spriteXEndOffset = -0;
+        int spriteXStart = 0;
+        int spriteXEnd = 0;
         int h = 0;
         int sh = 0;
         int syo = 0;
         int ch = 0;
         long xOffset;
-        for (int i = 0; i < transformedRayPoints.length; i++) {
+        boolean started = false;
+        for (int i = 0; i < screen.getWidth(); i++) {
             if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), viewPoint.getPosition(), wallsIntersectPoints[i], rsp)) {
                 if (rsp.between(wo.getLeft(), wo.getRight()) && rsp.between(viewPoint.getPosition(), wallsIntersectPoints[i])) {
-                    if (spriteXStartOffset == -1) {
+                    if (!started) {
                         double dist = SpecialMath.lineLength(viewPoint.getPosition(), rsp);
                         double kk = SpecialMath.lineLength(viewPoint.getPosition(), transformedRayPoints[i]);
                         h = (int) Math.round(GraphicsEngine.WALL_SIZE * kk / (dist * GraphicsEngine.KORRECTION));
@@ -306,29 +307,40 @@ public class GraphicsEngine {
                         syo = (int) Math.round(h * wo.getSprite().getYOffset() / GraphicsEngine.WALL_SIZE);
                         ch = (screen.getHeight() - h) / 2;
                     }
-                    xOffset = (long) SpecialMath.lineLength(wo.getLeft(), rsp);                    
-                    if (spriteXStartOffset == -1) {
-                        spriteXStartOffset = (int) (xOffset % wo.getSprite().getWidth());
+                    xOffset = (long) SpecialMath.lineLength(wo.getLeft(), rsp);
+                    if (!started) {
+                        spriteXStartOffset = (int) xOffset;
                         spriteXStart = i;
+                        started = true;
                     }
-                    if (spriteXStartOffset != -1) {
-                        spriteXEndOffset = (int) (xOffset % wo.getSprite().getWidth());
+                    if (started) {
+                        spriteXEndOffset = (int) xOffset;
                         spriteXEnd = i;
                     }
                 }
             }
         }
-        if (spriteXStart != -1) {
-            g.drawImage(wo.getSprite().getSubImage(spriteXStartOffset, 0, spriteXEndOffset - spriteXStartOffset + 1, h), 
-                    spriteXStart, ch + syo, spriteXEnd - spriteXStart + 1, sh, null);
+        if (started) {
+            int spriteImgWidth = spriteXEndOffset - spriteXStartOffset;
+            if (spriteImgWidth > wo.getSprite().getWidth()) {
+                spriteImgWidth = wo.getSprite().getWidth();
+            } else if (spriteImgWidth < 1) {
+                spriteImgWidth = 1;
+            }
+            int visibleSpriteWidth = spriteXEnd - spriteXStart;
+            if (visibleSpriteWidth < 1) {
+                visibleSpriteWidth = 1;
+            }
+            g.drawImage(wo.getSprite().getSubImage(spriteXStartOffset, 0, spriteImgWidth, h),
+                    spriteXStart, ch + syo, visibleSpriteWidth, sh, null);
         }
     }
 
     void renderObjects() throws InterruptedException {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-//        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
         objectsSortList.clear();
         for (WorldObject wobj : world.getAllObjects()) {
             wobj.turnSpriteToViewPoint(viewPoint);
@@ -400,7 +412,7 @@ public class GraphicsEngine {
 
     private final Color WALL_COLOR = new Color(0, 255, 0, 128);
     private final Color VIEWPOINT_COLOR = new Color(255, 0, 0, 128);
-    
+
     void drawMap() {
         Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
         int dx = screen.getImage().getWidth() / 2;
@@ -428,7 +440,7 @@ public class GraphicsEngine {
                         dx + (int) (l.getEnd().getX() * mapScale), dy - (int) (l.getEnd().getY() * mapScale));
             }
         }
-        
+
     }
 
 }

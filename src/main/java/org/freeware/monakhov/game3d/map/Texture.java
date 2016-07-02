@@ -17,7 +17,6 @@ import javax.imageio.ImageIO;
 public class Texture {
 
     private final BufferedImage[] images;
-    private final String[] fileNames;
 
     public final static int SIZE = 256;
     private final static double min[] = {256, 128, 64, 32, 16, 8, 4, 2, 1, 0};
@@ -26,14 +25,12 @@ public class Texture {
     private final int width;
 
     Texture(int width, int count) {
-        fileNames = new String[count];
         images = new BufferedImage[count];
         this.width = width;
     }
 
     void addFile(int index, String fileName) throws IOException {
-        fileNames[index] = fileName;
-        BufferedImage bi = ImageIO.read(Texture.class.getResourceAsStream(fileNames[index]));
+        BufferedImage bi = ImageIO.read(Texture.class.getResourceAsStream(fileName));
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();

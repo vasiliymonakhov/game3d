@@ -41,7 +41,12 @@ public abstract class VisibleLine extends Line {
         return flag;
     }    
     
-
-    public abstract BufferedImage getSubImage(Point p, int height);
+    /**
+     *
+     * @param p
+     * @param height
+     * @return
+     */
+    public abstract BufferedImage getSubImage(Point p, double height);
     
 }

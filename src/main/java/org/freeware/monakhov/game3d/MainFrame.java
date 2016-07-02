@@ -55,7 +55,7 @@ public class MainFrame extends javax.swing.JFrame {
         try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml")) {
             loader.parse(world, hero, is);
         }
-        
+
         screen = new Screen(rect.width * 4 / 4, rect.height * 4 / 4);
         graphicsEngine = new GraphicsEngine(world, hero, screen);
         gameEngine = new GameEngine(world, hero);
@@ -76,22 +76,22 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 while (true) {
-                    long now = System.nanoTime();
-                    hero.analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), frameNanoTime);
-                    if (ked.isInteract()) {
-                        gameEngine.interactWithHero();
-                        ked.setInteract(false);
-                    }
-                    gameEngine.doCycle(frameNanoTime);
                     try {
+                        long now = System.nanoTime();
+                        hero.analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), frameNanoTime);
+                        if (ked.isInteract()) {
+                            gameEngine.interactWithHero();
+                            ked.setInteract(false);
+                        }
+                        gameEngine.doCycle(frameNanoTime);
                         graphicsEngine.doCycle();
+                        // if (++iter % 10 == 0) System.gc();
+                        frames++;
+                        frameNanoTime = System.nanoTime() - now;
+                        SwingUtilities.invokeLater(repainter);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    // if (++iter % 10 == 0) System.gc();
-                    frames++;
-                    frameNanoTime = System.nanoTime() - now;
-                    SwingUtilities.invokeLater(repainter);
                 }
             }
         });
@@ -133,7 +133,7 @@ public class MainFrame extends javax.swing.JFrame {
             int y = (rr.height - screen.getHeight()) / 2;
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, rr.width, y);
-            g.fillRect(0, rr.height - y, rr.width, y);
+            g.fillRect(0, screen.getHeight() + y, rr.width, y + 1);
             int sw = (rr.width - screen.getWidth()) / 2;
             g.fillRect(0, y, sw, screen.getHeight());
             g.fillRect(x + screen.getWidth(), y, sw, screen.getHeight());

@@ -17,7 +17,6 @@ import javax.imageio.ImageIO;
 public class Sprite {
 
     private final BufferedImage[] images;
-    private final String[] fileNames;
     private final int width;
     private final int yOffset, height;
 
@@ -25,7 +24,6 @@ public class Sprite {
     private final static double max[] = {Double.MAX_VALUE, 256, 128, 64, 32, 16, 8, 4, 2, 1};
 
     public Sprite(int count, int width, int height, int yOffset) throws IOException {
-        fileNames = new String[count];
         images = new BufferedImage[count];
         this.width = width;
         this.height = height;
@@ -33,8 +31,7 @@ public class Sprite {
     }
 
     void addFile(int index, String fileName) throws IOException {
-        fileNames[index] = fileName;
-        BufferedImage bi = ImageIO.read(Sprite.class.getResourceAsStream(fileNames[index]));
+        BufferedImage bi = ImageIO.read(Sprite.class.getResourceAsStream(fileName));
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();

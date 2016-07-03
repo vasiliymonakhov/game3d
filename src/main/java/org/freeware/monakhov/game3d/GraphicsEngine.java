@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import org.freeware.monakhov.game3d.map.Door;
+import org.freeware.monakhov.game3d.map.visiblelines.Door;
 import org.freeware.monakhov.game3d.map.Image;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
-import org.freeware.monakhov.game3d.map.VisibleLine;
+import org.freeware.monakhov.game3d.map.visiblelines.VisibleLine;
 import org.freeware.monakhov.game3d.map.World;
 
 /**

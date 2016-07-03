@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d.map;
 
+import org.freeware.monakhov.game3d.map.visiblelines.VisibleLine;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.freeware.monakhov.game3d.SpecialMath;
@@ -115,7 +116,7 @@ public class Line {
     /**
      * Проверяет видимость линии на экране
      */
-    boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
+    public boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
         for (int i = 0; i < mapLines.length; i++) {
             if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, lcp)) {
                 if (lcp.between(start, end) && lcp.between(viewPoint, rayPoints[i])) return true;

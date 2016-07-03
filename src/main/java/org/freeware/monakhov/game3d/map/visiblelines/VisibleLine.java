@@ -1,7 +1,11 @@
-package org.freeware.monakhov.game3d.map;
+package org.freeware.monakhov.game3d.map.visiblelines;
 
 import java.awt.image.BufferedImage;
 import org.freeware.monakhov.game3d.SpecialMath;
+import org.freeware.monakhov.game3d.map.Line;
+import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.Texture;
+import org.freeware.monakhov.game3d.map.World;
 
 /**
  *
@@ -21,7 +25,7 @@ public abstract class VisibleLine extends Line {
      * Проверяет видимость линии на экране
      */
     @Override
-    boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
+    public boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
         Point p = new Point();
         boolean flag = false;
         for (int i = 0; i < mapLines.length; i++) {

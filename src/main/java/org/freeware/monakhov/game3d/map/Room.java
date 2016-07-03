@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d.map;
 
+import org.freeware.monakhov.game3d.map.visiblelines.VisibleLine;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

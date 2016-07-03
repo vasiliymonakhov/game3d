@@ -7,7 +7,6 @@ import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.nonmovable.GreenBarrel;
-import org.freeware.monakhov.game3d.objects.nonmovable.RedLight;
 import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
 import org.xml.sax.Attributes;
 
@@ -134,8 +133,6 @@ abstract public class WorldObject {
                 return new GreenBarrel(world, new Point(attr));
             case "tree" :
                 return new Tree(world, new Point(attr));
-            case "red_light" :
-                return new RedLight(world, new Point(attr));                
         }
         return null;        
     }

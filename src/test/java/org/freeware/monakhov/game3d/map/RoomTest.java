@@ -4,6 +4,7 @@
 
 package org.freeware.monakhov.game3d.map;
 
+import org.freeware.monakhov.game3d.map.visiblelines.Wall;
 import java.util.Collection;
 import org.junit.Test;
 import static org.junit.Assert.*;

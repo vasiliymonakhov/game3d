@@ -1,7 +1,9 @@
-package org.freeware.monakhov.game3d.map;
+package org.freeware.monakhov.game3d.map.visiblelines;
 
 import java.awt.image.BufferedImage;
 import org.freeware.monakhov.game3d.SpecialMath;
+import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.World;
 
 /**
  *

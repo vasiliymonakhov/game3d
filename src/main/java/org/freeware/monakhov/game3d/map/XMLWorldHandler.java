@@ -4,6 +4,11 @@
 
 package org.freeware.monakhov.game3d.map;
 
+import org.freeware.monakhov.game3d.map.visiblelines.DoorOpenSwitch;
+import org.freeware.monakhov.game3d.map.visiblelines.SecretDoor;
+import org.freeware.monakhov.game3d.map.visiblelines.SimpleSwitch;
+import org.freeware.monakhov.game3d.map.visiblelines.Door;
+import org.freeware.monakhov.game3d.map.visiblelines.Wall;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.ViewPoint;
 import org.xml.sax.Attributes;

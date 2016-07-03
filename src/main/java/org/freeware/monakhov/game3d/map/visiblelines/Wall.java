@@ -2,10 +2,13 @@
  * This software is free. You can use it without any limitations, but I don't
  * give any kind of warranties!
  */
-package org.freeware.monakhov.game3d.map;
+package org.freeware.monakhov.game3d.map.visiblelines;
 
 import java.awt.image.BufferedImage;
 import org.freeware.monakhov.game3d.SpecialMath;
+import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.Texture;
+import org.freeware.monakhov.game3d.map.World;
 
 /**
  * Wall in a map

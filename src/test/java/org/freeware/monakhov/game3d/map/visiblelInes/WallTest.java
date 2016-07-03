@@ -2,11 +2,17 @@
  * This software is free. You can use it without any limitations, but I don't give any kind of warranties!
  */
 
-package org.freeware.monakhov.game3d.map;
+package org.freeware.monakhov.game3d.map.visiblelInes;
 
+import org.freeware.monakhov.game3d.map.visiblelines.Wall;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import org.freeware.monakhov.game3d.map.Line;
+import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.Texture;
+import org.freeware.monakhov.game3d.map.XMLResourceLoader;
+import org.freeware.monakhov.game3d.map.XMLWorldLoaderTest;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

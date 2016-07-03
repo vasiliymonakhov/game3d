@@ -98,11 +98,5 @@
     <objects>
         <object class = "tree" id = "tree00" x = "64" y = "192"/>
         <object class = "tree" id = "tree01" x = "448" y = "192"/>
-        <object class = "red_light" id = "rl02l" x = "128" y = "704"/>
-        <object class = "red_light" id = "rl02r" x = "384" y = "704"/>
-        <object class = "red_light" id = "rl03l" x = "128" y = "960"/>
-        <object class = "red_light" id = "rl03r" x = "384" y = "960"/>
-        <object class = "red_light" id = "rl01" x = "256" y = "0"/>
-        <object class = "red_light" id = "rl03" x = "256" y = "-1920"/>
     </objects>   
 </root>

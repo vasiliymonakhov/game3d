@@ -1,4 +1,8 @@
-package org.freeware.monakhov.game3d.map;
+package org.freeware.monakhov.game3d.map.visiblelines;
+
+import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.Texture;
+import org.freeware.monakhov.game3d.map.World;
 
 /**
  *

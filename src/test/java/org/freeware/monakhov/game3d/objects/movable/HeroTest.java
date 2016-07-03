@@ -7,7 +7,7 @@ package org.freeware.monakhov.game3d.objects.movable;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
-import org.freeware.monakhov.game3d.map.Wall;
+import org.freeware.monakhov.game3d.map.visiblelines.Wall;
 import org.freeware.monakhov.game3d.map.World;
 import org.junit.Test;
 import static org.junit.Assert.*;

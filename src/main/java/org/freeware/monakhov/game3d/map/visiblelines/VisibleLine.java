@@ -21,9 +21,6 @@ public abstract class VisibleLine extends Line {
     
     public abstract boolean pointIsVisible(Point p);
     
-    /**
-     * Проверяет видимость линии на экране
-     */
     @Override
     public boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
         Point p = new Point();

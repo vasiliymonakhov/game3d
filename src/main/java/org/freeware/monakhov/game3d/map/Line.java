@@ -113,9 +113,6 @@ public class Line {
 
     private final Point lcp = new Point();
     
-    /**
-     * Проверяет видимость линии на экране
-     */
     public boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
         for (int i = 0; i < mapLines.length; i++) {
             if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, lcp)) {

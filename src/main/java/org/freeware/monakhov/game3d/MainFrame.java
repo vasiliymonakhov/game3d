@@ -89,7 +89,7 @@ public class MainFrame extends javax.swing.JFrame {
                         frames++;
                         frameNanoTime = System.nanoTime() - now;
                         SwingUtilities.invokeLater(repainter);
-                    } catch (InterruptedException ex) {
+                    } catch (Throwable ex) {
                         Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }

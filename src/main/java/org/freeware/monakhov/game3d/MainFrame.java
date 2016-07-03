@@ -188,6 +188,9 @@ public class MainFrame extends javax.swing.JFrame {
                     case KeyEvent.VK_F12:
                         fullScreen = !fullScreen;
                         break;
+                    case KeyEvent.VK_F8:
+                        screen.makeScreenShot();
+                        break;                        
                     case KeyEvent.VK_PAGE_UP:
                         graphicsEngine.incMapScale();
                         break;

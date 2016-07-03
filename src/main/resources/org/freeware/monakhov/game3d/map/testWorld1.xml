@@ -25,9 +25,9 @@
     <lines>
         <wall id = "w00" start = "p01" end = "p17" texture = "brick01"/>
         <wall id = "w01" start = "p18" end = "p02" texture = "brick01"/>
-        <wall id = "w02" start = "p17" end = "p20" texture = "brick01"/>
-        <wall id = "w03" start = "p20" end = "p19" texture = "brick01"/>
-        <wall id = "w04" start = "p19" end = "p18" texture = "brick01"/>
+        <wall id = "w02" start = "p17" end = "p20" texture = "beton01"/>
+        <wall id = "w03" start = "p20" end = "p19" texture = "beton01"/>
+        <wall id = "w04" start = "p19" end = "p18" texture = "beton01"/>
         <secret_door id = "sd01" start = "p17" end = "p18" texture = "brick01"/>
         <wall id = "w1" start = "p02" end = "p03" texture = "brick01"/>
         <wall id = "w2" start = "p03" end = "p04" texture = "door_border_left01"/>                

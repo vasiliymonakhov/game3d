@@ -9,7 +9,12 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  * This is a screen
@@ -77,4 +82,29 @@ class Screen {
         return drawImage;
     }
 
+    private int screenShotCounter = 1;
+    
+    public void makeScreenShot() {
+        try {
+            lock.lock();
+            final BufferedImage bi = new BufferedImage(width, height, Transparency.OPAQUE);
+            Graphics g = bi.getGraphics();
+            g.drawImage(screenImage, 0, 0, null);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ImageIO.write(bi, "PNG", new File(String.format("screen%05d.png", screenShotCounter++)));
+                    } catch (IOException ex) {
+                        Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, "Can't save screenshot", ex);
+                    }
+                }
+            });
+            t.start();
+        }
+        finally {
+            lock.unlock();
+        }        
+    }
+    
 }

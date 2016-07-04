@@ -20,6 +20,7 @@ class XMLResourceHandler extends DefaultHandler {
     private String path;
     private Texture currentTexture;
     private Sprite currentSprite;
+    private MultiImage currentMultiImage;
     
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attr)  throws SAXException {
@@ -50,8 +51,15 @@ class XMLResourceHandler extends DefaultHandler {
                     currentSprite.addFile(Integer.parseInt(attr.getValue("index")), path + attr.getValue("file"));
                     break;                    
                 case "image" :
-                    Image.add(attr.getValue("id"), path + attr.getValue("file"));
+                    if (currentMultiImage != null) {
+                        currentMultiImage.addImage(Image.get(attr.getValue("id")), Integer.parseInt(attr.getValue("x")), Integer.parseInt(attr.getValue("y")));                        
+                    } else {
+                        Image.add(attr.getValue("id"), path + attr.getValue("file"));
+                    }
                     break;                
+                case "multiimage" :
+                    currentMultiImage = MultiImage.add(attr.getValue("id"), Integer.parseInt(attr.getValue("width")), Integer.parseInt(attr.getValue("height")));
+                    break;
             }            
         }
         catch (IOException | NumberFormatException ex) {
@@ -68,6 +76,9 @@ class XMLResourceHandler extends DefaultHandler {
                 case "sprite" :
                     currentSprite = null;
                     break;                    
+                case "multiimage" :
+                    currentMultiImage = null;
+                    break;                                        
             }            
     }            
     

@@ -4,7 +4,6 @@
  */
 package org.freeware.monakhov.game3d;
 
-import org.freeware.monakhov.game3d.objects.movable.ViewPoint;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -28,8 +28,10 @@ import org.freeware.monakhov.game3d.map.Image;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
+import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.visiblelines.VisibleLine;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.movable.Hero;
 
 /**
  * This is a Graphics Engine
@@ -40,7 +42,7 @@ public class GraphicsEngine {
 
     private final World world;
 
-    private final ViewPoint viewPoint;
+    private final Hero hero;
 
     private final Screen screen;
 
@@ -58,14 +60,16 @@ public class GraphicsEngine {
     public final static double WALL_SIZE = 256;
     public final static double KORRECTION = 10000;
 
-    private final static Executor EXECUTOR = Executors.newFixedThreadPool(4);
+    public static final int MAX_DRAW_THREADS = 4;
+
+    private final static Executor EXECUTOR = Executors.newFixedThreadPool(MAX_DRAW_THREADS);
     private final ArrayList<WorldObject> objectsSortList = new ArrayList<>();
 
     BufferedImage sky;
 
-    GraphicsEngine(World world, ViewPoint viewPoint, Screen screen) throws IOException {
+    GraphicsEngine(World world, Hero hero, Screen screen) {
         this.world = world;
-        this.viewPoint = viewPoint;
+        this.hero = hero;
         this.screen = screen;
         mapLines = new VisibleLine[screen.getWidth()];
         farFarFrontier = KORRECTION * screen.getWidth() / 2;
@@ -78,7 +82,7 @@ public class GraphicsEngine {
         }
         k = new double[screen.getWidth()];
         for (int i = 0; i < screen.getWidth(); i++) {
-            k[i] = WALL_SIZE * SpecialMath.lineLength(viewPoint.getPosition(), rayPoints[i]) / KORRECTION;
+            k[i] = WALL_SIZE * SpecialMath.lineLength(hero.getPosition(), rayPoints[i]) / KORRECTION;
         }
         wallsIntersectPoints = new Point[screen.getWidth()];
         for (int i = 0; i < screen.getWidth(); i++) {
@@ -88,7 +92,7 @@ public class GraphicsEngine {
         for (int i = 0; i < screen.getWidth(); i++) {
             wallColumnDrawers[i] = new WallColumnDrawer(i);
         }
-        floorCeilingDrawers = new FloorCeilingDrawer[4];
+        floorCeilingDrawers = new FloorCeilingDrawer[MAX_DRAW_THREADS];
         int w = screen.getWidth() / floorCeilingDrawers.length;
         BufferedImage floor = world.getFloor() != null ? Image.get(world.getFloor()).getImage() : null;
         BufferedImage ceiling = world.getCeiling() != null ? Image.get(world.getCeiling()).getImage() : null;
@@ -108,7 +112,7 @@ public class GraphicsEngine {
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             g2.drawImage(bi, 0, 0, sky.getWidth(), sky.getHeight(), 0, 0, width, height, null);
             g2.dispose();
-            skyDrawers = new SkyDrawer[4];
+            skyDrawers = new SkyDrawer[MAX_DRAW_THREADS];
             w = screen.getWidth() / skyDrawers.length;
             for (int i = 0; i < skyDrawers.length; i++) {
                 skyDrawers[i] = new SkyDrawer(i * w, w, sky);
@@ -116,7 +120,6 @@ public class GraphicsEngine {
         } else {
             skyDrawers = null;
         }
-
     }
 
     void clearRender() {
@@ -127,7 +130,7 @@ public class GraphicsEngine {
 
     void checkVisibleRooms() {
         visibleRooms.clear();
-        viewPoint.getRoom().checkVisibility(mapLines, viewPoint.getPosition(), transformedRayPoints, wallsIntersectPoints, visibleRooms);
+        hero.getRoom().checkVisibility(mapLines, hero.getPosition(), transformedRayPoints, wallsIntersectPoints, visibleRooms);
     }
 
     private class WallColumnDrawer implements Runnable {
@@ -150,7 +153,7 @@ public class GraphicsEngine {
             try {
                 VisibleLine l = mapLines[index];
                 if (l != null) {
-                    double dist = SpecialMath.lineLength(viewPoint.getPosition(), wallsIntersectPoints[index]);
+                    double dist = SpecialMath.lineLength(hero.getPosition(), wallsIntersectPoints[index]);
                     int h = (int) Math.round(k[index] / dist);
                     int ch = (int) Math.round(((double) screen.getHeight() - h) / 2);
                     g.drawImage(l.getSubImage(wallsIntersectPoints[index], h), index, ch, 1, h, null);
@@ -181,6 +184,7 @@ public class GraphicsEngine {
         private Graphics2D g;
         private final BufferedImage floor;
         private final BufferedImage ceiling;
+        private final int floorHeight;
 
         void set(Graphics2D g, CountDownLatch doneSignal) {
             this.g = g;
@@ -190,21 +194,31 @@ public class GraphicsEngine {
         FloorCeilingDrawer(int x, int w, BufferedImage floor, BufferedImage ceiling) {
             this.x = x;
             this.w = w;
-            this.floor = floor;
-            this.ceiling = ceiling;
+            
+            GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                getDefaultConfiguration();
+            int height = screen.getHeight() / 2;
+            floorHeight = screen.getHeight() - height;
+            this.floor = gfx_config.createCompatibleImage(w, floorHeight, Transparency.OPAQUE);
+            Graphics2D g2 = (Graphics2D)this.floor.getGraphics();
+            g2.drawImage(floor, 0, 0, w, floorHeight, null);
+            if (ceiling != null) {
+                this.ceiling = gfx_config.createCompatibleImage(w, height, Transparency.OPAQUE);
+                g2 = (Graphics2D)this.ceiling.getGraphics();
+                g2.drawImage(ceiling, 0, 0, w, height, null);
+            } else {
+                this.ceiling = null;
+            }
         }
 
         @Override
         public void run() {
             try {
-                int height = screen.getHeight() / 2;
                 if (ceiling != null) {
-                    g.drawImage(ceiling, x, 0, w, height, null);
+                    g.drawImage(ceiling, x, 0, null);
                 }
-                int floor_height = screen.getHeight() - height;
-                if (floor != null) {
-                    g.drawImage(floor, x, height, w, floor_height, null);
-                }
+                g.drawImage(floor, x, screen.getHeight() - floorHeight, null);
             } finally {
                 doneSignal.countDown();
             }
@@ -225,7 +239,7 @@ public class GraphicsEngine {
         if (skyDrawers != null) {
             doneSignal = new CountDownLatch(floorCeilingDrawers.length);
             double pi2 = Math.PI * 2;
-            int a = (int) (sky.getWidth() * ((viewPoint.getAzimuth() + pi2) % pi2) / pi2);
+            int a = (int) (sky.getWidth() * ((hero.getAzimuth() + pi2) % pi2) / pi2);
             for (SkyDrawer skyDrawer : skyDrawers) {
                 skyDrawer.set(g, a, doneSignal);
                 EXECUTOR.execute(skyDrawer);
@@ -279,13 +293,93 @@ public class GraphicsEngine {
     Comparator<WorldObject> objectsSortComparator = new Comparator<WorldObject>() {
         @Override
         public int compare(WorldObject o1, WorldObject o2) {
-            return (int) (o2.distanceTo(viewPoint.getPosition()) - o1.distanceTo(viewPoint.getPosition()));
+            return (int) (o2.distanceTo(hero.getPosition()) - o1.distanceTo(hero.getPosition()));
         }
     };
 
     private final Point rsp = new Point();
 
-    void renderObject(Graphics2D g, WorldObject wo) {
+    private class SpriteToDraw {
+
+        private final Sprite sprite;
+        private final int spriteXStartOffset;
+        private final int spriteImgWidth;
+        private final int h;
+        private final int x, y, width, height;
+
+        SpriteToDraw(Sprite sprite, int spriteXStartOffset, int spriteImgWidth, int h, int x, int y, int width, int height) {
+            this.sprite = sprite;
+            this.spriteXStartOffset = spriteXStartOffset;
+            this.spriteImgWidth = spriteImgWidth;
+            this.h = h;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+
+        boolean intersects(SpriteToDraw s1, SpriteToDraw s2) {
+            if (s1.x > s2.x) {
+                // поменять местами спрайты для сравнения
+                SpriteToDraw stmp = s1;
+                s1 = s2;
+                s2 = stmp;
+            }
+            if (s1.x + s1.width > s2.x) {
+                // пересекаются по горизонтали
+                if (s1.y > s2.y) {
+                    return s2.y + s2.height > s1.y;
+                } else {
+                    return s1.y + s1.height > s2.y;
+                }
+            }
+            return false;
+        }
+
+        boolean intersects(SpriteToDraw os) {
+            return intersects(this, os);
+        }
+
+        void drawSprite(Graphics2D g) {
+            g.drawImage(sprite.getSubImage(spriteXStartOffset, 0, spriteImgWidth, h),
+                    x, y, width, height, null);
+        }
+
+    }
+
+    private class SpriteDrawer implements Runnable {
+
+        private CountDownLatch doneSignal;
+        private final Graphics2D g;
+        private final SpriteToDraw s2d;
+
+        SpriteDrawer(Graphics2D g, SpriteToDraw s2d) {
+            this.g = g;
+            this.s2d = s2d;
+        }
+
+        void setDoneSignal(CountDownLatch doneSignal) {
+            this.doneSignal = doneSignal;
+        }
+
+        SpriteToDraw getSprite() {
+            return s2d;
+        }
+
+        @Override
+        public void run() {
+            try {
+                s2d.drawSprite(g);
+            } finally {
+                doneSignal.countDown();
+            }
+        }
+
+    }
+
+    private final List<SpriteToDraw> spritesToDraw = new ArrayList<>();
+
+    void prepareToRenderObject(WorldObject wo) {
         int spriteXStartOffset = 0;
         int spriteXEndOffset = -0;
         int spriteXStart = 0;
@@ -297,11 +391,11 @@ public class GraphicsEngine {
         long xOffset;
         boolean started = false;
         for (int i = 0; i < screen.getWidth(); i++) {
-            if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), viewPoint.getPosition(), wallsIntersectPoints[i], rsp)) {
-                if (rsp.between(wo.getLeft(), wo.getRight()) && rsp.between(viewPoint.getPosition(), wallsIntersectPoints[i])) {
+            if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), hero.getPosition(), wallsIntersectPoints[i], rsp)) {
+                if (rsp.between(wo.getLeft(), wo.getRight()) && rsp.between(hero.getPosition(), wallsIntersectPoints[i])) {
                     if (!started) {
-                        double dist = SpecialMath.lineLength(viewPoint.getPosition(), rsp);
-                        double kk = SpecialMath.lineLength(viewPoint.getPosition(), transformedRayPoints[i]);
+                        double dist = SpecialMath.lineLength(hero.getPosition(), rsp);
+                        double kk = SpecialMath.lineLength(hero.getPosition(), transformedRayPoints[i]);
                         h = (int) Math.round(GraphicsEngine.WALL_SIZE * kk / (dist * GraphicsEngine.KORRECTION));
                         sh = (int) Math.round(h * wo.getSprite().getHeight() / GraphicsEngine.WALL_SIZE);
                         syo = (int) Math.round(h * wo.getSprite().getYOffset() / GraphicsEngine.WALL_SIZE);
@@ -331,19 +425,14 @@ public class GraphicsEngine {
             if (visibleSpriteWidth < 1) {
                 visibleSpriteWidth = 1;
             }
-            g.drawImage(wo.getSprite().getSubImage(spriteXStartOffset, 0, spriteImgWidth, h),
-                    spriteXStart, ch + syo, visibleSpriteWidth, sh, null);
+            spritesToDraw.add(new SpriteToDraw(wo.getSprite(), spriteXStartOffset, spriteImgWidth, h, spriteXStart, ch + syo, visibleSpriteWidth, sh));
         }
     }
 
     void renderObjects() throws InterruptedException {
-        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
         objectsSortList.clear();
         for (WorldObject wobj : world.getAllObjects()) {
-            wobj.turnSpriteToViewPoint(viewPoint);
+            wobj.turnSpriteToViewPoint(hero);
             boolean flag = false;
             for (Room r : visibleRooms) {
                 if (r.insideThisRoom(wobj.getLeft()) || r.insideThisRoom(wobj.getRight())) {
@@ -356,9 +445,56 @@ public class GraphicsEngine {
             }
         }
         Collections.sort(objectsSortList, objectsSortComparator);
+        spritesToDraw.clear();
         for (WorldObject wobj : objectsSortList) {
-            renderObject(g, wobj);
+            prepareToRenderObject(wobj);
         }
+        if (spritesToDraw.isEmpty()) {
+            return;
+        }
+        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
+
+        List<SpriteDrawer> drawers = new ArrayList<>();
+        Iterator<SpriteToDraw> d2dit = spritesToDraw.iterator();
+        drawers.add(new SpriteDrawer(g, d2dit.next()));
+
+        while (d2dit.hasNext()) {
+            SpriteToDraw s2d = d2dit.next();
+            boolean canAdd = true;
+            for (SpriteDrawer sd : drawers) {
+                if (sd.getSprite().intersects(s2d)) {
+                    canAdd = false;
+                    break;
+                }
+            }
+            if (canAdd) {
+                drawers.add(new SpriteDrawer(g, s2d));
+            } else {
+                if (!drawers.isEmpty()) {
+                    drawSpritesInParallel(drawers);
+                    drawers.add(new SpriteDrawer(g, s2d));
+                } else {
+                    drawers.add(new SpriteDrawer(g, s2d));
+                    drawSpritesInParallel(drawers);
+                }
+            }
+        }
+        if (!drawers.isEmpty()) {
+            drawSpritesInParallel(drawers);
+        }
+    }
+
+    private void drawSpritesInParallel(List<SpriteDrawer> drawers) throws InterruptedException {
+        CountDownLatch doneSignal = new CountDownLatch(drawers.size());
+        for (SpriteDrawer sd : drawers) {
+            sd.setDoneSignal(doneSignal);
+            EXECUTOR.execute(sd);
+        }
+        doneSignal.await();
+        drawers.clear();
     }
 
     private boolean mapEnabled;
@@ -371,19 +507,20 @@ public class GraphicsEngine {
         renderFloor();
         renderWalls();
         renderObjects();
+        hero.drawOnScreen(screen);
         if (mapEnabled) {
             drawMap();
         }
     }
 
     void transform() {
-        double sin = Math.sin(-viewPoint.getAzimuth());
-        double cos = Math.cos(-viewPoint.getAzimuth());
+        double sin = Math.sin(-hero.getAzimuth());
+        double cos = Math.cos(-hero.getAzimuth());
         for (int i = 0; i < screen.getWidth(); i++) {
             double x = rayPoints[i].getX();
             double y = rayPoints[i].getY();
-            double new_x = x * cos - y * sin + viewPoint.getPosition().getX();
-            double new_y = y * cos + x * sin + viewPoint.getPosition().getY();
+            double new_x = x * cos - y * sin + hero.getPosition().getX();
+            double new_y = y * cos + x * sin + hero.getPosition().getY();
             transformedRayPoints[i].moveTo(new_x, new_y);
         }
     }
@@ -420,11 +557,11 @@ public class GraphicsEngine {
         g.setColor(VIEWPOINT_COLOR);
         g.fillOval(dx - 5, dy - 5, 10, 10);
         g.setStroke(WALL);
-        int rx = (int) (20 * Math.sin(viewPoint.getAzimuth()));
-        int ry = (int) (20 * Math.cos(viewPoint.getAzimuth()));
+        int rx = (int) (20 * Math.sin(hero.getAzimuth()));
+        int ry = (int) (20 * Math.cos(hero.getAzimuth()));
         g.drawLine(dx, dy, dx + rx, dy - ry);
-        dx += -(int) viewPoint.getPosition().getX() * mapScale;
-        dy += (int) viewPoint.getPosition().getY() * mapScale;
+        dx += -(int) hero.getPosition().getX() * mapScale;
+        dy += (int) hero.getPosition().getY() * mapScale;
         g.setColor(WALL_COLOR);
         for (Room r : world.getAllRooms()) {
             for (Line l : r.getAllLines()) {

@@ -30,10 +30,11 @@ import org.xml.sax.SAXException;
 
 public class MainFrame extends javax.swing.JFrame {
 
-    final GraphicsEngine graphicsEngine;
+    Screen screen;
+    GraphicsEngine graphicsEngine;
+
     final GameEngine gameEngine;
     final World world;
-    final Screen screen;
     final Hero hero;
 
     public MainFrame() throws ParserConfigurationException, SAXException, IOException {
@@ -56,8 +57,8 @@ public class MainFrame extends javax.swing.JFrame {
             loader.parse(world, hero, is);
         }
 
-        screen = new Screen(rect.width * 4 / 4, rect.height * 4 / 4);
-        graphicsEngine = new GraphicsEngine(world, hero, screen);
+        makeScreenAndEngine();
+        
         gameEngine = new GameEngine(world, hero);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
@@ -84,6 +85,18 @@ public class MainFrame extends javax.swing.JFrame {
                             ked.setInteract(false);
                         }
                         gameEngine.doCycle(frameNanoTime);
+                        boolean remakeEngine = false;
+                        if (ked.isIncPercent() && percent < 100) {
+                            remakeEngine = true;
+                            percent += 5;
+                        }
+                        if (ked.isDecPercent() && percent >= 20) {
+                            remakeEngine = true;
+                            percent -= 5;
+                        }                        
+                        if (remakeEngine) {
+                            makeScreenAndEngine();
+                        }
                         graphicsEngine.doCycle();
                         // if (++iter % 10 == 0) System.gc();
                         frames++;
@@ -102,6 +115,14 @@ public class MainFrame extends javax.swing.JFrame {
                 t.start();
             }
         });
+    }
+    
+    int percent = 100;
+    
+    private void makeScreenAndEngine() {
+        Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        screen = new Screen(rect.width * percent / 100, rect.height * percent / 100);
+        graphicsEngine = new GraphicsEngine(world, hero, screen);
     }
 
     final KeyDispatcher ked = new KeyDispatcher();
@@ -157,6 +178,8 @@ public class MainFrame extends javax.swing.JFrame {
         private boolean strafeRight;
         private boolean left;
         private boolean interact;
+        private boolean incPercent;
+        private boolean decPercent;
 
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
@@ -200,6 +223,12 @@ public class MainFrame extends javax.swing.JFrame {
                     case KeyEvent.VK_SPACE:
                         interact = true;
                         break;
+                    case KeyEvent.VK_F6:
+                        incPercent = true;
+                        break;
+                    case KeyEvent.VK_F5:
+                        decPercent = true;
+                        break;                                                                        
                 }
             }
             if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -284,6 +313,24 @@ public class MainFrame extends javax.swing.JFrame {
          */
         void setInteract(boolean interact) {
             this.interact = interact;
+        }
+
+        /**
+         * @return the incPercent
+         */
+        boolean isIncPercent() {
+            boolean res = incPercent;
+            incPercent = false;
+            return res;
+        }
+
+        /**
+         * @return the decPercent
+         */
+        boolean isDecPercent() {
+            boolean res = decPercent;
+            decPercent = false;
+            return res;
         }
     }
 }

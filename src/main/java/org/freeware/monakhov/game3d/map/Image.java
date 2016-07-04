@@ -3,14 +3,10 @@ package org.freeware.monakhov.game3d.map;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -20,31 +16,23 @@ import javax.imageio.ImageIO;
  */
 public class Image {
 
-    private final String fileName;
-    private BufferedImage image;
+    private final BufferedImage image;
 
     Image(String fileName) throws IOException {
-        this.fileName = fileName;
+        BufferedImage bi = ImageIO.read(Image.class.getResourceAsStream(fileName));
+        GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                getDefaultConfiguration();
+        image = gfx_config.createCompatibleImage(bi.getWidth(), bi.getHeight(), bi.getColorModel().getTransparency());
+        Graphics2D g = (Graphics2D) image.getGraphics();
+        g.drawImage(bi, 0, 0, null);
+        g.dispose();
     }
 
     /**
      * @return the image
-     * @throws java.io.IOException
      */
-    public BufferedImage getImage() throws IOException {
-        if (image == null) {
-            BufferedImage bi = ImageIO.read(Image.class.getResourceAsStream(fileName));
-            GraphicsConfiguration gfx_config = GraphicsEnvironment.
-                    getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                    getDefaultConfiguration();
-            image = gfx_config.createCompatibleImage(bi.getWidth(), bi.getHeight(),
-                    bi.isAlphaPremultiplied() ? Transparency.TRANSLUCENT : Transparency.OPAQUE);
-            Graphics2D g = (Graphics2D) image.getGraphics();
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-            g.drawImage(bi, 0, 0, null);
-            g.dispose();
-        }
+    public BufferedImage getImage() {
         return image;
     }
 

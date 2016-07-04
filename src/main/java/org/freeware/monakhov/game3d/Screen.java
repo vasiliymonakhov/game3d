@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
  *
  * @author Vasily Monakhov
  */
-class Screen {
+public class Screen {
 
     private BufferedImage screenImage;
     private BufferedImage drawImage;

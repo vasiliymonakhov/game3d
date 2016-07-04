@@ -115,5 +115,27 @@
         <image id = "ceiling02" file = "ceiling02.png"/>
         <image id = "sky01" file = "sky01.jpg"/>
         <image id = "sky02" file = "sky02.jpg"/>
+        <image id = "axe01_1" file = "axe01_1.png"/>
+        <image id = "axe01_2" file = "axe01_2.png"/>
+        <image id = "axe01_3" file = "axe01_3.png"/>
+        <image id = "fuck" file = "fuck.png"/>
+        <image id = "knife" file = "knife01.png"/>
+        <image id = "pistol" file = "pistol01.png"/>
     </images>   
+    <multiimages>
+        <multiimage id = "axe" width = "1920" height = "1080">
+            <image id = "axe01_1" x = "1365" y = "0"/>
+            <image id = "axe01_2" x = "1250" y = "328"/>
+            <image id = "axe01_3" x = "922" y = "758"/>                        
+        </multiimage>   
+        <multiimage id = "fuck" width = "1920" height = "1080">
+            <image id = "fuck" x = "184" y = "248"/>                        
+        </multiimage>           
+        <multiimage id = "knife" width = "1920" height = "1080">
+            <image id = "knife" x = "940" y = "416"/>                        
+        </multiimage>        
+        <multiimage id = "pistol" width = "1920" height = "1080">
+            <image id = "pistol" x = "416" y = "440"/>                        
+        </multiimage>                
+    </multiimages>    
 </root>

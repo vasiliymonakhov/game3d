@@ -1,10 +1,7 @@
 package org.freeware.monakhov.game3d.objects.movable;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.List;
 import org.freeware.monakhov.game3d.Screen;
-import org.freeware.monakhov.game3d.map.Image;
 import org.freeware.monakhov.game3d.map.MultiImage;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;

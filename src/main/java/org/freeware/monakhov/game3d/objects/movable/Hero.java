@@ -2,6 +2,7 @@ package org.freeware.monakhov.game3d.objects.movable;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import org.freeware.monakhov.game3d.Screen;
 import org.freeware.monakhov.game3d.map.Image;
 import org.freeware.monakhov.game3d.map.MultiImage;
@@ -146,8 +147,8 @@ public class Hero extends ViewPoint {
     
     MultiImage weapon = MultiImage.get("axe");
     
-    public void drawOnScreen(Screen screen) {
-        weapon.draw(screen, 0, 100);
+    public List<MultiImage.ImageToDraw> getImagesToDraw(Screen screen) {
+        return weapon.getImagesToDraw(screen);
     }
 
 }

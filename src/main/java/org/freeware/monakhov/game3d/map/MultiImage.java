@@ -1,6 +1,10 @@
 package org.freeware.monakhov.game3d.map;
 
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -63,15 +67,68 @@ public class MultiImage {
         return img;
     }    
     
-    public void draw(Screen screen, int dx, int dy) {
-        Graphics2D g = (Graphics2D)screen.getImage().getGraphics();        
-        for (Node n : nodes) {
-            int x = (int)Math.round((double)(dx + n.x) * screen.getWidth() / width);
-            int y = (int)Math.round((double)(dy + n.y) * screen.getHeight() / height);
+    public class ImageToDraw {
+        
+        private final BufferedImage i;
+        private final int x;
+        private final int y;   
+        
+        ImageToDraw (Node n, Screen screen) {
+            GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                    getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                    getDefaultConfiguration();
+            x = (int)Math.round((double)n.x * screen.getWidth() / width);
+            y = (int)Math.round((double)n.y * screen.getHeight() / height);
             int w = (int)Math.round((double)n.i.getImage().getWidth() * screen.getWidth() / width);
-            int h = (int)Math.round((double)n.i.getImage().getHeight() * screen.getHeight() / height);            
-            g.drawImage(n.i.getImage(), x, y, w, h, null);            
+            int h = (int)Math.round((double)n.i.getImage().getHeight() * screen.getHeight() / height);                        
+            i = gfx_config.createCompatibleImage(w, h, n.i.getImage().getColorModel().getTransparency());
+            Graphics2D g = (Graphics2D) i.getGraphics();
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);                    
+            g.drawImage(n.i.getImage(), 0, 0, w, h, null);            
+            g.dispose();            
         }
+
+        /**
+         * @return the i
+         */
+        public BufferedImage getI() {
+            return i;
+        }
+
+        /**
+         * @return the x
+         */
+        public int getX() {
+            return x;
+        }
+
+        /**
+         * @return the y
+         */
+        public int getY() {
+            return y;
+        }
+        
+    }
+    
+    private List<ImageToDraw> imagesToDraw;
+    private int sw = 0, sh = 0;
+    
+    public List<ImageToDraw> getImagesToDraw(Screen screen) {
+        if (imagesToDraw == null) {
+            imagesToDraw = new ArrayList<>();
+        }
+        if (sw != screen.getWidth() || sh != screen.getHeight()) {
+            imagesToDraw.clear();
+            sw = screen.getWidth();
+            sh = screen.getHeight();
+            for (Node n : nodes) {
+                imagesToDraw.add(new ImageToDraw(n, screen));
+            }
+        }
+        return imagesToDraw;
     }
 
 }

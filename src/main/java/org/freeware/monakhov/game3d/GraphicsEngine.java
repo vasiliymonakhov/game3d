@@ -13,7 +13,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +25,7 @@ import java.util.concurrent.Executors;
 import org.freeware.monakhov.game3d.map.visiblelines.Door;
 import org.freeware.monakhov.game3d.map.Image;
 import org.freeware.monakhov.game3d.map.Line;
+import org.freeware.monakhov.game3d.map.MultiImage;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.Sprite;
@@ -164,10 +164,7 @@ public class GraphicsEngine {
         }
     }
 
-    void renderWalls() throws InterruptedException {
-        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    void renderWalls(Graphics2D g) throws InterruptedException {
         CountDownLatch doneSignal = new CountDownLatch(mapLines.length);
         for (int i = 0; i < mapLines.length; i++) {
             wallColumnDrawers[i].set(g, doneSignal);
@@ -194,18 +191,18 @@ public class GraphicsEngine {
         FloorCeilingDrawer(int x, int w, BufferedImage floor, BufferedImage ceiling) {
             this.x = x;
             this.w = w;
-            
+
             GraphicsConfiguration gfx_config = GraphicsEnvironment.
-                getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                getDefaultConfiguration();
+                    getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                    getDefaultConfiguration();
             int height = screen.getHeight() / 2;
             floorHeight = screen.getHeight() - height;
             this.floor = gfx_config.createCompatibleImage(w, floorHeight, Transparency.OPAQUE);
-            Graphics2D g2 = (Graphics2D)this.floor.getGraphics();
+            Graphics2D g2 = (Graphics2D) this.floor.getGraphics();
             g2.drawImage(floor, 0, 0, w, floorHeight, null);
             if (ceiling != null) {
                 this.ceiling = gfx_config.createCompatibleImage(w, height, Transparency.OPAQUE);
-                g2 = (Graphics2D)this.ceiling.getGraphics();
+                g2 = (Graphics2D) this.ceiling.getGraphics();
                 g2.drawImage(ceiling, 0, 0, w, height, null);
             } else {
                 this.ceiling = null;
@@ -226,10 +223,7 @@ public class GraphicsEngine {
 
     }
 
-    void renderFloor() throws InterruptedException {
-        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    void renderFloor(Graphics2D g) throws InterruptedException {
         CountDownLatch doneSignal = new CountDownLatch(floorCeilingDrawers.length);
         for (FloorCeilingDrawer floorCeilingDrawer : floorCeilingDrawers) {
             floorCeilingDrawer.set(g, doneSignal);
@@ -429,7 +423,7 @@ public class GraphicsEngine {
         }
     }
 
-    void renderObjects() throws InterruptedException {
+    void renderObjects(Graphics2D g) throws InterruptedException {
         objectsSortList.clear();
         for (WorldObject wobj : world.getAllObjects()) {
             wobj.turnSpriteToViewPoint(hero);
@@ -452,11 +446,6 @@ public class GraphicsEngine {
         if (spritesToDraw.isEmpty()) {
             return;
         }
-        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
-
         List<SpriteDrawer> drawers = new ArrayList<>();
         Iterator<SpriteToDraw> d2dit = spritesToDraw.iterator();
         drawers.add(new SpriteDrawer(g, d2dit.next()));
@@ -497,6 +486,37 @@ public class GraphicsEngine {
         drawers.clear();
     }
 
+    private class MultiImageDrawer implements Runnable {
+
+        private final MultiImage.ImageToDraw mi2d;
+        private final Graphics2D g;
+        private final CountDownLatch doneSignal;
+
+        MultiImageDrawer(Graphics2D g, CountDownLatch doneSignal, MultiImage.ImageToDraw mi2d) {
+            this.g = g;
+            this.doneSignal = doneSignal;
+            this.mi2d = mi2d;
+        }
+
+        @Override
+        public void run() {
+            try {
+                g.drawImage(mi2d.getI(), mi2d.getX(), mi2d.getY(), null);
+            } finally {
+                doneSignal.countDown();
+            }
+        }
+    }
+
+    private void renderHeroLook(Graphics2D g) throws InterruptedException {
+        List<MultiImage.ImageToDraw> images = hero.getImagesToDraw(screen);
+        CountDownLatch doneSignal = new CountDownLatch(images.size());
+        for (final MultiImage.ImageToDraw mi2d : images) {
+            EXECUTOR.execute(new MultiImageDrawer(g, doneSignal, mi2d));
+        }
+        doneSignal.await();
+    }
+
     private boolean mapEnabled;
 
     void toggleMap() {
@@ -504,10 +524,14 @@ public class GraphicsEngine {
     }
 
     void render() throws InterruptedException {
-        renderFloor();
-        renderWalls();
-        renderObjects();
-        hero.drawOnScreen(screen);
+        Graphics2D g = (Graphics2D) screen.getImage().getGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);        
+        renderFloor(g);
+        renderWalls(g);
+        renderObjects(g);
+        renderHeroLook(g);
         if (mapEnabled) {
             drawMap();
         }

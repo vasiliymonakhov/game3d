@@ -179,6 +179,7 @@ public class GraphicsEngine {
      */
     void clearRender() {
         Arrays.fill(mapLines, null);
+        visibleRooms.clear();
     }
 
     /**
@@ -196,7 +197,7 @@ public class GraphicsEngine {
      */
     void checkVisibleRooms() {
         for (int i = 0; i < screen.getWidth(); i++) {
-            checkedRooms.clear();
+             checkedRooms.clear();
              world.getHero().getRoom().traceRoom(mapLines, i, world.getHero().getPosition(), transformedRayPoints[i], wallsIntersectPoints[i], visibleRooms, checkedRooms);
         }
     }

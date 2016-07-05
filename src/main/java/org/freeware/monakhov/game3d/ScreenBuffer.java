@@ -1,7 +1,3 @@
-/**
- * This software is free. You can use it without any limitations, but I don't
- * give any kind of warranties!
- */
 package org.freeware.monakhov.game3d;
 
 import java.awt.Graphics;
@@ -17,30 +13,60 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
- * This is a screen
+ * Буфер экрана с двойной буферизацией
  *
  * @author Vasily Monakhov
  */
-public class Screen {
+public class ScreenBuffer {
 
+    /**
+     * Текущее изображение, которое показывается пользователю
+     */
     private BufferedImage screenImage;
+    /**
+     * Изображение, которое создаётся
+     */
     private BufferedImage drawImage;
 
+    /**
+     * ширина буфера экрана
+     */
     private final int width;
+    /**
+     * высота буфера экрана
+     */
     private final int height;
 
-    Screen(int width, int height) {
+    /**
+     * Создайт буфер
+     * @param width ширина
+     * @param height высота
+     */
+    ScreenBuffer(int width, int height) {
         this.width = width;
         this.height = height;
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();
         screenImage = gfx_config.createCompatibleImage(width, height, Transparency.OPAQUE);
+        screenImage.setAccelerationPriority(1);        
         drawImage = gfx_config.createCompatibleImage(width, height, Transparency.OPAQUE);
+        drawImage.setAccelerationPriority(1);        
     }
 
+    /**
+     * Блокировка для исключения одновременного рисования и отображения
+     */
     private final ReentrantLock lock = new ReentrantLock();
 
+    /**
+     * Рисует содержимое буфера в графическом контексте
+     * @param g графический контекст
+     * @param screenX горизонтальная координата изображения
+     * @param screenY вертикальная координата изображения
+     * @param screenW ширина изображения
+     * @param screenH высота изображения
+     */
     void paint(Graphics g, int screenX, int screenY, int screenW, int screenH) {
         try {
             lock.lock();
@@ -50,6 +76,9 @@ public class Screen {
         }
     }
 
+    /**
+     * Меняет местами изображения. 
+     */
     public void swapBuffers() {
         try {
             lock.lock();
@@ -62,6 +91,7 @@ public class Screen {
     }
 
     /**
+     * Возвращает ширину буфера
      * @return the width
      */
     public int getWidth() {
@@ -69,6 +99,7 @@ public class Screen {
     }
 
     /**
+     * возыращает высоту буфера
      * @return the height
      */
     public int getHeight() {
@@ -76,14 +107,21 @@ public class Screen {
     }
 
     /**
+     * Возвращает изображение для рисования
      * @return the Image
      */
     public BufferedImage getImage() {
         return drawImage;
     }
 
+    /**
+     * Счётчик порядковых но меров для скриншотов
+     */
     private int screenShotCounter = 1;
     
+    /**
+     * Делает скриншот - сохраняет изображение из буфера в файл
+     */
     public void makeScreenShot() {
         try {
             lock.lock();
@@ -96,7 +134,7 @@ public class Screen {
                     try {
                         ImageIO.write(bi, "PNG", new File(String.format("screen%05d.png", screenShotCounter++)));
                     } catch (IOException ex) {
-                        Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, "Can't save screenshot", ex);
+                        Logger.getLogger(ScreenBuffer.class.getName()).log(Level.SEVERE, "Can't save screenshot", ex);
                     }
                 }
             });

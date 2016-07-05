@@ -3,15 +3,12 @@ package org.freeware.monakhov.game3d;
 import org.freeware.monakhov.game3d.objects.movable.Hero;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -20,7 +17,6 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.xml.parsers.ParserConfigurationException;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
@@ -30,7 +26,7 @@ import org.xml.sax.SAXException;
 
 public class MainFrame extends javax.swing.JFrame {
 
-    Screen screen;
+    ScreenBuffer screen;
     GraphicsEngine graphicsEngine;
 
     final GameEngine gameEngine;
@@ -54,23 +50,15 @@ public class MainFrame extends javax.swing.JFrame {
         world.setHero(hero);
         XMLWorldLoader loader = new XMLWorldLoader();
         try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld1.xml")) {
-            loader.parse(world, hero, is);
+            loader.parse(world, is);
         }
 
         makeScreenAndEngine();
         
-        gameEngine = new GameEngine(world, hero);
+        gameEngine = new GameEngine(world);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
 
-        Timer sec = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fps = String.format("%d FPS%n", frames);
-                frames = 0;
-            }
-        });
-        sec.start();
         final Thread t = new Thread(new Runnable() {
 
             // int iter;
@@ -99,7 +87,6 @@ public class MainFrame extends javax.swing.JFrame {
                         }
                         graphicsEngine.doCycle();
                         // if (++iter % 10 == 0) System.gc();
-                        frames++;
                         frameNanoTime = System.nanoTime() - now;
                         SwingUtilities.invokeLater(repainter);
                     } catch (Throwable ex) {
@@ -121,8 +108,8 @@ public class MainFrame extends javax.swing.JFrame {
     
     private void makeScreenAndEngine() {
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-        screen = new Screen(rect.width * percent / 100, rect.height * percent / 100);
-        graphicsEngine = new GraphicsEngine(world, hero, screen);
+        screen = new ScreenBuffer(rect.width * percent / 100, rect.height * percent / 100);
+        graphicsEngine = new GraphicsEngine(world, screen);
     }
 
     final KeyDispatcher ked = new KeyDispatcher();
@@ -135,12 +122,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     };
 
-    String fps = "";
-    Font f = new Font("Arial", 0, 20);
-
-    private volatile int frames;
-
-    private boolean fullScreen = true;
+    private boolean fullScreen = false;
 
     @Override
     public void paint(Graphics gr) {
@@ -162,9 +144,6 @@ public class MainFrame extends javax.swing.JFrame {
         } else {
             screen.paint(g, 0, 0, rr.width, rr.height);
         }
-        g.setColor(Color.GREEN);
-        g.setFont(f);
-        g.drawString(fps, 25, 25);
     }
 
     private long frameNanoTime;

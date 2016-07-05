@@ -1,7 +1,3 @@
-/**
- * This software is free. You can use it without any limitations, but I don't give any kind of warranties!
- */
-
 package org.freeware.monakhov.game3d.map;
 
 import java.io.BufferedReader;
@@ -16,7 +12,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Loads resources from XML stream
+ * загружает ресурсы из XML
  * 
  * @author Vasily Monakhov 
  */

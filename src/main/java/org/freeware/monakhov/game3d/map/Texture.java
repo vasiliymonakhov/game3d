@@ -16,39 +16,68 @@ import javax.imageio.ImageIO;
  */
 public class Texture {
 
-    private final BufferedImage[] images;
+    /**
+     * Изображения текстур. Для уменьшения ряби при прорисовке текстур используются несколько заранее 
+     * подготовленных изображений с разными размерами.
+     */
+    private final BufferedImage[][] images;
 
+    /**
+     * Высота текстуры
+     */
     public final static int SIZE = 256;
-    private final static double min[] = {256, 128, 64, 32, 16, 8, 4, 2, 1, 0};
-    private final static double max[] = {Double.MAX_VALUE, 256, 128, 64, 32, 16, 8, 4, 2, 1};
+    /**
+     * Таблицы для определения, какое изображение нужно использовать для вывода на экран в зависимости от высоты
+     */
+    private final static double min[] = {256, 128, 64, 32, 16};
+    private final static double max[] = {Double.MAX_VALUE, 256, 128, 64, 32};
 
+    /**
+     * Ширина текстуры
+     */
     private final int width;
 
+    /**
+     * Создайт текстуру
+     * @param width ширина
+     * @param count количество изображений
+     */
     Texture(int width, int count) {
-        images = new BufferedImage[count];
+        images = new BufferedImage[count][];
         this.width = width;
     }
 
+    /**
+     * Добавляет в текстуру новое изображение
+     * @param index индекс изображения 
+     * @param fileName имя файла
+     * @throws IOException 
+     */
     void addFile(int index, String fileName) throws IOException {
         BufferedImage bi = ImageIO.read(Texture.class.getResourceAsStream(fileName));
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();
-        images[index] = gfx_config.createCompatibleImage(width >> index, SIZE >> index,
-                bi.getColorModel().getTransparency());
-        Graphics2D g = (Graphics2D) images[index].getGraphics();
-        g.drawImage(bi, 0, 0, null);
-        g.dispose();
+        int nw = width >> index;
+        int ns = SIZE >> index;
+        BufferedImage[] newImages = new BufferedImage[nw];
+        for (int i = 0; i < nw; i++) {
+            BufferedImage ni = gfx_config.createCompatibleImage(1, ns, bi.getColorModel().getTransparency());
+            ni.setAccelerationPriority(1);
+            Graphics2D g = (Graphics2D) ni.createGraphics();
+            g.drawImage(bi.getSubimage(i, 0, 1, bi.getHeight()), null, null);
+            g.dispose();
+            newImages[i] = ni;
+        }
+        images[index] = newImages;
     }
 
     /**
-     * @param index
-     * @return the image
+     * Вовзращает участок изображения шириной 1 пиксель
+     * @param x смещение от нечала
+     * @param height выста текстуры на буфере экрана
+     * @return участок изображения
      */
-    public BufferedImage getImage(int index) {
-        return images[index];
-    }
-
     public BufferedImage getSubImage(int x, double height) {
         int index = 0;
         for (int i = 0; i < min.length; i++) {
@@ -60,7 +89,7 @@ public class Texture {
         if (index >= images.length) {
             index = images.length - 1;
         }
-        return getImage(index).getSubimage((x % width) >> index, 0, 1, SIZE >> index);
+        return images[index][(x % width) >> index];
     }
 
     /**
@@ -86,6 +115,11 @@ public class Texture {
         return tex;
     }
 
+    /**
+     * Возвращает текстуру по идентификатору
+     * @param id идентификатор текстуры
+     * @return текстура
+     */
     public static Texture get(String id) {
         Texture tex = textures.get(id);
         if (tex == null) {

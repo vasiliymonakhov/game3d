@@ -35,7 +35,7 @@ public class XMLWorldLoaderTest {
         World w = new World();
         XMLWorldLoader wl = new XMLWorldLoader();
         try (InputStream is = XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/maps/testXMLWorld.xml")) {
-            wl.parse(w, null, is);
+            wl.parse(w, is);
         }
         
         Room r0 = w.getRoom("r0");

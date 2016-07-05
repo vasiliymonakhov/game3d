@@ -1,7 +1,3 @@
-/**
- * This software is free. You can use it without any limitations, but I don't give any kind of warranties!
- */
-
 package org.freeware.monakhov.game3d.map;
 
 import java.io.IOException;
@@ -12,14 +8,26 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Handles XML data of our resources
+ * обрабатывает XML с ресурсами
  * @author Vasily Monakhov 
  */
 class XMLResourceHandler extends DefaultHandler {
     
+    /**
+     * Путь к файлам
+     */
     private String path;
+    /**
+     * Текущая текстура
+     */
     private Texture currentTexture;
+    /**
+     * Текущий спрайт
+     */
     private Sprite currentSprite;
+    /**
+     * Текущее комбинированное изображение
+     */
     private MultiImage currentMultiImage;
     
     @Override

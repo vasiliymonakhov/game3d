@@ -16,20 +16,30 @@ import javax.imageio.ImageIO;
  */
 public class Image {
 
+    /**
+     * Буферизированное изображение
+     */
     private final BufferedImage image;
 
+    /**
+     * Содайт изображение
+     * @param fileName имя файла
+     * @throws IOException 
+     */
     Image(String fileName) throws IOException {
         BufferedImage bi = ImageIO.read(Image.class.getResourceAsStream(fileName));
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();
         image = gfx_config.createCompatibleImage(bi.getWidth(), bi.getHeight(), bi.getColorModel().getTransparency());
-        Graphics2D g = (Graphics2D) image.getGraphics();
+        image.setAccelerationPriority(1);        
+        Graphics2D g = (Graphics2D) image.createGraphics();
         g.drawImage(bi, 0, 0, null);
         g.dispose();
     }
 
     /**
+     * Возвращает буферизированное изображение
      * @return the image
      */
     public BufferedImage getImage() {
@@ -55,6 +65,11 @@ public class Image {
         images.put(id, new Image(fileName));
     }
 
+    /**
+     * Возвращает изображение по идентификатору
+     * @param id идентификатори изображения
+     * @return изображение
+     */
     public static Image get(String id) {
         Image img = images.get(id);
         if (img == null) {

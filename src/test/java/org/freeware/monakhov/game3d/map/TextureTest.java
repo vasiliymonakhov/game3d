@@ -26,26 +26,6 @@ public class TextureTest {
     }    
     
     /**
-     * Test of getImage method, of class Texture.
-     */
-    @Test
-    public void testGetImage() {
-        Texture tex = Texture.get("brick01");
-        BufferedImage bi = tex.getImage(0);
-        assertNotNull(bi);
-        assertEquals(256, bi.getWidth());
-        assertEquals(256, bi.getHeight());
-        bi = tex.getImage(1);
-        assertNotNull(bi);
-        assertEquals(128, bi.getWidth());
-        assertEquals(128, bi.getHeight());
-        bi = tex.getImage(2);
-        assertNotNull(bi);
-        assertEquals(64, bi.getWidth());
-        assertEquals(64, bi.getHeight());
-    }
-
-    /**
      * Test of getSubImage method, of class Texture.
      */
     @Test

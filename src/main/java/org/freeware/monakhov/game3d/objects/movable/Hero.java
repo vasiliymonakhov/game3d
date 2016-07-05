@@ -1,41 +1,96 @@
 package org.freeware.monakhov.game3d.objects.movable;
 
 import java.util.List;
-import org.freeware.monakhov.game3d.Screen;
+import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.map.MultiImage;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
 
 /**
- *
- * @author Vasily Monakhov 
+ * Главный герой
+ * @author Vasily Monakhov
  */
 public class Hero extends ViewPoint {
 
+    /**
+     * Создаёт героя
+     * @param world мир
+     * @param position позиция
+     */
     public Hero(World world, Point position) {
         super(world, position);
     }
-    
+
+    /**
+     * Максимальная скорость движения назад
+     */
     public static final double MAX_BACKWARD_MOVE_SPEED = -256 / 1.0E9;
-    public static final double STRAFE_ACCELERATION = 512 / 1.0E18;
-    public static final double TURN_ACCELERATION = 2 * Math.PI / 1.0E18;
-    public static final double MOVE_BREAKING = 4096 / 1.0E18;
-    public static final double MOVE_FORWARD_ACCELERATION = 2048 / 1.0E18;
-    public static final double MAX_STRAFE_SPEED = 1024 / 1.0E9;
-    public static final double STRAFE_BREAKING = 4096 / 1.0E18;
-    public static final double MOVE_BACKWARD_ACCELERATION = -512 / 1.0E18;
+    /**
+     * Максимальная скорость движения вперёд
+     */
     public static final double MAX_FORWARD_MOVE_SPEED = 1024 / 1.0E9;
-    public static final double TURN_BREAK = 3 * Math.PI / 1.0E18;
-    public static final double MAX_TURN_SPEED = Math.PI / 2.0E9;
-    
+    /**
+     * Максимальная скорость движения в бок
+     */
+    public static final double MAX_STRAFE_SPEED = 1024 / 1.0E9;
+    /**
+     * Максимальная скорость поворота
+     */
+    public static final double MAX_TURN_SPEED = Math.PI / 1.5E9;
+
+    /**
+     * Ускорение при движении вперёд
+     */
+    public static final double MOVE_FORWARD_ACCELERATION = 2048 / 1.0E18;
+    /**
+     * Ускорение при движении назад
+     */
+    public static final double MOVE_BACKWARD_ACCELERATION = -512 / 1.0E18;
+    /**
+     * Ускорение при движении в бок
+     */
+    public static final double STRAFE_ACCELERATION = 512 / 1.0E18;
+    /**
+     * Ускорение при повороте
+     */
+    public static final double TURN_ACCELERATION = 2.5 * Math.PI / 1.0E18;
+
+    /**
+     * Замедление при движении прямо
+     */
+    public static final double MOVE_BREAKING = 4096 / 1.0E18;
+    /**
+     * Замедление при движении в бок
+     */
+    public static final double STRAFE_BREAKING = 4096 / 1.0E18;
+    /**
+     * Замедление при поворотах
+     */
+    public static final double TURN_BREAKING = 3 * Math.PI / 1.0E18;
+
+    /**
+     * Скорость движения в бок
+     */
     private double strafeSpeed = 0;
+    /**
+     * Скорость движения прямо
+     */
     private double moveSpeed = 0;
+    /**
+     * Скорость поворота
+     */
     private double turnSpeed = 0;
-    
+
+    /**
+     * Анализ поворота
+     * @param left поворачивать влево
+     * @param right поворачивать вправо
+     * @param frameNanoTime время
+     */
     private void analyseTurn(boolean left, boolean right, long frameNanoTime) {
         if (left) {
             if (turnSpeed > 0) {
-                turnSpeed = turnSpeed - TURN_BREAK * frameNanoTime;
+                turnSpeed = turnSpeed - TURN_BREAKING * frameNanoTime;
             } else {
                 turnSpeed = turnSpeed - TURN_ACCELERATION * frameNanoTime;
             }
@@ -44,7 +99,7 @@ public class Hero extends ViewPoint {
             }
         } else if (right) {
             if (turnSpeed < 0) {
-                turnSpeed = turnSpeed + TURN_BREAK * frameNanoTime;
+                turnSpeed = turnSpeed + TURN_BREAKING * frameNanoTime;
             } else {
                 turnSpeed = turnSpeed + TURN_ACCELERATION * frameNanoTime;
             }
@@ -53,19 +108,25 @@ public class Hero extends ViewPoint {
             }
         } else {
             if (turnSpeed > 0) {
-                turnSpeed = turnSpeed - TURN_BREAK * frameNanoTime;
+                turnSpeed = turnSpeed - TURN_BREAKING * frameNanoTime;
                 if (turnSpeed < 0) {
                     turnSpeed = 0;
                 }
             } else if (turnSpeed < 0) {
-                turnSpeed = turnSpeed + TURN_BREAK * frameNanoTime;
+                turnSpeed = turnSpeed + TURN_BREAKING * frameNanoTime;
                 if (turnSpeed > 0) {
                     turnSpeed = 0;
                 }
             }
-        }        
+        }
     }
-    
+
+    /**
+     * Анализ двидения пряма
+     * @param forward идти вперёд
+     * @param backward идти назад
+     * @param frameNanoTime время
+     */
     private void analyseMove(boolean forward, boolean backward, long frameNanoTime) {
         if (forward) {
             if (moveSpeed < 0) {
@@ -97,9 +158,15 @@ public class Hero extends ViewPoint {
                     moveSpeed = 0;
                 }
             }
-        }        
+        }
     }
-    
+
+    /**
+     * Анализ вдидения в бок
+     * @param strafeLeft двигаться влеов
+     * @param strafeRight двигаться вправо
+     * @param frameNanoTime время
+     */
     private void analyseStrafe(boolean strafeLeft, boolean strafeRight, long frameNanoTime) {
         if (strafeLeft) {
             if (strafeSpeed > 0) {
@@ -131,9 +198,19 @@ public class Hero extends ViewPoint {
                     strafeSpeed = 0;
                 }
             }
-        }        
+        }
     }
-    
+
+    /**
+     * Анализ движения
+     * @param left поворачиваться влево
+     * @param right поворачиваться вправо
+     * @param forward двигаться вперёд
+     * @param backward двигаться назад
+     * @param strafeLeft двигаться влево
+     * @param strafeRight двигаться вправо
+     * @param frameNanoTime время
+     */
     public void analyseKeys(boolean left, boolean right, boolean forward, boolean backward, boolean strafeLeft, boolean strafeRight, long frameNanoTime) {
         analyseTurn(left, right, frameNanoTime);
         setAzimuth(getAzimuth() + turnSpeed * frameNanoTime);
@@ -141,10 +218,14 @@ public class Hero extends ViewPoint {
         analyseStrafe(strafeLeft, strafeRight, frameNanoTime);
         moveBy(moveSpeed * frameNanoTime, strafeSpeed * frameNanoTime);
     }
-    
+
+    /**
+     * изображение оружия в руках
+     */
     MultiImage weapon = MultiImage.get("axe");
-    
-    public List<MultiImage.ImageToDraw> getImagesToDraw(Screen screen) {
+
+
+    public List<MultiImage.ImageToDraw> getImagesToDraw(ScreenBuffer screen) {
         return weapon.getImagesToDraw(screen);
     }
 

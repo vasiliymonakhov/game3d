@@ -17,19 +17,40 @@ import org.xml.sax.Attributes;
  */
 abstract public class WorldObject {
 
+    /**
+     * Позиция на карте
+     */
     protected final Point position;
+    /**
+     * Предыдущая позиция на карте
+     */
     protected final Point oldPosition;
+    /**
+     * Левая точка
+     */
     private final Point left = new Point();
+    /**
+     * Правая точка
+     */
     private final Point right = new Point();
+    /**
+     * мир
+     */
     protected final World world;    
 
+    /**
+     * Азимут
+     */
     protected double azimuth;
-
+    /**
+     * Комната, в которой находится объект
+     */
     protected Room room;
 
     /**
-     * @param world
-     * @param position the position to set
+     * Создаёт объект
+     * @param world мир
+     * @param position позийия объекта
      */
     public WorldObject(World world, Point position) {
         if (position == null) {
@@ -39,14 +60,25 @@ abstract public class WorldObject {
         this.world = world;
         oldPosition = new Point();
         oldPosition.moveTo(position.getX(), position.getY());
+        updateRoom();
+    }
+    
+    /**
+     * Обновляет сведения о комнате
+     */
+    public final void updateRoom() {
         for (Room r : world.getAllRooms()) {
             if (r.insideThisRoom(position)) {
                 room = r;
                 break;
             }
-        }        
-    }
+        }                
+    }    
 
+    /**
+     * Поворачивает крайние точки объекта к главному герою
+     * @param hero главный герой
+     */
     public void turnSpriteToViewPoint(ViewPoint hero) {
         int sw2 = getSprite().getWidth() / 2;
         double deltaX = sw2 * Math.cos(-hero.getAzimuth());
@@ -56,6 +88,7 @@ abstract public class WorldObject {
     }
 
     /**
+     * Возвращает азимут
      * @return the azimuth
      */
     public double getAzimuth() {
@@ -63,13 +96,15 @@ abstract public class WorldObject {
     }
 
     /**
+     * Устанавливает азимут
      * @param azimuth the azimuth to set
      */
     public void setAzimuth(double azimuth) {
-        this.azimuth = azimuth % (2 * Math.PI);
+        this.azimuth = (azimuth + 2 * Math.PI) % (2 * Math.PI);
     }
 
     /**
+     * Возвращает комнату, в которой находится объект
      * @return the room
      */
     public Room getRoom() {
@@ -77,6 +112,7 @@ abstract public class WorldObject {
     }
 
     /**
+     * Устанавливает комнату, в которой находится объект
      * @param room the room to set
      */
     public void setRoom(Room room) {
@@ -87,18 +123,32 @@ abstract public class WorldObject {
     }
 
     /**
+     * Возвращает позицию объекта
      * @return the position
      */
     public Point getPosition() {
         return position;
     }
 
+    /**
+     * Возвращает спрайт, которым нужно отрисовать объект
+     * @return  спрайт
+     */
     abstract public Sprite getSprite();
 
+    /**
+     * Вовзращает расстояние от объекта до заданной точки
+     * @param p точка
+     * @return расстояние
+     */
     public double distanceTo(Point p) {
         return SpecialMath.lineLength(p, position);
     }
 
+    /**
+     * Можно ли пройти сквозь объект
+     * @return 
+     */
     public boolean isCrossable() {
         return false;
     }
@@ -110,9 +160,14 @@ abstract public class WorldObject {
      */
     abstract public double getRadius();
     
+    /**
+     * Вовзращает радиус окружности, на каоторую распространяется действие объекта
+     * @return 
+     */
     abstract public double getInteractRadius();
 
     /**
+     * Вовзращает левую точку
      * @return the left
      */
     public Point getLeft() {
@@ -120,12 +175,19 @@ abstract public class WorldObject {
     }
 
     /**
+     * Возвращает правую точку
      * @return the right
      */
     public Point getRight() {
         return right;
     }
 
+    /**
+     * Создаёт объекты из XML
+     * @param world мир
+     * @param attr запись файла
+     * @return созданный объект
+     */
     public static WorldObject createFromXML(World world, Attributes attr) {
         String clasz = attr.getValue("class");
         switch (clasz) {
@@ -137,8 +199,16 @@ abstract public class WorldObject {
         return null;        
     }
     
+    /**
+     * Действие при взаимодействии с другим объектом мира
+     * @param wo другой объект
+     */
     public abstract void onInteractWith(WorldObject wo);
     
+    /**
+     * Сделать что-нибудь
+     * @param frameNanoTime текущее время
+     */
     public abstract void doSomething(long frameNanoTime);
     
 }

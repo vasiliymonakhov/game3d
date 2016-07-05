@@ -41,14 +41,10 @@ public class SpriteTest {
     public void testGetSubImage() {
         Sprite spr = Sprite.get("green_barrel");
         assertNotNull(spr);
-        BufferedImage bi = spr.getSubImage(10, 0, 340);
+        BufferedImage bi = spr.getSubImage(10, 0, 1, 16);
         assertNotNull(bi);
         assertEquals(1, bi.getWidth());
-        assertEquals(66, bi.getHeight());        
-        bi = spr.getSubImage(10, 0, 200);
-        assertNotNull(bi);
-        assertEquals(1, bi.getWidth());
-        assertEquals(33, bi.getHeight());                
+        assertEquals(16, bi.getHeight());        
     }
 
     /**

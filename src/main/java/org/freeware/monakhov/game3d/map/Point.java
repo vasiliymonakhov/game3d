@@ -82,10 +82,10 @@ public class Point {
      * @return true если да
      */
     public boolean between(Point pa, Point pb) {
-        double xmax = Math.max(pa.x, pb.x) + EPSILON;
-        double xmin = Math.min(pa.x, pb.x) - EPSILON;
-        double ymax = Math.max(pa.y, pb.y) + EPSILON;
-        double ymin = Math.min(pa.y, pb.y) - EPSILON;
+        double xmax = pa.x >  pb.x ? pa.x + EPSILON : pb.x + EPSILON;
+        double xmin = pa.x < pb.x ?  pa.x - EPSILON : pb.x - EPSILON;
+        double ymax = pa.y > pb.y ? pa.y + EPSILON : pb.y + EPSILON;
+        double ymin = pa.y < pb.y ? pa.y - EPSILON : pb.y - EPSILON;
         return x <= xmax && x >= xmin && y <= ymax && y >= ymin;
     }
 

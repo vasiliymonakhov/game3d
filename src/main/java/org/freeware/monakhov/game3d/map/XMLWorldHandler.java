@@ -1,7 +1,3 @@
-/**
- * This software is free. You can use it without any limitations, but I don't give any kind of warranties!
- */
-
 package org.freeware.monakhov.game3d.map;
 
 import org.freeware.monakhov.game3d.map.visiblelines.DoorOpenSwitch;
@@ -10,29 +6,32 @@ import org.freeware.monakhov.game3d.map.visiblelines.SimpleSwitch;
 import org.freeware.monakhov.game3d.map.visiblelines.Door;
 import org.freeware.monakhov.game3d.map.visiblelines.Wall;
 import org.freeware.monakhov.game3d.objects.WorldObject;
-import org.freeware.monakhov.game3d.objects.movable.ViewPoint;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Handles XML data of our world
+ * Загружает мир из XML
  * @author Vasily Monakhov 
  */
 class XMLWorldHandler extends DefaultHandler {
     
+    /**
+     * Мир
+     */
     private final World world;
-    private final ViewPoint hero;
     
-    XMLWorldHandler(World world, ViewPoint hero) {
+    /**
+     * Содаёт загрузчик
+     * @param world мир
+     */
+    XMLWorldHandler(World world) {
         this.world = world;
-        this.hero = hero;
     }
 
     private boolean loadingPoints;
     private boolean loadingLines;
     private boolean loadingRooms;
-    
     private String roomID;
     
     @Override
@@ -102,9 +101,9 @@ class XMLWorldHandler extends DefaultHandler {
                 l.setPortal(world.getRoom(attr.getValue("to")));
                 break;
             case "hero" :
-                hero.getPosition().moveTo(Integer.parseInt(attr.getValue("x")), Integer.parseInt(attr.getValue("y")));
-                hero.setRoom(world.getRoom(attr.getValue("room")));
-                hero.setAzimuth(Math.PI * 2 * Integer.parseInt(attr.getValue("azimuth")) / 360);
+                world.getHero().getPosition().moveTo(Integer.parseInt(attr.getValue("x")), Integer.parseInt(attr.getValue("y")));
+                world.getHero().setAzimuth(Math.PI * 2 * Integer.parseInt(attr.getValue("azimuth")) / 360);
+                world.getHero().updateRoom();
                 break;
             case "object":
                 world.addObject(attr.getValue("id"), WorldObject.createFromXML(world, attr));

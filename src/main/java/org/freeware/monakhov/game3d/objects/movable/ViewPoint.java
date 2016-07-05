@@ -6,12 +6,17 @@ import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
- * This is who are You! :)
+ * Точка, с которой производится наблюдение
  *
  * @author Vasily Monakhov
  */
 public class ViewPoint extends MovableObject {
     
+    /**
+     * Создаёт объект
+     * @param world мир
+     * @param position мозиция
+     */
     public ViewPoint(World world, Point position) {
         super(world, position);
     }

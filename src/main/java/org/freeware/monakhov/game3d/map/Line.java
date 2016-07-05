@@ -24,12 +24,15 @@ public class Line {
      * наблюдателя
      */
     protected final Point end;
-    
+
     /**
      * Эта линия может быть порталом в другую комнату
      */
     private Set<Room> portalToRooms;
-    
+
+    /**
+     * ссылка на мир
+     */
     protected final World world;
 
     /**
@@ -84,10 +87,15 @@ public class Line {
         return portalToRooms;
     }
 
+    /**
+     * Сообщает, что эта линия является порталом между комнатами
+     *
+     * @return true если линия является порталом
+     */
     public boolean isPortal() {
-        return portalToRooms!= null; 
+        return portalToRooms != null;
     }
-    
+
     /**
      * Сообщает, видима ли эта линия
      *
@@ -96,36 +104,73 @@ public class Line {
     public boolean isVisible() {
         return false;
     }
-    
-    protected boolean everSeen = false;    
-    
+
+    /**
+     * Флажок, сообщающий что линия была увидена хотя бы раз
+     */
+    protected boolean everSeen = false;
+
+    /**
+     * Сообщает, что линия была увидена хотя бы раз
+     *
+     * @return true если линия была увидена хотя бы раз
+     */
     public boolean isEverSeen() {
         return everSeen;
     }
-    
+
     /**
      * Сообщает, что линию можно пересекать
+     *
      * @return можно ли пересекать через линию
      */
     public boolean isCrossable() {
         return true;
     }
 
-    private final Point lcp = new Point();
-    
-    public boolean checkVisibility(VisibleLine[] mapLines, Point viewPoint, Point[] rayPoints, Point[] intersectPoints) {
-        for (int i = 0; i < mapLines.length; i++) {
-            if (SpecialMath.lineIntersection(start, end, rayPoints[i], viewPoint, lcp)) {
-                if (lcp.between(start, end) && lcp.between(viewPoint, rayPoints[i])) return true;
+    /**
+     * Трассируем линию лучом
+     * @param mapLines массив линий, попадающих в столбец на экране
+     * @param index индекс луча
+     * @param viewPoint точка обзора
+     * @param rayPoint точка луча
+     * @param intersectPoint точека пересечения трассирующего луча и какой-либо стены
+     * @param visibleRooms множество видимых комнат
+     * @param checkedRooms множество уже проверенных комнат
+     * @return true если луч нашел видимую стену
+     */
+    public boolean traceLine(VisibleLine[] mapLines, int index, Point viewPoint, Point rayPoint, Point intersectPoint, Set<Room> visibleRooms, Set<Room> checkedRooms) {
+        Point lcp = new Point();
+        if (SpecialMath.lineIntersection(start, end, rayPoint, viewPoint, lcp) && lcp.between(start, end) && lcp.between(viewPoint, rayPoint)) {
+            everSeen = true;
+            if (isPortal()) {
+                for (Room r : getRoomsFromPortal()) {
+                    if (checkedRooms.contains(r)) {
+                        continue;
+                    }
+                    if (r.traceRoom(mapLines, index, viewPoint, rayPoint, intersectPoint, visibleRooms, checkedRooms)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
     }
-    
+
+    /**
+     * Что нужно сделать при взаимодействии с объектом мира
+     *
+     * @param wo
+     */
     public void onInteractWith(WorldObject wo) {
     }
-    
+
+    /**
+     * Сделать что-нибудь
+     *
+     * @param frameNanoTime текущее время
+     */
     public void doSomething(long frameNanoTime) {
     }
-    
+
 }

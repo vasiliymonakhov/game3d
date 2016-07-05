@@ -9,12 +9,25 @@ import org.freeware.monakhov.game3d.map.Point;
  */
 public class SpecialMath {
 
+    /**
+     * Вычисляет расстояние между двумя точками
+     * @param a первая точка
+     * @param b вторая точка
+     * @return расстояние между точками
+     */
     public static double lineLength(Point a, Point b) {
         double x = a.getX() - b.getX();
         double y = a.getY() - b.getY();
         return Math.sqrt(x * x + y * y);
     }
 
+    /**
+     * Вычисляет площадь треугольника, образованного тремя точками
+     * @param a первая точка
+     * @param b вторая точка
+     * @param c третья точка
+     * @return площадь треугольника
+     */
     public static double triangleSquare(Point a, Point b, Point c) {
         double ab = lineLength(a, b);
         double bc = lineLength(b, c);
@@ -23,8 +36,20 @@ public class SpecialMath {
         return Math.sqrt(p * (p - ab) * (p - bc) * (p - ac));
     }
 
+    /**
+     * Точность сравнений
+     */
     public final static double EPSILON = 0.01d;
 
+    /**
+     * Определяет, пересекаются ли две бесконечные линии, проходящие через заданные точки
+     * @param p1 первая точка, через которую проходит первая линия
+     * @param p2 вторая точка, через которую проходит первая линия
+     * @param p3 первая точка, через которую проходит вторая линия
+     * @param p4 вторая точка, через которую проходит вторая линия
+     * @param i точка, куда надо записать координаты точки пересечения
+     * @return true если линии пересекаются, при этом в i будут находиться координаты точки пересечения
+     */
     public static boolean lineIntersection(Point p1, Point p2, Point p3, Point p4, Point i) {
         double a1 = p2.getY() - p1.getY();
         double b1 = p1.getX() - p2.getX();
@@ -40,10 +65,20 @@ public class SpecialMath {
         }
         double dx = -c1 * b2 + b1 * c2;
         double dy = -a1 * c2 + c1 * a2;
-        i.moveTo(dx / d, dy / d);
+        if (i != null) {
+            i.moveTo(dx / d, dy / d);
+        }
         return true;
     }
 
+    /**
+     * Определяет, пересекаются ли отрезок, проходящая через заданные точки и окружность, заданная точкой и радиусом
+     * @param p1 первая точка, через которую проходит отрезок
+     * @param p2 вторая точка, через которую проходит отрезок
+     * @param o центр окружности
+     * @param r радиус окружности
+     * @return true если пересекает хотя бы в одной точке или отрезок находится внутри окружности
+     */
     public static boolean lineAndCircleIntersects(Point p1, Point p2, Point o, double r) {
         Point pi0 = new Point();
         Point pi1 = new Point();
@@ -60,6 +95,17 @@ public class SpecialMath {
         return r > SpecialMath.lineLength(o, p1) || r > SpecialMath.lineLength(o, p2);
     }
 
+    /**
+     * Определяет, пересекаются ли прямая, проходящая через заданные точки и окружность, заданная точкой и радиусом и возвращает
+     * количество точек пересечения и их координаты
+     * @param p1 первая точка, через которую проходит линия
+     * @param p2 вторая точка, через которую проходит линия
+     * @param o центр окружности
+     * @param r радиус окружности
+     * @param pr1 первая точка, в которую будут записаны координаты пересечения
+     * @param pr2 вторая точка, в которую будут записаны координаты пересечения
+     * @return количество точек пересечения
+     */
     public static int lineAndCircleIntersection(Point p1, Point p2, Point o, double r, Point pr1, Point pr2) {
         double a = p2.getY() - p1.getY();
         double b = p1.getX() - p2.getX();

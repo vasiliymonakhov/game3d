@@ -9,10 +9,14 @@ import org.freeware.monakhov.game3d.map.World;
  */
 abstract public class CrossableObject extends NonMovableObject {
 
+    /**
+     * Создаёт объект
+     * @param world мир 
+     * @param position позиция
+     */
     public CrossableObject(World world, Point position) {
         super(world, position);
     }
-
 
     @Override
     public boolean isCrossable() {

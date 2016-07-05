@@ -6,7 +6,7 @@ import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
- * Бочка
+ * Зелёная бочка
  * @author Vasily Monakhov 
  */
 public class GreenBarrel extends NonMovableObject {
@@ -35,7 +35,7 @@ public class GreenBarrel extends NonMovableObject {
 
     @Override
     public double getInteractRadius() {
-        return 0;
+        return 25;
     }
 
 }

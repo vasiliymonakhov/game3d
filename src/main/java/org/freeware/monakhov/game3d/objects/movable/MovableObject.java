@@ -14,10 +14,20 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
  */
 public abstract class MovableObject extends WorldObject {
 
+    /**
+     * Создаёт объект
+     * @param world мир
+     * @param position положение
+     */
     public MovableObject(World world, Point position) {
         super(world, position);
     }
 
+    /**
+     * Проверяет, не столкнулись ли с каким-то объектом
+     * @param newPosition новое положение
+     * @return true если столкнулись
+     */
     boolean touchAnyObject(Point newPosition) {
         // проверяем, не столкнулись ли мы с каким-то объектом
         for (WorldObject o : world.getAllObjects()) {
@@ -34,6 +44,11 @@ public abstract class MovableObject extends WorldObject {
         return false;
     }
 
+    /**
+     * Проверяет, не уткнулись ли в стенку
+     * @param newPosition новое положение
+     * @return true если уткнулись
+     */
     Line touchWall(Point newPosition) {
         // проверить, не уткнулись ли мы с стенку
         for (Line l : room.getAllLines()) {
@@ -49,6 +64,11 @@ public abstract class MovableObject extends WorldObject {
         return null;
     }
 
+    /**
+     * Проверяет, не пересекли ли мы стенку
+     * @param newPosition новое положение
+     * @return стенка или null если не пересекли
+     */
     Line crossWall(Point newPosition) {
         // проверить, не пересекли ли мы с стенку
         Point p = new Point();
@@ -65,6 +85,11 @@ public abstract class MovableObject extends WorldObject {
         return null;
     }
 
+    /**
+     * Проверяем, не попали ли мы в другую комнату
+     * @param newPosition новое положение
+     * @return новая комната или null
+     */
     Room checkMoveToOtherRoom(Point newPosition) {
         // проверяем, не пересекли ли мы какую-то линию
         Point p = new Point();
@@ -86,6 +111,12 @@ public abstract class MovableObject extends WorldObject {
         return null;
     }
 
+    /**
+     * Переместиться в новое место
+     * @param df смещение по прямой
+     * @param ds смещение в стороны
+     * @return true если манёвр удался
+     */
     public boolean moveBy(double df, double ds) {
         Point newPosition = new Point(position.getX(), position.getY());
         // определяем новые координаты

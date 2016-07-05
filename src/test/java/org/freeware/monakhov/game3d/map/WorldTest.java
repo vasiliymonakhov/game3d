@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test of World
- * @author Vasily Monakhov 
+ * @author Vasily Monakhov
  */
 public class WorldTest {
 
@@ -27,7 +27,7 @@ public class WorldTest {
         w.addPoint("p0", new Point(10, 20));
         w.addPoint("p1", new Point(30, 40));
         w.addPoint("p2", new Point(50, 60));
-        
+
         Point p = w.getPoint("p0");
         assertEquals(10, p.getX(), EPSILON);
         assertEquals(20, p.getY(), EPSILON);
@@ -48,8 +48,8 @@ public class WorldTest {
         World w = new World();
         w.addPoint("p0", new Point(10, 20));
         w.addPoint("p0", new Point(30, 40));
-    }    
-    
+    }
+
     /**
      * Test of addPoint method, of class Room.
      */
@@ -57,7 +57,7 @@ public class WorldTest {
     public void testAddPoint2() {
         World w = new World();
         w.addPoint("", new Point(10, 20));
-    }    
+    }
 
     /**
      * Test of addPoint method, of class Room.
@@ -66,8 +66,8 @@ public class WorldTest {
     public void testAddPoint3() {
         World w = new World();
         w.addPoint(null, new Point(10, 20));
-    }        
-    
+    }
+
     /**
      * Test of addPoint method, of class Room.
      */
@@ -75,8 +75,8 @@ public class WorldTest {
     public void testAddPoint4() {
         World w = new World();
         w.addPoint("p0", null);
-    }            
-    
+    }
+
     /**
      * Test of addRoom method, of class World.
      */
@@ -104,7 +104,7 @@ public class WorldTest {
         Room r2 = new Room();
         w.addRoom("r1", r1);
         w.addRoom("r1", r2);
-    }    
+    }
 
     /**
      * Test of addRoom method, of class World.
@@ -117,7 +117,7 @@ public class WorldTest {
         Room r3 = new Room();
         w.addRoom("r1", r1);
         w.addRoom("r2", r2);
-        w.addRoom("r3", r3);        
+        w.addRoom("r3", r3);
         assertTrue(r1 == w.getRoom("r1"));
         assertTrue(r2 == w.getRoom("r2"));
         assertTrue(r3 == w.getRoom("r3"));
@@ -134,7 +134,7 @@ public class WorldTest {
         Room r3 = new Room();
         w.addRoom("r1", r1);
         w.addRoom("r2", r2);
-        w.addRoom("r3", r3);        
+        w.addRoom("r3", r3);
         assertTrue(r1 == w.getRoom("r1"));
         assertTrue(r2 == w.getRoom("r2"));
         assertTrue(r3 == w.getRoom("r3"));
@@ -152,7 +152,7 @@ public class WorldTest {
         Room r4 = new Room();
         w.addRoom("r1", r1);
         w.addRoom("r2", r2);
-        w.addRoom("r3", r3);        
+        w.addRoom("r3", r3);
         assertTrue(r1 == w.getRoom("r1"));
         assertTrue(r2 == w.getRoom("r2"));
         assertTrue(r3 == w.getRoom("r3"));
@@ -161,30 +161,6 @@ public class WorldTest {
         assertTrue(expResult.contains(r2));
         assertTrue(expResult.contains(r3));
         assertFalse(expResult.contains(r4));
-    }
-
-    /**
-     * Test of prepareForVisibilityCheck method, of class World.
-     */
-    @Test
-    public void testPrepareForVisibilityCheck() {
-        World w = new World();
-        Room r1 = new Room();
-        Room r2 = new Room();
-        Room r3 = new Room();
-        w.addRoom("r1", r1);
-        w.addRoom("r2", r2);
-        w.addRoom("r3", r3);                
-        r1.roomVisibilityAlreadyChecked = true;
-        r2.roomVisibilityAlreadyChecked = true;        
-        r3.roomVisibilityAlreadyChecked = true;                
-        w.prepareForVisibilityCheck();
-        assertFalse(r1.isRoomVisibilityAlreadyChecked());
-        assertFalse(r2.isRoomVisibilityAlreadyChecked());
-        assertFalse(r3.isRoomVisibilityAlreadyChecked());
-        assertFalse(r1.roomVisibilityAlreadyChecked);
-        assertFalse(r2.roomVisibilityAlreadyChecked);
-        assertFalse(r3.roomVisibilityAlreadyChecked);
     }
 
     /**
@@ -222,7 +198,7 @@ public class WorldTest {
         World w = new World();
         GreenBarrel b = new GreenBarrel(w, new Point());
         w.addObject("", b);
-    }    
+    }
 
     /**
      * Test of addObject method, of class World.
@@ -232,8 +208,8 @@ public class WorldTest {
         World w = new World();
         GreenBarrel b = new GreenBarrel(w, new Point());
         w.addObject(null, b);
-    }    
-    
+    }
+
     /**
      * Test of addObject method, of class World.
      */
@@ -241,8 +217,8 @@ public class WorldTest {
     public void testAddObject4() {
         World w = new World();
         w.addObject("abarrel", null);
-    }    
-    
+    }
+
     /**
      * Test of getPoint method, of class Room.
      */
@@ -272,6 +248,6 @@ public class WorldTest {
         assertTrue(points.contains(p1));
         assertTrue(points.contains(p2));
     }
-    
-    
+
+
 }

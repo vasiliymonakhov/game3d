@@ -6,34 +6,47 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.Hero;
 
 /**
- *
+ * Логика игрового цикла
  * @author Vasily Monakhov
  */
 public class GameEngine {
 
+    /**
+     * ссылка на текущий мир
+     */
     private final World world;
 
-    private final Hero hero;
-
-    public GameEngine(World world, Hero hero) {
+   /**
+     * Создаёт логику
+     * @param world мир
+     */
+    public GameEngine(World world) {
         this.world = world;
-        this.hero = hero;
     }
 
+    /**
+     * Отработка взаимодействия главного героя с предметами мира
+     */
     public void interactWithHero() {
+        // проверить взаимодействие с объектами мира
         for (WorldObject wo : world.getAllObjects()) {
-            if (SpecialMath.lineLength(wo.getPosition(), hero.getPosition()) < hero.getInteractRadius() + wo.getInteractRadius()) {
-                hero.onInteractWith(wo);
-                wo.onInteractWith(hero);
+            if (SpecialMath.lineLength(wo.getPosition(), world.getHero().getPosition()) < world.getHero().getInteractRadius() + wo.getInteractRadius()) {
+                world.getHero().onInteractWith(wo);
+                wo.onInteractWith(world.getHero());
             }
         }
+        // проверить взаимодействие с линиями на карте мира
         for (Line l : world.getAllLines()) {
-            if (SpecialMath.lineAndCircleIntersects(l.getStart(), l.getEnd(), hero.getPosition(), hero.getInteractRadius())) {
-                l.onInteractWith(hero);
+            if (SpecialMath.lineAndCircleIntersects(l.getStart(), l.getEnd(), world.getHero().getPosition(), world.getHero().getInteractRadius())) {
+                l.onInteractWith(world.getHero());
             }
         }
     }
 
+    /**
+     * Выполнение одного такта 
+     * @param nanoTime текущее системное время
+     */
     public void doCycle(long nanoTime) {
         for (WorldObject wo : world.getAllObjects()) {
             wo.doSomething(nanoTime);

@@ -16,43 +16,74 @@ import javax.imageio.ImageIO;
  */
 public class Sprite {
 
+    /**
+     * Буферризированные изображения 
+     */
     private final BufferedImage[] images;
+    /**
+     * Ширина спрайта
+     */
     private final int width;
+    /**
+     * Смещение спрайта по вертикали и его высота
+     */
     private final int yOffset, height;
 
-    private final static double min[] = {256, 128, 64, 32, 16, 8, 4, 2, 1, 0};
-    private final static double max[] = {Double.MAX_VALUE, 256, 128, 64, 32, 16, 8, 4, 2, 1};
+    /**
+     * Таблицы для определения, какое изображение нужно использовать для вывода на экран в зависимости от высоты
+     */
+    private final static double min[] = {256, 128, 64, 32, 16};
+    private final static double max[] = {Double.MAX_VALUE, 256, 128, 64, 32};
 
-    public Sprite(int count, int width, int height, int yOffset) throws IOException {
+    /**
+     * Создаёт новый спрайт
+     * @param count количество изображений
+     * @param width ширина
+     * @param height высота
+     * @param yOffset смещение спрайта по вертикали
+     */
+    public Sprite(int count, int width, int height, int yOffset) {
         images = new BufferedImage[count];
         this.width = width;
         this.height = height;
         this.yOffset = yOffset;
     }
 
+    /**
+     * Добавляет изображение в спрайт
+     * @param index индекс изображения
+     * @param fileName имя файла
+     * @throws IOException 
+     */
     void addFile(int index, String fileName) throws IOException {
         BufferedImage bi = ImageIO.read(Sprite.class.getResourceAsStream(fileName));
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();
         images[index] = gfx_config.createCompatibleImage(width, height, bi.getColorModel().getTransparency());
-        Graphics g = images[index].getGraphics();
+        images[index].setAccelerationPriority(1);        
+        Graphics g = images[index].createGraphics();
         g.drawImage(bi, 0, 0, null);
         g.dispose();
     }
 
     /**
-     * @param index
+     * Возвращает буферизированное изображение по индексу
+     * @param index индекс
      * @return the image
      */
     public BufferedImage getImage(int index) {
         return images[index];
     }
 
-    public BufferedImage getSubImage(int x, int y, int height) {
-        return getSubImage(x, y, 1, height);
-    }
-
+    /**
+     * Возвращает участок изображения
+     * @param x горизонталная координата
+     * @param y вертикальная координата
+     * @param vwidth ширина
+     * @param height высота
+     * @return участок изображения
+     */
     public BufferedImage getSubImage(int x, int y, int vwidth, int height) {
         int index = 0;
         for (int i = 0; i < min.length; i++) {
@@ -72,8 +103,16 @@ public class Sprite {
         return bi.getSubimage((x % width) >> index, y >> index, svwidth, bi.getHeight() >> index);
     }
 
+    /**
+     * Карта спрайтов
+     */
     private final static Map<String, Sprite> sprites = new LinkedHashMap<>();
 
+    /**
+     * Вовзращает спрайт по его идентификатору
+     * @param id идентификатор спрайта
+     * @return спрайт
+     */
     public static Sprite get(String id) {
         Sprite spr = sprites.get(id);
         if (spr == null) {

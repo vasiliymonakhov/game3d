@@ -1,7 +1,3 @@
-/**
- * This software is free. You can use it without any limitations, but I don't
- * give any kind of warranties!
- */
 package org.freeware.monakhov.game3d.map.visiblelines;
 
 import java.awt.image.BufferedImage;
@@ -11,14 +7,24 @@ import org.freeware.monakhov.game3d.map.Texture;
 import org.freeware.monakhov.game3d.map.World;
 
 /**
- * Wall in a map
+ * Стена
  *
  * @author Vasily Monakhov
  */
 public class Wall extends VisibleLine {
 
+    /**
+     * Текстура
+     */
     private final Texture texture;
 
+    /**
+     * Создайт стену
+     * @param start точка начала
+     * @param end точка конца
+     * @param texture текстура
+     * @param world мир
+     */
     public Wall(Point start, Point end, Texture texture, World world) {
         super(start, end, world);
         this.texture = texture;
@@ -31,6 +37,7 @@ public class Wall extends VisibleLine {
 
     @Override
     public boolean isVisible() {
+        // стены прозрачными не бывают
         return true;
     }
 

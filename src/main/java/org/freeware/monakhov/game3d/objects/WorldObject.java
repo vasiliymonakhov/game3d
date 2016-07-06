@@ -34,10 +34,26 @@ abstract public class WorldObject {
      */
     private final Point right = new Point();
     /**
+     * Левая передняя точка
+     */
+    private final Point frontLeft = new Point();
+    /**
+     * Правая передняя точка
+     */
+    private final Point frontRight = new Point();
+    /**
+     * Левая задняя точка
+     */
+    private final Point rearLeft = new Point();
+    /**
+     * Правая задняя точка
+     */
+    private final Point rearRight = new Point();
+
+    /**
      * мир
      */
-    protected final World world;    
-
+    protected final World world;
     /**
      * Азимут
      */
@@ -62,7 +78,7 @@ abstract public class WorldObject {
         oldPosition.moveTo(position.getX(), position.getY());
         updateRoom();
     }
-    
+
     /**
      * Обновляет сведения о комнате
      */
@@ -72,8 +88,8 @@ abstract public class WorldObject {
                 room = r;
                 break;
             }
-        }                
-    }    
+        }
+    }
 
     /**
      * Поворачивает крайние точки объекта к главному герою
@@ -81,10 +97,14 @@ abstract public class WorldObject {
      */
     public void turnSpriteToViewPoint(ViewPoint hero) {
         int sw2 = getSprite().getWidth() / 2;
-        double deltaX = sw2 * Math.cos(-hero.getAzimuth());
-        double deltaY = sw2 * Math.sin(-hero.getAzimuth());
-        left.moveTo(position.getX() - deltaX, position.getY() - deltaY);
-        right.moveTo(position.getX() + deltaX, position.getY() + deltaY);
+        double cos = sw2 * Math.cos(-hero.getAzimuth());
+        double sin = sw2 * Math.sin(-hero.getAzimuth());
+        left.moveTo(position.getX() - cos, position.getY() - sin);
+        right.moveTo(position.getX() + cos, position.getY() + sin);
+        frontLeft.moveTo(position.getX() - cos + sin, position.getY() - cos - sin);
+        frontRight.moveTo(position.getX() + cos + sin, position.getY() - cos + sin);
+        rearLeft.moveTo(position.getX() - cos - sin, position.getY() + cos - sin);
+        rearRight.moveTo(position.getX() + cos - sin, position.getY() + cos + sin);
     }
 
     /**
@@ -147,7 +167,7 @@ abstract public class WorldObject {
 
     /**
      * Можно ли пройти сквозь объект
-     * @return 
+     * @return
      */
     public boolean isCrossable() {
         return false;
@@ -159,10 +179,10 @@ abstract public class WorldObject {
      * @return
      */
     abstract public double getRadius();
-    
+
     /**
      * Вовзращает радиус окружности, на каоторую распространяется действие объекта
-     * @return 
+     * @return
      */
     abstract public double getInteractRadius();
 
@@ -196,19 +216,47 @@ abstract public class WorldObject {
             case "tree" :
                 return new Tree(world, new Point(attr));
         }
-        return null;        
+        return null;
     }
-    
+
     /**
      * Действие при взаимодействии с другим объектом мира
      * @param wo другой объект
      */
     public abstract void onInteractWith(WorldObject wo);
-    
+
     /**
      * Сделать что-нибудь
      * @param frameNanoTime текущее время
      */
     public abstract void doSomething(long frameNanoTime);
-    
+
+    /**
+     * @return the frontLeft
+     */
+    public Point getFrontLeft() {
+        return frontLeft;
+    }
+
+    /**
+     * @return the frontRight
+     */
+    public Point getFrontRight() {
+        return frontRight;
+    }
+
+    /**
+     * @return the rearLeft
+     */
+    public Point getRearLeft() {
+        return rearLeft;
+    }
+
+    /**
+     * @return the rearRight
+     */
+    public Point getRearRight() {
+        return rearRight;
+    }
+
 }

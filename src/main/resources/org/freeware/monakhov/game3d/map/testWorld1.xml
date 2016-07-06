@@ -102,7 +102,7 @@
     <hero  x = "256" y = "-3840" azimuth = "0"/>
     <objects>
         <object class = "tree" id = "tree00" x = "64" y = "192"/>
-        <object class = "tree" id = "tree01" x = "448" y = "192"/>
+
 
         <object class = "green_barrel" id = "gb01" x = "64" y = "576"/>
         <object class = "green_barrel" id = "gb02" x = "128" y = "576"/>

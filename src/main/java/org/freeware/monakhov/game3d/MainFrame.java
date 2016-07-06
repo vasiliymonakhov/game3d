@@ -54,7 +54,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         makeScreenAndEngine();
-        
+
         gameEngine = new GameEngine(world);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
@@ -81,7 +81,7 @@ public class MainFrame extends javax.swing.JFrame {
                         if (ked.isDecPercent() && percent >= 20) {
                             remakeEngine = true;
                             percent -= 5;
-                        }                        
+                        }
                         if (remakeEngine) {
                             makeScreenAndEngine();
                         }
@@ -103,9 +103,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }
-    
+
     int percent = 100;
-    
+
     private void makeScreenAndEngine() {
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         screen = new ScreenBuffer(rect.width * percent / 100, rect.height * percent / 100);
@@ -192,7 +192,7 @@ public class MainFrame extends javax.swing.JFrame {
                         break;
                     case KeyEvent.VK_F8:
                         screen.makeScreenShot();
-                        break;                        
+                        break;
                     case KeyEvent.VK_PAGE_UP:
                         graphicsEngine.incMapScale();
                         break;
@@ -207,7 +207,7 @@ public class MainFrame extends javax.swing.JFrame {
                         break;
                     case KeyEvent.VK_F5:
                         decPercent = true;
-                        break;                                                                        
+                        break;
                 }
             }
             if (e.getID() == KeyEvent.KEY_RELEASED) {

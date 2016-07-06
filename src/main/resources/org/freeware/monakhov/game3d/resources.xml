@@ -1,113 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <textures path = "/org/freeware/monakhov/game3d/graphics/textures/">
-        <texture id = "beton01" width = "256" count = "6">
-            <texture_file index = "0" file = "beton01_0.png"/>
-            <texture_file index = "1" file = "beton01_1.png"/>
-            <texture_file index = "2" file = "beton01_2.png"/>
-            <texture_file index = "3" file = "beton01_3.png"/>
-            <texture_file index = "4" file = "beton01_4.png"/>
-            <texture_file index = "5" file = "beton01_5.png"/>
-        </texture>
-        <texture id = "block01" width = "256" count = "6">
-            <texture_file index = "0" file = "block01_0.png"/>
-            <texture_file index = "1" file = "block01_1.png"/>
-            <texture_file index = "2" file = "block01_2.png"/>
-            <texture_file index = "3" file = "block01_3.png"/>
-            <texture_file index = "4" file = "block01_4.png"/>
-            <texture_file index = "5" file = "block01_5.png"/>
-        </texture>                
-        <texture id = "brick01" width = "256" count = "6">
-            <texture_file index = "0" file = "brick01_0.png"/>
-            <texture_file index = "1" file = "brick01_1.png"/>
-            <texture_file index = "2" file = "brick01_2.png"/>
-            <texture_file index = "3" file = "brick01_3.png"/>
-            <texture_file index = "4" file = "brick01_4.png"/>
-            <texture_file index = "5" file = "brick01_5.png"/>
-        </texture>
-        <texture id = "brick02" width = "256" count = "6">
-            <texture_file index = "0" file = "brick02_0.png"/>
-            <texture_file index = "1" file = "brick02_1.png"/>
-            <texture_file index = "2" file = "brick02_2.png"/>
-            <texture_file index = "3" file = "brick02_3.png"/>
-            <texture_file index = "4" file = "brick02_4.png"/>
-            <texture_file index = "5" file = "brick02_5.png"/>
-        </texture>
-        <texture id = "brick03" width = "256" count = "6">
-            <texture_file index = "0" file = "brick03_0.png"/>
-            <texture_file index = "1" file = "brick03_1.png"/>
-            <texture_file index = "2" file = "brick03_2.png"/>
-            <texture_file index = "3" file = "brick03_3.png"/>
-            <texture_file index = "4" file = "brick03_4.png"/>
-            <texture_file index = "5" file = "brick03_5.png"/>
-        </texture>                
-        <texture id = "door_border_left01" width = "32" count = "3">
-            <texture_file index = "0" file = "door_border_left01_0.png"/>
-            <texture_file index = "1" file = "door_border_left01_1.png"/>
-            <texture_file index = "2" file = "door_border_left01_2.png"/>
-        </texture>            
-        <texture id = "door_border_right01" width = "32" count = "3">
-            <texture_file index = "0" file = "door_border_right01_0.png"/>
-            <texture_file index = "1" file = "door_border_right01_1.png"/>
-            <texture_file index = "2" file = "door_border_right01_2.png"/>
-        </texture>        
-        <texture id = "door_closed01" width = "256" count = "4">
-            <texture_file index = "0" file = "door_closed01_0.png"/>
-            <texture_file index = "1" file = "door_closed01_1.png"/>
-            <texture_file index = "2" file = "door_closed01_2.png"/>
-            <texture_file index = "3" file = "door_closed01_3.png"/>
-        </texture>        
-        <texture id = "door_open01" width = "256" count = "4">
-            <texture_file index = "0" file = "door_open01_0.png"/>
-            <texture_file index = "1" file = "door_open01_1.png"/>
-            <texture_file index = "2" file = "door_open01_2.png"/>
-            <texture_file index = "3" file = "door_open01_3.png"/>
-        </texture>    
-        <texture id = "fence01" width = "256" count = "3">
-            <texture_file index = "0" file = "fence01_0.png"/>
-            <texture_file index = "1" file = "fence01_1.png"/>
-            <texture_file index = "2" file = "fence01_2.png"/>
-        </texture>         
-        <texture id = "metal01" width = "12" count = "3">
-            <texture_file index = "0" file = "metal01_0.png"/>
-            <texture_file index = "1" file = "metal01_1.png"/>
-            <texture_file index = "2" file = "metal01_2.png"/>
-        </texture>                        
-        <texture id = "metal02" width = "268" count = "3">
-            <texture_file index = "0" file = "metal02_0.png"/>
-            <texture_file index = "1" file = "metal02_1.png"/>
-            <texture_file index = "2" file = "metal02_2.png"/>
-        </texture>         
-        <texture id = "metal03" width = "456" count = "4">
-            <texture_file index = "0" file = "metal03_0.png"/>
-            <texture_file index = "1" file = "metal03_1.png"/>
-            <texture_file index = "2" file = "metal03_2.png"/>
-            <texture_file index = "3" file = "metal03_3.png"/>
-        </texture>                 
-        <texture id = "switch01_off" width = "64" count = "3">
-            <texture_file index = "0" file = "switch01_off_0.png"/>
-            <texture_file index = "1" file = "switch01_off_1.png"/>
-            <texture_file index = "2" file = "switch01_off_2.png"/>
-        </texture>               
-        <texture id = "switch01_on" width = "64" count = "3">
-            <texture_file index = "0" file = "switch01_on_0.png"/>
-            <texture_file index = "1" file = "switch01_on_1.png"/>
-            <texture_file index = "2" file = "switch01_on_2.png"/>
-        </texture>        
-    </textures>    
-    <sprites path = "/org/freeware/monakhov/game3d/graphics/sprites/">    
-        <sprite id = "tree" count = "4" width = "162" height = "256" y_offset="0">
-            <sprite_file index = "0" file = "tree_0.png"/>
-            <sprite_file index = "1" file = "tree_1.png"/>
-            <sprite_file index = "2" file = "tree_2.png"/>
-            <sprite_file index = "3" file = "tree_3.png"/>
-        </sprite>    
-        <sprite id = "green_barrel" count = "3" width = "40" height = "66" y_offset="190">        
-            <sprite_file index = "0" file = "green_barrel_0.png"/>            
-            <sprite_file index = "1" file = "green_barrel_1.png"/>            
-            <sprite_file index = "2" file = "green_barrel_2.png"/>            
-         </sprite>
-    </sprites>   
+        <texture id = "beton01" file = "beton01_0.png"/>
+        <texture id = "block01" file = "block01_0.png"/>
+        <texture id = "brick01" file = "brick01_0.png"/>
+        <texture id = "brick02" file = "brick02_0.png"/>
+        <texture id = "brick03" file = "brick03_0.png"/>
+        <texture id = "door_border_left01" file = "door_border_left01_0.png"/>
+        <texture id = "door_border_right01" file = "door_border_right01_0.png"/>
+        <texture id = "door_closed01" file = "door_closed01_0.png"/>
+        <texture id = "door_open01" file = "door_open01_0.png"/>
+        <texture id = "fence01" file = "fence01_0.png"/>
+        <texture id = "switch01_off" file = "switch01_off_0.png"/>
+        <texture id = "switch01_on" file = "switch01_on_0.png"/>
+    </textures>
+    <sprites path = "/org/freeware/monakhov/game3d/graphics/sprites/">
+        <sprite id = "tree" width = "256" height = "256" y_offset="0" file = "tree_0.png"/>
+        <sprite id = "green_barrel" width = "64" height = "64" y_offset="192" file = "green_barrel_0.png"/>
+    </sprites>
     <images path = "/org/freeware/monakhov/game3d/graphics/images/">
         <image id = "floor01" file = "floor01.png"/>
         <image id = "floor02" file = "floor02.png"/>
@@ -121,21 +31,21 @@
         <image id = "fuck" file = "fuck.png"/>
         <image id = "knife" file = "knife01.png"/>
         <image id = "pistol" file = "pistol01.png"/>
-    </images>   
+    </images>
     <multiimages>
         <multiimage id = "axe" width = "1920" height = "1080">
             <image id = "axe01_1" x = "1365" y = "0"/>
             <image id = "axe01_2" x = "1250" y = "328"/>
-            <image id = "axe01_3" x = "922" y = "758"/>                        
-        </multiimage>   
+            <image id = "axe01_3" x = "922" y = "758"/>
+        </multiimage>
         <multiimage id = "fuck" width = "1920" height = "1080">
-            <image id = "fuck" x = "184" y = "248"/>                        
-        </multiimage>           
+            <image id = "fuck" x = "184" y = "248"/>
+        </multiimage>
         <multiimage id = "knife" width = "1920" height = "1080">
-            <image id = "knife" x = "940" y = "416"/>                        
-        </multiimage>        
+            <image id = "knife" x = "940" y = "416"/>
+        </multiimage>
         <multiimage id = "pistol" width = "1920" height = "1080">
-            <image id = "pistol" x = "416" y = "440"/>                        
-        </multiimage>                
-    </multiimages>    
+            <image id = "pistol" x = "416" y = "440"/>
+        </multiimage>
+    </multiimages>
 </root>

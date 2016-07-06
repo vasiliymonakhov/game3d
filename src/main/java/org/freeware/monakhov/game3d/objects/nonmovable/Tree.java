@@ -7,7 +7,7 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
  * Дерево
- * @author Vasily Monakhov 
+ * @author Vasily Monakhov
  */
 public class Tree extends NonMovableObject {
 

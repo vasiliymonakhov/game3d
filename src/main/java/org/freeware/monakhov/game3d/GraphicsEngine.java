@@ -112,6 +112,15 @@ public class GraphicsEngine {
     private final ArrayList<WorldObject> objectsSortList = new ArrayList<>();
 
     /**
+     * высота стены в данном столбце экрана
+     */
+    private final int[] wallHeight;
+    /**
+     * Расстояние от наблюдателя до стены в данном столбце экрана
+     */
+    private final double[] distance;
+
+    /**
      * Изображение неба
      */
     private BufferedImage sky;
@@ -126,6 +135,8 @@ public class GraphicsEngine {
         this.world = world;
         this.screen = screen;
         mapLines = new VisibleLine[screen.getWidth()];
+        wallHeight = new int[screen.getWidth()];
+        distance = new double[screen.getWidth()];
         farFarFrontier = KORRECTION * screen.getWidth() / 2;
         rayPoints = new Point[screen.getWidth()];
         transformedRayPoints = new Point[screen.getWidth()];
@@ -147,7 +158,7 @@ public class GraphicsEngine {
         BufferedImage floor = world.getFloor() != null ? Image.get(world.getFloor()).getImage() : null;
         BufferedImage ceiling = world.getCeiling() != null ? Image.get(world.getCeiling()).getImage() : null;
         for (int i = 0; i < floorCeilingDrawers.length; i++) {
-            floorCeilingDrawers[i] = new FloorCeilingDrawer(i * w, w, floor, ceiling);
+            floorCeilingDrawers[i] = new FloorCeilingDrawer(i * w, w, floor, ceiling, screen.getHeight());
         }
         if (world.getSky() != null) {
             // если предусмотрено небо, то создаём его изображение в разрешении экрана
@@ -197,6 +208,7 @@ public class GraphicsEngine {
      */
     void checkVisibleRooms() {
         for (int i = 0; i < screen.getWidth(); i++) {
+            visibleRooms.add(world.getHero().getRoom());
              checkedRooms.clear();
              world.getHero().getRoom().traceRoom(mapLines, i, world.getHero().getPosition(), transformedRayPoints[i], wallsIntersectPoints[i], visibleRooms, checkedRooms);
         }
@@ -205,7 +217,7 @@ public class GraphicsEngine {
     /**
      * Класс для отображения видимого столбца
      */
-    class VisibleWallColumn implements Runnable {
+    private static class VisibleWallColumn implements Runnable {
 
         /**
          * изображение столбца из текстуры
@@ -220,6 +232,11 @@ public class GraphicsEngine {
          */
         private final int h;
         /**
+         * Отступ сверху
+         */
+        private final int ch;
+
+        /**
          * Ширина столбца
          */
         private int w = 1;
@@ -231,14 +248,15 @@ public class GraphicsEngine {
          * @param x горизонтальная координата на экране
          * @param h высота столбца
          */
-        VisibleWallColumn(BufferedImage bi, int x, int h) {
+        private VisibleWallColumn(BufferedImage bi, int x, int h, int ch) {
             this.bi = bi;
             this.x = x;
             this.h = h;
+            this.ch = ch;
         }
 
         /**
-         * Проверяет, являются ли переданные пересетры такими же
+         * Проверяет, являются ли переданные параметры такими же
          *
          * @param bi столбец текстуры
          * @param h выота столбца
@@ -262,7 +280,6 @@ public class GraphicsEngine {
         @Override
         public void run() {
             try {
-                int ch = (int) ((screen.getHeight() - h) / 2);
                 g.drawImage(bi, x, ch, w, h, null);
             } finally {
                 doneSignal.countDown();
@@ -302,7 +319,7 @@ public class GraphicsEngine {
     private void prepareVisibleWallColumns() {
         visibleWallColumns.clear();
         VisibleWallColumn lastColumn = null;
-        int h = 0;
+        int h = 0, ch = 0;
         BufferedImage bi = null;
         for (int i = 0; i < mapLines.length; i++) {
             VisibleLine l = mapLines[i];
@@ -310,19 +327,22 @@ public class GraphicsEngine {
             if (l != null) {
                 // вычисляем расстояние от главного героя до точки пересечения трассирующего луча и линии
                 double dist = SpecialMath.lineLength(world.getHero().getPosition(), wallsIntersectPoints[i]);
+                distance[i] = dist;
                 // вычисляем видимую высоту столбца
                 h = (int)Math.round(k[i] / dist);
+                wallHeight[i] = h;
+                ch = (int) ((screen.getHeight() - h) / 2);
                 // получаем столбец текстуры
                 bi = l.getSubImage(wallsIntersectPoints[i], h);
             }
             if (lastColumn == null) {
-                lastColumn = new VisibleWallColumn(bi, i, h);
+                lastColumn = new VisibleWallColumn(bi, i, h, ch);
                 visibleWallColumns.add(lastColumn);
             } else {
                 if (lastColumn.sameAs(bi, h)) {
                     lastColumn.incWidth();
                 } else {
-                    lastColumn = new VisibleWallColumn(bi, i, h);
+                    lastColumn = new VisibleWallColumn(bi, i, h, ch);
                     visibleWallColumns.add(lastColumn);
                 }
             }
@@ -350,13 +370,18 @@ public class GraphicsEngine {
     /**
      * Класс для многопоточного рисования пола и потолка
      */
-    private class FloorCeilingDrawer implements Runnable {
+    private static class FloorCeilingDrawer implements Runnable {
 
         /**
          * горизонталная координата участка, за которую будет отвечать экземпляр
          * класса
          */
         private final int x;
+        /**
+         * вертикальная координата участка, за которую будет отвечать экземпляр
+         * класса
+         */
+        private final int y;
         /**
          * Объект блокировки - сигнал завершения работы
          */
@@ -397,13 +422,14 @@ public class GraphicsEngine {
          * @param floor изображение для пола
          * @param ceiling изображение для потолка
          */
-        FloorCeilingDrawer(int x, int w, BufferedImage floor, BufferedImage ceiling) {
+        private FloorCeilingDrawer(int x, int w, BufferedImage floor, BufferedImage ceiling, int screenHeight) {
             this.x = x;
             GraphicsConfiguration gfx_config = GraphicsEnvironment.
                     getLocalGraphicsEnvironment().getDefaultScreenDevice().
                     getDefaultConfiguration();
-            int height = screen.getHeight() / 2;
-            floorHeight = screen.getHeight() - height;
+            int height = screenHeight / 2;
+            floorHeight = screenHeight - height;
+            y = screenHeight - floorHeight;
             // содаём заранее подогнанные под нужный размер изображения
             this.floor = gfx_config.createCompatibleImage(w, floorHeight, Transparency.OPAQUE);
             Graphics2D g2 = (Graphics2D) this.floor.getGraphics();
@@ -426,7 +452,7 @@ public class GraphicsEngine {
                     g.drawImage(ceiling, x, 0, null);
                 }
                 // рисуем пол
-                g.drawImage(floor, x, screen.getHeight() - floorHeight, null);
+                g.drawImage(floor, x, y, null);
             } finally {
                 // сообщаем о завершении работы
                 doneSignal.countDown();
@@ -467,7 +493,7 @@ public class GraphicsEngine {
     /**
      * Класс для многопоточного рисования неба
      */
-    private class SkyDrawer implements Runnable {
+    private static class SkyDrawer implements Runnable {
 
         /**
          * Горизонталная координата участка неба
@@ -514,7 +540,7 @@ public class GraphicsEngine {
          * @param w ширина участка
          * @param sky панорамное изображение неба
          */
-        SkyDrawer(int x, int w, BufferedImage sky) {
+        private SkyDrawer(int x, int w, BufferedImage sky) {
             this.x = x;
             this.w = w;
             this.sky = sky;
@@ -557,7 +583,7 @@ public class GraphicsEngine {
     /**
      * Спрайт, который необходимо нарисовать на экране
      */
-    private class SpriteToDraw implements Runnable {
+    private static class SpriteToDraw implements Runnable {
 
         /**
          * Спрайт
@@ -592,7 +618,7 @@ public class GraphicsEngine {
          * @param width ширина видимого участка спрайта
          * @param height вісота видимого участка спрайта
          */
-        SpriteToDraw(Sprite sprite, int spriteXStartOffset, int spriteImgWidth, int h, int x, int y, int width, int height) {
+        private SpriteToDraw(Sprite sprite, int spriteXStartOffset, int spriteImgWidth, int h, int x, int y, int width, int height) {
             this.sprite = sprite;
             this.spriteXStartOffset = spriteXStartOffset;
             this.spriteImgWidth = spriteImgWidth;
@@ -639,21 +665,12 @@ public class GraphicsEngine {
             return intersects(this, os);
         }
 
-        /**
-         * Рисует спрайт
-         *
-         * @param g графический контекст
-         */
-        void drawSprite(Graphics2D g) {
-            g.drawImage(sprite.getSubImage(spriteXStartOffset, 0, spriteImgWidth, h),
-                    x, y, width, height, null);
-        }
-
         @Override
         public void run() {
             try {
                 // рисуем спрайт :)
-                drawSprite(g);
+                g.drawImage(sprite.getSubImage(spriteXStartOffset, 0, spriteImgWidth, h),
+                        x, y, width, height, null);
             } finally {
                 // сообщаем о завершении работы
                 doneSignal.countDown();
@@ -684,13 +701,17 @@ public class GraphicsEngine {
      * Список спрайтов, которых нужно нарисовать
      */
     private final List<SpriteToDraw> spritesToDraw = new ArrayList<>();
+    /**
+     * Список объектов, которые реально будут видны на экране
+     */
+    private final List<WorldObject> reallyVisibleObjects = new ArrayList<>();
 
     /**
      * Подготавливает объект к отрисовке
      *
      * @param wo объект
      */
-    void prepareToRenderObject(WorldObject wo) {
+    private boolean prepareToRenderObject(WorldObject wo) {
         Point rsp = new Point();
         int spriteXStartOffset = 0;
         int spriteXEndOffset = -0;
@@ -741,15 +762,14 @@ public class GraphicsEngine {
             // запоминаем спрайт в списке спрайтов, подлежащих рисованию
             spritesToDraw.add(new SpriteToDraw(wo.getSprite(), spriteXStartOffset, spriteImgWidth, h, spriteXStart, ch + syo, visibleSpriteWidth, sh));
         }
+        return started;
     }
 
     /**
-     * Рисует на экране видимые объекты
-     *
-     * @param g графический контекст
-     * @throws InterruptedException
+     * Проверяет видимость объектов и создаёт список спрайтов
+     * @return true - есть видимые спрайты
      */
-    void renderObjects(Graphics2D g) throws InterruptedException {
+    private boolean checkVisibleObjectsAndTakeSprites() {
         objectsSortList.clear();
         for (WorldObject wobj : world.getAllObjects()) {
             wobj.turnSpriteToViewPoint(world.getHero()); // повернуть спрайт к главному герою
@@ -769,15 +789,37 @@ public class GraphicsEngine {
         // отсортировать объекты по расстоянию
         Collections.sort(objectsSortList, objectsSortComparator);
         spritesToDraw.clear();
+        reallyVisibleObjects.clear();
         // определить видимые спрайты
         for (WorldObject wobj : objectsSortList) {
-            prepareToRenderObject(wobj);
+            if (prepareToRenderObject(wobj)) {
+                reallyVisibleObjects.add(wobj);
+            }
         }
-        // если видимых спрайтов нет, то на этом можно заканчивать
-        if (spritesToDraw.isEmpty()) {
+        return !spritesToDraw.isEmpty();
+    }
+
+    /**
+     * Рисует на экране видимые объекты
+     *
+     * @param g графический контекст
+     * @throws InterruptedException
+     */
+    void renderObjects(Graphics2D g) throws InterruptedException {
+        if (!checkVisibleObjectsAndTakeSprites()) {
+            // если видимых спрайтов нет, то на этом можно заканчивать
             return;
         }
         // по всей видимости, видимые спрайты есть, надо их рисовать
+        renderSprites(g);
+    }
+
+    /**
+     * Рисует спрайты
+     * @param g графический контекст
+     * @throws InterruptedException
+     */
+    void renderSprites(Graphics2D g) throws InterruptedException {
         List<SpriteToDraw> currentDrawSprites = new ArrayList<>();
         Iterator<SpriteToDraw> d2dit = spritesToDraw.iterator();
         // первый спрайт попадает в очередь рисования автоматически
@@ -836,7 +878,7 @@ public class GraphicsEngine {
     /**
      * Класс для рисования комбинированных изображений
      */
-    private class MultiImageDrawer implements Runnable {
+    private static class MultiImageDrawer implements Runnable {
 
         /**
          * Участок комбинированного изображения
@@ -1006,10 +1048,11 @@ public class GraphicsEngine {
         int dx = screen.getImage().getWidth() / 2;
         int dy = screen.getImage().getHeight() / 2;
         g.setColor(VIEWPOINT_COLOR);
-        g.fillOval(dx - 5, dy - 5, 10, 10);
+        int ra = (int) (world.getHero().getRadius() * mapScale);
+        g.fillOval(dx - ra, dy - ra, 2 * ra, 2 * ra);
         g.setStroke(WALL);
-        int rx = (int) (20 * Math.sin(world.getHero().getAzimuth()));
-        int ry = (int) (20 * Math.cos(world.getHero().getAzimuth()));
+        int rx = (int) (64 * Math.sin(world.getHero().getAzimuth()));
+        int ry = (int) (64 * Math.cos(world.getHero().getAzimuth()));
         g.drawLine(dx, dy, dx + rx, dy - ry);
         dx += -(int) world.getHero().getPosition().getX() * mapScale;
         dy += (int) world.getHero().getPosition().getY() * mapScale;
@@ -1031,7 +1074,25 @@ public class GraphicsEngine {
                         dx + (int) (l.getEnd().getX() * mapScale), dy - (int) (l.getEnd().getY() * mapScale));
             }
         }
+        for (WorldObject wo : world.getAllObjects()) {
+            g.setColor(WALL_COLOR);
+            ra = (int) (wo.getRadius() * mapScale);
+            g.fillOval(dx - ra + (int) (wo.getPosition().getX() * mapScale), dy - ra - (int) (wo.getPosition().getY() * mapScale), 2 * ra, 2 * ra);
 
+            g.setColor(Color.GRAY);
+            int x1 = dx + (int) (wo.getFrontLeft().getX() * mapScale);
+            int y1 = dy - (int) (wo.getFrontLeft().getY() * mapScale);
+            int x2 = dx + (int) (wo.getFrontRight().getX() * mapScale);
+            int y2 = dy - (int) (wo.getFrontRight().getY() * mapScale);
+            int x3 = dx + (int) (wo.getRearRight().getX() * mapScale);
+            int y3 = dy - (int) (wo.getRearRight().getY() * mapScale);
+            int x4 = dx + (int) (wo.getRearLeft().getX() * mapScale);
+            int y4 = dy - (int) (wo.getRearLeft().getY() * mapScale);
+            g.drawLine(x1, y1, x2, y2);
+            g.drawLine(x2, y2, x3, y3);
+            g.drawLine(x3, y3, x4, y4);
+            g.drawLine(x4, y4, x1, y1);
+        }
     }
 
 }

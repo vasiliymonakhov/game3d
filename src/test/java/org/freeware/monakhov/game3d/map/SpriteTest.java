@@ -10,8 +10,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 
 /**
- * 
- * @author Vasily Monakhov 
+ *
+ * @author Vasily Monakhov
  */
 public class SpriteTest {
 
@@ -19,8 +19,8 @@ public class SpriteTest {
     public void setUp() throws Exception {
         XMLResourceLoader xmlrl = new XMLResourceLoader();
         xmlrl.parse(XMLWorldLoaderTest.class.getResourceAsStream("/org/freeware/monakhov/game3d/resources.xml"));
-    }    
-    
+    }
+
     /**
      * Test of getImage method, of class Sprite.
      */
@@ -30,8 +30,8 @@ public class SpriteTest {
         assertNotNull(spr);
         BufferedImage bi = spr.getImage(0);
         assertNotNull(bi);
-        assertEquals(40, bi.getWidth());
-        assertEquals(66, bi.getHeight());
+        assertEquals(64, bi.getWidth());
+        assertEquals(64, bi.getHeight());
     }
 
     /**
@@ -44,7 +44,7 @@ public class SpriteTest {
         BufferedImage bi = spr.getSubImage(10, 0, 1, 16);
         assertNotNull(bi);
         assertEquals(1, bi.getWidth());
-        assertEquals(16, bi.getHeight());        
+        assertEquals(4, bi.getHeight());
     }
 
     /**
@@ -58,8 +58,8 @@ public class SpriteTest {
         assertNotNull(spr2);
         assertTrue(spr1 != spr2);
         Sprite spr3 = Sprite.get("green_barrel");
-        assertNotNull(spr3);        
-        assertTrue(spr1 == spr3);        
+        assertNotNull(spr3);
+        assertTrue(spr1 == spr3);
     }
 
     /**
@@ -68,24 +68,24 @@ public class SpriteTest {
     @Test (expected = IllegalArgumentException.class)
     public void testGet2() {
         Sprite spr1 = Sprite.get(null);
-    }    
-    
+    }
+
     /**
      * Test of get method, of class Sprite.
      */
     @Test (expected = IllegalArgumentException.class)
     public void testGet3() {
         Sprite spr1 = Sprite.get("");
-    }    
-    
+    }
+
     /**
      * Test of get method, of class Sprite.
      */
     @Test (expected = IllegalArgumentException.class)
     public void testGet4() {
         Sprite spr1 = Sprite.get("asdaaccsvknvfdsnvakjvnfdvvkasv");
-    }        
-    
+    }
+
     /**
      * Test of getWidth method, of class Sprite.
      */
@@ -93,9 +93,9 @@ public class SpriteTest {
     public void testGetParams() {
         Sprite spr = Sprite.get("green_barrel");
         assertNotNull(spr);
-        assertEquals(40, spr.getWidth());
-        assertEquals(66, spr.getHeight());  
-        assertEquals(190, spr.getYOffset());  
+        assertEquals(64, spr.getWidth());
+        assertEquals(64, spr.getHeight());
+        assertEquals(192, spr.getYOffset());
     }
 
 }

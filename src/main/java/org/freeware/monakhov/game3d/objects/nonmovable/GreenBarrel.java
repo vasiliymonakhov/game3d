@@ -7,7 +7,7 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
  * Зелёная бочка
- * @author Vasily Monakhov 
+ * @author Vasily Monakhov
  */
 public class GreenBarrel extends NonMovableObject {
 

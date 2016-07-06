@@ -1,57 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root floor = "floor02" sky = "sky02">
+<root floor = "floor01" sky = "sky01">
     <points>
         <point id = "p0" x="0" y = "0"/>
         <point id = "p1" x="0" y = "10000"/>
         <point id = "p2" x="0" y = "20000"/>
-        <point id = "p3" x="10000" y = "20000"/>        
+        <point id = "p3" x="10000" y = "20000"/>
         <point id = "p4" x="10000" y = "10000"/>
         <point id = "p5" x="10000" y = "0"/>
         <point id = "p6" x="20000" y = "0"/>
-        <point id = "p7" x="20000" y = "20000"/>            
-    </points>    
+        <point id = "p7" x="20000" y = "20000"/>
+    </points>
     <lines>
         <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
         <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>
-        <wall id = "w2" start = "p2" end = "p3" texture = "brick03"/>                
+        <wall id = "w2" start = "p2" end = "p3" texture = "brick03"/>
         <wall id = "w3" start = "p3" end = "p7" texture = "brick01"/>
-        <wall id = "w4" start = "p7" end = "p6" texture = "brick02"/>                
+        <wall id = "w4" start = "p7" end = "p6" texture = "brick02"/>
         <wall id = "w5" start = "p6" end = "p5" texture = "brick03"/>
-        <wall id = "w6" start = "p5" end = "p0" texture = "brick01"/>                                
+        <wall id = "w6" start = "p5" end = "p0" texture = "brick01"/>
         <line id = "l0" start = "p1" end = "p4"/>
-        <line id = "l1" start = "p3" end = "p4"/>                                       
+        <line id = "l1" start = "p3" end = "p4"/>
         <line id = "l2" start = "p4" end = "p5"/>
-    </lines>    
+    </lines>
     <rooms>
         <room id = "r0">
-            <line id = "w0"/>            
-            <line id = "l0"/>                        
-            <line id = "l2"/>            
-            <line id = "w6"/>                                    
-        </room>   
+            <line id = "w0"/>
+            <line id = "l0"/>
+            <line id = "l2"/>
+            <line id = "w6"/>
+        </room>
         <room id = "r1">
-            <line id = "w1"/>                           
-            <line id = "w2"/>                           
-            <line id = "l1"/>                           
-            <line id = "l0"/>                                                               
-        </room>        
+            <line id = "w1"/>
+            <line id = "w2"/>
+            <line id = "l1"/>
+            <line id = "l0"/>
+        </room>
         <room id = "r2">
             <line id = "w3"/>
             <line id = "w4"/>
-            <line id = "w5"/>                        
+            <line id = "w5"/>
             <line id = "l2"/>
-            <line id = "l1"/>            
-        </room>                
+            <line id = "l1"/>
+        </room>
     </rooms>
     <portals>
         <portal from = "r0" line = "l0" to = "r1"/>
-        <portal from = "r1" line = "l0" to = "r0"/>
         <portal from = "r0" line = "l2" to = "r2"/>
-        <portal from = "r2" line = "l2" to = "r0"/>
         <portal from = "r1" line = "l1" to = "r2"/>
-        <portal from = "r2" line = "l1" to = "r1"/>
-    </portals>    
-    <hero  x = "1024" y = "256" room = "r0" azimuth = "45"/>    
+    </portals>
+    <hero  x = "1024" y = "256"  azimuth = "45"/>
     <objects>
         <object class = "tree" id = "tree00" x = "10000" y = "10000"/>
         <object class = "tree" id = "tree01" x = "10000" y = "11000"/>
@@ -72,9 +69,9 @@
         <object class = "tree" id = "tree16" x = "11000" y = "16000"/>
         <object class = "tree" id = "tree17" x = "11000" y = "17000"/>
         <object class = "tree" id = "tree18" x = "11000" y = "18000"/>
-        <object class = "tree" id = "tree19" x = "11000" y = "19000"/>        
-        
-        
+        <object class = "tree" id = "tree19" x = "11000" y = "19000"/>
+
+
         <object class = "tree" id = "tree20" x = "12000" y = "10000"/>
         <object class = "tree" id = "tree21" x = "12000" y = "11000"/>
         <object class = "tree" id = "tree22" x = "12000" y = "12000"/>
@@ -84,8 +81,8 @@
         <object class = "tree" id = "tree26" x = "12000" y = "16000"/>
         <object class = "tree" id = "tree27" x = "12000" y = "17000"/>
         <object class = "tree" id = "tree28" x = "12000" y = "18000"/>
-        <object class = "tree" id = "tree29" x = "12000" y = "19000"/>        
-        
+        <object class = "tree" id = "tree29" x = "12000" y = "19000"/>
+
         <object class = "tree" id = "tree30" x = "13000" y = "10000"/>
         <object class = "tree" id = "tree31" x = "13000" y = "11000"/>
         <object class = "tree" id = "tree32" x = "13000" y = "12000"/>
@@ -95,8 +92,8 @@
         <object class = "tree" id = "tree36" x = "13000" y = "16000"/>
         <object class = "tree" id = "tree37" x = "13000" y = "17000"/>
         <object class = "tree" id = "tree38" x = "13000" y = "18000"/>
-        <object class = "tree" id = "tree39" x = "13000" y = "19000"/>        
-        
+        <object class = "tree" id = "tree39" x = "13000" y = "19000"/>
+
         <object class = "tree" id = "tree40" x = "14000" y = "10000"/>
         <object class = "tree" id = "tree41" x = "14000" y = "11000"/>
         <object class = "tree" id = "tree42" x = "14000" y = "12000"/>
@@ -106,8 +103,8 @@
         <object class = "tree" id = "tree46" x = "14000" y = "16000"/>
         <object class = "tree" id = "tree47" x = "14000" y = "17000"/>
         <object class = "tree" id = "tree48" x = "14000" y = "18000"/>
-        <object class = "tree" id = "tree49" x = "14000" y = "19000"/>        
-        
+        <object class = "tree" id = "tree49" x = "14000" y = "19000"/>
+
         <object class = "tree" id = "tree50" x = "15000" y = "10000"/>
         <object class = "tree" id = "tree51" x = "15000" y = "11000"/>
         <object class = "tree" id = "tree52" x = "15000" y = "12000"/>
@@ -117,24 +114,24 @@
         <object class = "tree" id = "tree56" x = "15000" y = "16000"/>
         <object class = "tree" id = "tree57" x = "15000" y = "17000"/>
         <object class = "tree" id = "tree58" x = "15000" y = "18000"/>
-        <object class = "tree" id = "tree59" x = "15000" y = "19000"/>                                
-        
+        <object class = "tree" id = "tree59" x = "15000" y = "19000"/>
+
         <object class = "green_barrel" id = "green_barrel601" x = "456" y = "256"/>
         <object class = "green_barrel" id = "green_barrel602" x = "456" y = "156"/>
         <object class = "green_barrel" id = "green_barrel603" x = "456" y = "356"/>
         <object class = "green_barrel" id = "green_barrel604" x = "256" y = "156"/>
         <object class = "green_barrel" id = "green_barrel605" x = "256" y = "256"/>
-        <object class = "green_barrel" id = "green_barrel606" x = "256" y = "356"/>                                        
+        <object class = "green_barrel" id = "green_barrel606" x = "256" y = "356"/>
         <object class = "green_barrel" id = "green_barrel607" x = "356" y = "156"/>
         <object class = "green_barrel" id = "green_barrel608" x = "356" y = "256"/>
-        <object class = "green_barrel" id = "green_barrel609" x = "356" y = "356"/>                                        
+        <object class = "green_barrel" id = "green_barrel609" x = "356" y = "356"/>
         <object class = "green_barrel" id = "green_barrel610" x = "556" y = "156"/>
         <object class = "green_barrel" id = "green_barrel611" x = "556" y = "256"/>
-        <object class = "green_barrel" id = "green_barrel612" x = "556" y = "356"/>                                                
-                
-        
+        <object class = "green_barrel" id = "green_barrel612" x = "556" y = "356"/>
+
+
         <object class = "green_barrel" id = "green_barrel61" x = "10800" y = "1800"/>
         <object class = "green_barrel" id = "green_barrel62" x = "10700" y = "1800"/>
-        
-    </objects>   
+
+    </objects>
 </root>

@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 public class Sprite {
 
     /**
-     * Буферризированные изображения 
+     * Буферризированные изображения
      */
     private final BufferedImage[] images;
     /**
@@ -32,36 +32,53 @@ public class Sprite {
     /**
      * Таблицы для определения, какое изображение нужно использовать для вывода на экран в зависимости от высоты
      */
-    private final static double min[] = {256, 128, 64, 32, 16};
+    private final static double min[] = {256, 128, 64, 32, 0};
     private final static double max[] = {Double.MAX_VALUE, 256, 128, 64, 32};
 
     /**
      * Создаёт новый спрайт
-     * @param count количество изображений
      * @param width ширина
      * @param height высота
      * @param yOffset смещение спрайта по вертикали
+     * @param fileName имя файла с изображением
+     * @throws java.io.IOException
      */
-    public Sprite(int count, int width, int height, int yOffset) {
-        images = new BufferedImage[count];
+    public Sprite(int width, int height, int yOffset, String fileName) throws IOException {
+        images = new BufferedImage[min.length];
         this.width = width;
         this.height = height;
         this.yOffset = yOffset;
+        BufferedImage bi = ImageIO.read(Sprite.class.getResourceAsStream(fileName));
+        addMipMappedImage(0, bi.getWidth(), bi.getHeight(), bi);
+        for (int i = 1; i < min.length; i++) {
+            int nw = width >> i;
+            if (nw < 1) nw = 1;
+            int nh = height >> i;
+            if (nh < 1) nh = 1;
+            int bs = 1 << i;
+            BufferedImage mmi = new BufferedImage(nw, nh, bi.getType());
+            for (int x = 0; x < nw; x ++) {
+                for (int y = 0; y < nh; y ++) {
+                    mmi.setRGB(x, y, Texture.averagePixels(bi, x << i, y << i, bs));
+                }
+            }
+            addMipMappedImage(i, nw, nh, mmi);
+        }
     }
 
     /**
-     * Добавляет изображение в спрайт
-     * @param index индекс изображения
-     * @param fileName имя файла
-     * @throws IOException 
+     * Добавляет уменьшенное изображение
+     * @param index индекс
+     * @param nw новая ширина
+     * @param nh новая высота
+     * @param bi откуда взять данные для изображений
      */
-    void addFile(int index, String fileName) throws IOException {
-        BufferedImage bi = ImageIO.read(Sprite.class.getResourceAsStream(fileName));
+    private void addMipMappedImage(int index, int nw, int nh, BufferedImage bi) {
         GraphicsConfiguration gfx_config = GraphicsEnvironment.
                 getLocalGraphicsEnvironment().getDefaultScreenDevice().
                 getDefaultConfiguration();
-        images[index] = gfx_config.createCompatibleImage(width, height, bi.getColorModel().getTransparency());
-        images[index].setAccelerationPriority(1);        
+        images[index] = gfx_config.createCompatibleImage(nw, nh, bi.getColorModel().getTransparency());
+        images[index].setAccelerationPriority(1);
         Graphics g = images[index].createGraphics();
         g.drawImage(bi, 0, 0, null);
         g.dispose();
@@ -85,7 +102,7 @@ public class Sprite {
      * @return участок изображения
      */
     public BufferedImage getSubImage(int x, int y, int vwidth, int height) {
-        int index = 0;
+        int index = min.length - 1;
         for (int i = 0; i < min.length; i++) {
             if (height < max[i] && height >= min[i]) {
                 index = i;
@@ -100,7 +117,7 @@ public class Sprite {
         if (svwidth < 1) {
             svwidth = 1;
         }
-        return bi.getSubimage((x % width) >> index, y >> index, svwidth, bi.getHeight() >> index);
+        return bi.getSubimage((x % width) >> index, y >> index, svwidth, bi.getHeight());
     }
 
     /**
@@ -125,18 +142,18 @@ public class Sprite {
      * Добавляет новый спрайт
      *
      * @param id идентификатор спрайта
-     * @param count
-     * @param width
-     * @param height
+     * @param width ширина спрайта
+     * @param height высота спрайта
      * @param yOffset смещение спрайта от верха по вертикали
+     * @param fileName имя фафла со спрайтом
      * @return
      * @throws IOException
      */
-    public static Sprite add(String id, int count, int width, int height, int yOffset) throws IOException {
+    public static Sprite add(String id, int width, int height, int yOffset, String fileName) throws IOException {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("Sprite id is null or empty");
         }
-        Sprite spr = new Sprite(count, width, height, yOffset);
+        Sprite spr = new Sprite(width, height, yOffset, fileName);
         sprites.put(id, spr);
         return spr;
     }

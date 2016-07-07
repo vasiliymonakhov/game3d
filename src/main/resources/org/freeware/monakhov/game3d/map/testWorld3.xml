@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root floor = "floor01" sky = "sky01">
+<root floor = "floor02" sky = "sky02">
     <points>
         <point id = "p0" x="0" y = "0"/>
         <point id = "p1" x="0" y = "10000"/>
@@ -50,71 +50,71 @@
     </portals>
     <hero  x = "1024" y = "256"  azimuth = "45"/>
     <objects>
-        <object class = "tree" id = "tree00" x = "10000" y = "10000"/>
-        <object class = "tree" id = "tree01" x = "10000" y = "11000"/>
-        <object class = "tree" id = "tree02" x = "10000" y = "12000"/>
-        <object class = "tree" id = "tree03" x = "10000" y = "13000"/>
-        <object class = "tree" id = "tree04" x = "10000" y = "14000"/>
-        <object class = "tree" id = "tree05" x = "10000" y = "15000"/>
-        <object class = "tree" id = "tree06" x = "10000" y = "16000"/>
-        <object class = "tree" id = "tree07" x = "10000" y = "17000"/>
-        <object class = "tree" id = "tree08" x = "10000" y = "18000"/>
-        <object class = "tree" id = "tree09" x = "10000" y = "19000"/>
-        <object class = "tree" id = "tree10" x = "11000" y = "10000"/>
-        <object class = "tree" id = "tree11" x = "11000" y = "11000"/>
-        <object class = "tree" id = "tree12" x = "11000" y = "12000"/>
-        <object class = "tree" id = "tree13" x = "11000" y = "13000"/>
-        <object class = "tree" id = "tree14" x = "11000" y = "14000"/>
-        <object class = "tree" id = "tree15" x = "11000" y = "15000"/>
-        <object class = "tree" id = "tree16" x = "11000" y = "16000"/>
-        <object class = "tree" id = "tree17" x = "11000" y = "17000"/>
-        <object class = "tree" id = "tree18" x = "11000" y = "18000"/>
-        <object class = "tree" id = "tree19" x = "11000" y = "19000"/>
+        <object class = "green_barrel" id = "tree00" x = "10000" y = "10000"/>
+        <object class = "green_barrel" id = "tree01" x = "10000" y = "11000"/>
+        <object class = "green_barrel" id = "tree02" x = "10000" y = "12000"/>
+        <object class = "green_barrel" id = "tree03" x = "10000" y = "13000"/>
+        <object class = "green_barrel" id = "tree04" x = "10000" y = "14000"/>
+        <object class = "green_barrel" id = "tree05" x = "10000" y = "15000"/>
+        <object class = "green_barrel" id = "tree06" x = "10000" y = "16000"/>
+        <object class = "green_barrel" id = "tree07" x = "10000" y = "17000"/>
+        <object class = "green_barrel" id = "tree08" x = "10000" y = "18000"/>
+        <object class = "green_barrel" id = "tree09" x = "10000" y = "19000"/>
+        <object class = "green_barrel" id = "tree10" x = "11000" y = "10000"/>
+        <object class = "green_barrel" id = "tree11" x = "11000" y = "11000"/>
+        <object class = "green_barrel" id = "tree12" x = "11000" y = "12000"/>
+        <object class = "green_barrel" id = "tree13" x = "11000" y = "13000"/>
+        <object class = "green_barrel" id = "tree14" x = "11000" y = "14000"/>
+        <object class = "green_barrel" id = "tree15" x = "11000" y = "15000"/>
+        <object class = "green_barrel" id = "tree16" x = "11000" y = "16000"/>
+        <object class = "green_barrel" id = "tree17" x = "11000" y = "17000"/>
+        <object class = "green_barrel" id = "tree18" x = "11000" y = "18000"/>
+        <object class = "green_barrel" id = "tree19" x = "11000" y = "19000"/>
 
 
-        <object class = "tree" id = "tree20" x = "12000" y = "10000"/>
-        <object class = "tree" id = "tree21" x = "12000" y = "11000"/>
-        <object class = "tree" id = "tree22" x = "12000" y = "12000"/>
-        <object class = "tree" id = "tree23" x = "12000" y = "13000"/>
-        <object class = "tree" id = "tree24" x = "12000" y = "14000"/>
-        <object class = "tree" id = "tree25" x = "12000" y = "15000"/>
-        <object class = "tree" id = "tree26" x = "12000" y = "16000"/>
-        <object class = "tree" id = "tree27" x = "12000" y = "17000"/>
-        <object class = "tree" id = "tree28" x = "12000" y = "18000"/>
-        <object class = "tree" id = "tree29" x = "12000" y = "19000"/>
+        <object class = "green_barrel" id = "tree20" x = "12000" y = "10000"/>
+        <object class = "green_barrel" id = "tree21" x = "12000" y = "11000"/>
+        <object class = "green_barrel" id = "tree22" x = "12000" y = "12000"/>
+        <object class = "green_barrel" id = "tree23" x = "12000" y = "13000"/>
+        <object class = "green_barrel" id = "tree24" x = "12000" y = "14000"/>
+        <object class = "green_barrel" id = "tree25" x = "12000" y = "15000"/>
+        <object class = "green_barrel" id = "tree26" x = "12000" y = "16000"/>
+        <object class = "green_barrel" id = "tree27" x = "12000" y = "17000"/>
+        <object class = "green_barrel" id = "tree28" x = "12000" y = "18000"/>
+        <object class = "green_barrel" id = "tree29" x = "12000" y = "19000"/>
 
-        <object class = "tree" id = "tree30" x = "13000" y = "10000"/>
-        <object class = "tree" id = "tree31" x = "13000" y = "11000"/>
-        <object class = "tree" id = "tree32" x = "13000" y = "12000"/>
-        <object class = "tree" id = "tree33" x = "13000" y = "13000"/>
-        <object class = "tree" id = "tree34" x = "13000" y = "14000"/>
-        <object class = "tree" id = "tree35" x = "13000" y = "15000"/>
-        <object class = "tree" id = "tree36" x = "13000" y = "16000"/>
-        <object class = "tree" id = "tree37" x = "13000" y = "17000"/>
-        <object class = "tree" id = "tree38" x = "13000" y = "18000"/>
-        <object class = "tree" id = "tree39" x = "13000" y = "19000"/>
+        <object class = "green_barrel" id = "tree30" x = "13000" y = "10000"/>
+        <object class = "green_barrel" id = "tree31" x = "13000" y = "11000"/>
+        <object class = "green_barrel" id = "tree32" x = "13000" y = "12000"/>
+        <object class = "green_barrel" id = "tree33" x = "13000" y = "13000"/>
+        <object class = "green_barrel" id = "tree34" x = "13000" y = "14000"/>
+        <object class = "green_barrel" id = "tree35" x = "13000" y = "15000"/>
+        <object class = "green_barrel" id = "tree36" x = "13000" y = "16000"/>
+        <object class = "green_barrel" id = "tree37" x = "13000" y = "17000"/>
+        <object class = "green_barrel" id = "tree38" x = "13000" y = "18000"/>
+        <object class = "green_barrel" id = "tree39" x = "13000" y = "19000"/>
 
-        <object class = "tree" id = "tree40" x = "14000" y = "10000"/>
-        <object class = "tree" id = "tree41" x = "14000" y = "11000"/>
-        <object class = "tree" id = "tree42" x = "14000" y = "12000"/>
-        <object class = "tree" id = "tree43" x = "14000" y = "13000"/>
-        <object class = "tree" id = "tree44" x = "14000" y = "14000"/>
-        <object class = "tree" id = "tree45" x = "14000" y = "15000"/>
-        <object class = "tree" id = "tree46" x = "14000" y = "16000"/>
-        <object class = "tree" id = "tree47" x = "14000" y = "17000"/>
-        <object class = "tree" id = "tree48" x = "14000" y = "18000"/>
-        <object class = "tree" id = "tree49" x = "14000" y = "19000"/>
+        <object class = "green_barrel" id = "tree40" x = "14000" y = "10000"/>
+        <object class = "green_barrel" id = "tree41" x = "14000" y = "11000"/>
+        <object class = "green_barrel" id = "tree42" x = "14000" y = "12000"/>
+        <object class = "green_barrel" id = "tree43" x = "14000" y = "13000"/>
+        <object class = "green_barrel" id = "tree44" x = "14000" y = "14000"/>
+        <object class = "green_barrel" id = "tree45" x = "14000" y = "15000"/>
+        <object class = "green_barrel" id = "tree46" x = "14000" y = "16000"/>
+        <object class = "green_barrel" id = "tree47" x = "14000" y = "17000"/>
+        <object class = "green_barrel" id = "tree48" x = "14000" y = "18000"/>
+        <object class = "green_barrel" id = "tree49" x = "14000" y = "19000"/>
 
-        <object class = "tree" id = "tree50" x = "15000" y = "10000"/>
-        <object class = "tree" id = "tree51" x = "15000" y = "11000"/>
-        <object class = "tree" id = "tree52" x = "15000" y = "12000"/>
-        <object class = "tree" id = "tree53" x = "15000" y = "13000"/>
-        <object class = "tree" id = "tree54" x = "15000" y = "14000"/>
-        <object class = "tree" id = "tree55" x = "15000" y = "15000"/>
-        <object class = "tree" id = "tree56" x = "15000" y = "16000"/>
-        <object class = "tree" id = "tree57" x = "15000" y = "17000"/>
-        <object class = "tree" id = "tree58" x = "15000" y = "18000"/>
-        <object class = "tree" id = "tree59" x = "15000" y = "19000"/>
+        <object class = "green_barrel" id = "tree50" x = "15000" y = "10000"/>
+        <object class = "green_barrel" id = "tree51" x = "15000" y = "11000"/>
+        <object class = "green_barrel" id = "tree52" x = "15000" y = "12000"/>
+        <object class = "green_barrel" id = "tree53" x = "15000" y = "13000"/>
+        <object class = "green_barrel" id = "tree54" x = "15000" y = "14000"/>
+        <object class = "green_barrel" id = "tree55" x = "15000" y = "15000"/>
+        <object class = "green_barrel" id = "tree56" x = "15000" y = "16000"/>
+        <object class = "green_barrel" id = "tree57" x = "15000" y = "17000"/>
+        <object class = "green_barrel" id = "tree58" x = "15000" y = "18000"/>
+        <object class = "green_barrel" id = "tree59" x = "15000" y = "19000"/>
 
         <object class = "green_barrel" id = "green_barrel601" x = "456" y = "256"/>
         <object class = "green_barrel" id = "green_barrel602" x = "456" y = "156"/>

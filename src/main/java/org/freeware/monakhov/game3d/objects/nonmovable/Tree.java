@@ -36,7 +36,16 @@ public class Tree extends NonMovableObject {
 
     @Override
     public double getInteractRadius() {
-        return 0;
+        return 60;
+    }
+
+    @Override
+    public void onCollapseWith(WorldObject wo) {
+    }
+
+    @Override
+    public void onGetDamage(double d) {
+        world.deleteObject(this);
     }
 
 }

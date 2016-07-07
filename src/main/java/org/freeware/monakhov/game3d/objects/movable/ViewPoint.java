@@ -11,14 +11,14 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
  * @author Vasily Monakhov
  */
 public class ViewPoint extends MovableObject {
-    
+
     /**
      * Создаёт объект
      * @param world мир
      * @param position мозиция
      */
     public ViewPoint(World world, Point position) {
-        super(world, position);
+        super(world, position, null);
     }
 
     @Override
@@ -42,6 +42,15 @@ public class ViewPoint extends MovableObject {
     @Override
     public double getInteractRadius() {
         return 96;
+    }
+
+    @Override
+    public void onCollapseWith(WorldObject wo) {
+    }
+
+    @Override
+    public void onGetDamage(double d) {
+        System.out.println("Damaged on " + d);
     }
 
 }

@@ -34,23 +34,6 @@ abstract public class WorldObject {
      */
     private final Point right = new Point();
     /**
-     * Левая передняя точка
-     */
-    private final Point frontLeft = new Point();
-    /**
-     * Правая передняя точка
-     */
-    private final Point frontRight = new Point();
-    /**
-     * Левая задняя точка
-     */
-    private final Point rearLeft = new Point();
-    /**
-     * Правая задняя точка
-     */
-    private final Point rearRight = new Point();
-
-    /**
      * мир
      */
     protected final World world;
@@ -96,15 +79,13 @@ abstract public class WorldObject {
      * @param hero главный герой
      */
     public void turnSpriteToViewPoint(ViewPoint hero) {
-        int sw2 = getSprite().getWidth() / 2;
-        double cos = sw2 * Math.cos(-hero.getAzimuth());
-        double sin = sw2 * Math.sin(-hero.getAzimuth());
-        left.moveTo(position.getX() - cos, position.getY() - sin);
-        right.moveTo(position.getX() + cos, position.getY() + sin);
-        frontLeft.moveTo(position.getX() - cos + sin, position.getY() - cos - sin);
-        frontRight.moveTo(position.getX() + cos + sin, position.getY() - cos + sin);
-        rearLeft.moveTo(position.getX() - cos - sin, position.getY() + cos - sin);
-        rearRight.moveTo(position.getX() + cos - sin, position.getY() + cos + sin);
+        if (getSprite() != null) {
+            int sw2 = getSprite().getWidth() / 2;
+            double cos = sw2 * Math.cos(-hero.getAzimuth());
+            double sin = sw2 * Math.sin(-hero.getAzimuth());
+            left.moveTo(position.getX() - cos, position.getY() - sin);
+            right.moveTo(position.getX() + cos, position.getY() + sin);
+        }
     }
 
     /**
@@ -226,37 +207,21 @@ abstract public class WorldObject {
     public abstract void onInteractWith(WorldObject wo);
 
     /**
+     * Действие при столкновении с другим объектом мира
+     * @param wo другой объект
+     */
+    public abstract void onCollapseWith(WorldObject wo);
+
+    /**
      * Сделать что-нибудь
      * @param frameNanoTime текущее время
      */
     public abstract void doSomething(long frameNanoTime);
 
     /**
-     * @return the frontLeft
+     * Действие при получении ущерба
+     * @param d количество ущерба
      */
-    public Point getFrontLeft() {
-        return frontLeft;
-    }
-
-    /**
-     * @return the frontRight
-     */
-    public Point getFrontRight() {
-        return frontRight;
-    }
-
-    /**
-     * @return the rearLeft
-     */
-    public Point getRearLeft() {
-        return rearLeft;
-    }
-
-    /**
-     * @return the rearRight
-     */
-    public Point getRearRight() {
-        return rearRight;
-    }
+    public abstract void onGetDamage(double d);
 
 }

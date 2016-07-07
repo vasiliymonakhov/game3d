@@ -20,7 +20,7 @@ public class Door extends AbstractDoor {
      * Текстура закрытой двери
      */
     private final Texture closedTexture;
-    
+
     /**
      * Создаёт дверь
      * @param start точка начала
@@ -43,7 +43,7 @@ public class Door extends AbstractDoor {
     public Texture getTexture() {
         if (state == OPEN || state == OPENING) return openTexture;
         return closedTexture;
-    }    
+    }
 
     /**
      * Время, которое дверь была открыта

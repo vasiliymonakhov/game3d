@@ -1,9 +1,13 @@
 package org.freeware.monakhov.game3d.map;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.Hero;
 
@@ -169,14 +173,16 @@ public class World {
     /**
      * Объекты мира
      */
-    private final Map<String, WorldObject> objects = new HashMap<>();
+    private final Map<String, WorldObject> identifiedObjects = new HashMap<>();
+
+    private final Set<WorldObject> objects = new HashSet<>();
 
     /**
      * Вовзращает список объектов мира
      * @return
      */
     public Collection<WorldObject> getAllObjects() {
-        return objects.values();
+        return objects;
     }
 
     /**
@@ -191,10 +197,11 @@ public class World {
         if (o == null) {
             throw new IllegalArgumentException("Object must be not null");
         }
-        if (objects.containsKey(id)) {
+        if (identifiedObjects.containsKey(id)) {
             throw new IllegalArgumentException("Object " + id + " already exists");
         }
-        objects.put(id, o);
+        identifiedObjects.put(id, o);
+        objects.add(o);
     }
 
     /**
@@ -206,10 +213,10 @@ public class World {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("Object id must be not null or empty");
         }
-        if (!objects.containsKey(id)) {
+        if (!identifiedObjects.containsKey(id)) {
             throw new IllegalArgumentException("Object " + id + " not exists");
         }
-        return objects.get(id);
+        return identifiedObjects.get(id);
     }
 
     /**
@@ -252,6 +259,25 @@ public class World {
      */
     public void setSky(String sky) {
         this.sky = sky;
+    }
+
+    private final List<WorldObject> objectsToAdd = new ArrayList<>();
+
+    public void addNewObject(WorldObject e) {
+        objectsToAdd.add(e);
+    }
+
+    private final List<WorldObject> objectsToDelete = new ArrayList<>();
+
+    public void deleteObject(WorldObject e) {
+        objectsToDelete.add(e);
+    }
+
+    public void updateObjects() {
+        objects.removeAll(objectsToDelete);
+        objectsToDelete.clear();
+        objects.addAll(objectsToAdd);
+        objectsToAdd.clear();
     }
 
 }

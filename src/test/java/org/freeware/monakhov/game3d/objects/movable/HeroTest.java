@@ -64,7 +64,7 @@ public class HeroTest {
     }    
 
     /**
-     * Test of moveBy method, of class ViewPoint.
+     * Test of moveByWithCheck method, of class ViewPoint.
      */
     @Test
     public void testMoveBy() {
@@ -112,23 +112,23 @@ public class HeroTest {
         ViewPoint h = new ViewPoint(w, p);
         h.setRoom(r0);
         
-        h.moveBy(0, 1000); // strife right
+        h.moveByWithCheck(0, 1000); // strife right
         assertEquals(1500,  h.getPosition().getX(), EPSILON);
         assertEquals(500,  h.getPosition().getY(), EPSILON);
         assertTrue(h.getRoom() == r1);
         
         h.setAzimuth(- Math.PI / 2); // turn left
-        h.moveBy(1000, 0);
+        h.moveByWithCheck(1000, 0);
         assertEquals(500,  h.getPosition().getX(), EPSILON);
         assertEquals(500,  h.getPosition().getY(), EPSILON);
         assertTrue(h.getRoom() == r0);
 
-        h.moveBy(0, -100);
+        h.moveByWithCheck(0, -100);
         assertEquals(500,  h.getPosition().getX(), EPSILON);
         assertEquals(400,  h.getPosition().getY(), EPSILON);
         assertTrue(h.getRoom() == r0);
         
-        h.moveBy(-1000, 100);
+        h.moveByWithCheck(-1000, 100);
         assertEquals(1500,  h.getPosition().getX(), EPSILON);
         assertEquals(500,  h.getPosition().getY(), EPSILON);
         assertTrue(h.getRoom() == r1);

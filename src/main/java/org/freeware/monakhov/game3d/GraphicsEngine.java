@@ -188,7 +188,7 @@ public class GraphicsEngine {
     /**
      * Подготавливает к рендерингу
      */
-    void clearRender() {
+    private void clearRender() {
         Arrays.fill(mapLines, null);
         visibleRooms.clear();
     }
@@ -206,7 +206,7 @@ public class GraphicsEngine {
      * Проверяет, какие комнаты видимы. При этом будет заполнен массив столбцов
      * с указанием конкретных линий
      */
-    void checkVisibleRooms() {
+    private void checkVisibleRooms() {
         for (int i = 0; i < screen.getWidth(); i++) {
             visibleRooms.add(world.getHero().getRoom());
              checkedRooms.clear();
@@ -355,7 +355,7 @@ public class GraphicsEngine {
      * @param g графический контекст
      * @throws InterruptedException
      */
-    void renderWalls(Graphics2D g) throws InterruptedException {
+    private void renderWalls(Graphics2D g) throws InterruptedException {
         prepareVisibleWallColumns();
         CountDownLatch doneSignal = new CountDownLatch(visibleWallColumns.size());
         // для всех столбцов экрана запускаем потоки рисования
@@ -467,7 +467,7 @@ public class GraphicsEngine {
      * @param g графический контекст
      * @throws InterruptedException
      */
-    void renderCeilingAndFloor(Graphics2D g) throws InterruptedException {
+    private void renderCeilingAndFloor(Graphics2D g) throws InterruptedException {
         CountDownLatch doneSignal = new CountDownLatch(floorCeilingDrawers.length);
         // рисуем пол и потолок в нескольких потоках
         for (FloorCeilingDrawer floorCeilingDrawer : floorCeilingDrawers) {
@@ -573,7 +573,7 @@ public class GraphicsEngine {
      * Компаратор для сортировки объектов мира. Сначала должны идти те объекты,
      * которые находятся дальше от главного героя
      */
-    Comparator<WorldObject> objectsSortComparator = new Comparator<WorldObject>() {
+    private final Comparator<WorldObject> objectsSortComparator = new Comparator<WorldObject>() {
         @Override
         public int compare(WorldObject o1, WorldObject o2) {
             return (int) (o2.distanceTo(world.getHero().getPosition()) - o1.distanceTo(world.getHero().getPosition()));
@@ -772,6 +772,7 @@ public class GraphicsEngine {
     private boolean checkVisibleObjectsAndTakeSprites() {
         objectsSortList.clear();
         for (WorldObject wobj : world.getAllObjects()) {
+            if (wobj.getSprite() == null) continue;
             wobj.turnSpriteToViewPoint(world.getHero()); // повернуть спрайт к главному герою
             boolean flag = false;
             // проверить по списку видимых комнат
@@ -805,7 +806,7 @@ public class GraphicsEngine {
      * @param g графический контекст
      * @throws InterruptedException
      */
-    void renderObjects(Graphics2D g) throws InterruptedException {
+    private void renderObjects(Graphics2D g) throws InterruptedException {
         if (!checkVisibleObjectsAndTakeSprites()) {
             // если видимых спрайтов нет, то на этом можно заканчивать
             return;
@@ -819,7 +820,7 @@ public class GraphicsEngine {
      * @param g графический контекст
      * @throws InterruptedException
      */
-    void renderSprites(Graphics2D g) throws InterruptedException {
+    private void renderSprites(Graphics2D g) throws InterruptedException {
         List<SpriteToDraw> currentDrawSprites = new ArrayList<>();
         Iterator<SpriteToDraw> d2dit = spritesToDraw.iterator();
         // первый спрайт попадает в очередь рисования автоматически
@@ -948,7 +949,7 @@ public class GraphicsEngine {
      *
      * @throws InterruptedException
      */
-    void render() throws InterruptedException {
+    private void render() throws InterruptedException {
         Graphics2D g = (Graphics2D) screen.getImage().createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -956,7 +957,7 @@ public class GraphicsEngine {
         renderCeilingAndFloor(g);
         renderWalls(g);
         renderObjects(g);
-        renderHeroLook(g);
+//        renderHeroLook(g);
         if (mapEnabled) {
             drawMap(g);
         }
@@ -964,12 +965,12 @@ public class GraphicsEngine {
         g.dispose();
     }
 
-    double counter;
+    private double counter;
     long time = System.nanoTime();
     private final Font f = new Font(Font.SANS_SERIF, 0, 25);
-    String fps = "";
+    private String fps = "";
 
-    void drawFPS(Graphics2D g) {
+    private void drawFPS(Graphics2D g) {
         counter++;
         if (counter >= 50) {
             long nt = System.nanoTime();
@@ -985,7 +986,7 @@ public class GraphicsEngine {
     /**
      * Вращает сканирующие лучи вокруг главного героя
      */
-    void transformRays() {
+    private void transformRays() {
         double sin = Math.sin(-world.getHero().getAzimuth());
         double cos = Math.cos(-world.getHero().getAzimuth());
         for (int i = 0; i < screen.getWidth(); i++) {
@@ -1011,9 +1012,9 @@ public class GraphicsEngine {
     }
 
     // толщины линий карты
-    BasicStroke LINE = new BasicStroke(1);
-    BasicStroke WALL = new BasicStroke(3);
-    BasicStroke ROOM = new BasicStroke(5);
+    private final BasicStroke LINE = new BasicStroke(1);
+    private final BasicStroke WALL = new BasicStroke(3);
+    private final BasicStroke ROOM = new BasicStroke(5);
 
     /**
      * Масштаб карты
@@ -1044,7 +1045,7 @@ public class GraphicsEngine {
      *
      * @param g графический контекст
      */
-    void drawMap(Graphics2D g) {
+    private void drawMap(Graphics2D g) {
         int dx = screen.getImage().getWidth() / 2;
         int dy = screen.getImage().getHeight() / 2;
         g.setColor(VIEWPOINT_COLOR);
@@ -1078,20 +1079,6 @@ public class GraphicsEngine {
             g.setColor(WALL_COLOR);
             ra = (int) (wo.getRadius() * mapScale);
             g.fillOval(dx - ra + (int) (wo.getPosition().getX() * mapScale), dy - ra - (int) (wo.getPosition().getY() * mapScale), 2 * ra, 2 * ra);
-
-            g.setColor(Color.GRAY);
-            int x1 = dx + (int) (wo.getFrontLeft().getX() * mapScale);
-            int y1 = dy - (int) (wo.getFrontLeft().getY() * mapScale);
-            int x2 = dx + (int) (wo.getFrontRight().getX() * mapScale);
-            int y2 = dy - (int) (wo.getFrontRight().getY() * mapScale);
-            int x3 = dx + (int) (wo.getRearRight().getX() * mapScale);
-            int y3 = dy - (int) (wo.getRearRight().getY() * mapScale);
-            int x4 = dx + (int) (wo.getRearLeft().getX() * mapScale);
-            int y4 = dy - (int) (wo.getRearLeft().getY() * mapScale);
-            g.drawLine(x1, y1, x2, y2);
-            g.drawLine(x2, y2, x3, y3);
-            g.drawLine(x3, y3, x4, y4);
-            g.drawLine(x4, y4, x1, y1);
         }
     }
 

@@ -103,6 +103,7 @@
     <objects>
         <object class = "tree" id = "tree00" x = "64" y = "192"/>
 
+        <object class = "green_barrel" id = "gb0" x = "256" y = "0"/>
 
         <object class = "green_barrel" id = "gb01" x = "64" y = "576"/>
         <object class = "green_barrel" id = "gb02" x = "128" y = "576"/>
@@ -176,6 +177,14 @@
         <object class = "green_barrel" id = "gb77" x = "448" y = "1024"/>
         <object class = "green_barrel" id = "gb78" x = "512" y = "1024"/>
 
+        <object class = "green_barrel" id = "gb0_01" x = "368" y = "-1024"/>
+        <object class = "green_barrel" id = "gb0_02" x = "368" y = "-1124"/>
+        <object class = "green_barrel" id = "gb0_03" x = "368" y = "-1224"/>
+        <object class = "green_barrel" id = "gb0_04" x = "368" y = "-1324"/>
+        <object class = "green_barrel" id = "gb0_05" x = "368" y = "-1424"/>
 
     </objects>
+    <entities>
+        <entity class = "fireball_gun" id = "fbg01" x = "256" y = "-3740" azimuth = "12"/>
+    </entities>
 </root>

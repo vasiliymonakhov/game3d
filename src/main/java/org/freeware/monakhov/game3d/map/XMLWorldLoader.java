@@ -12,19 +12,18 @@ import java.io.UnsupportedEncodingException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.freeware.monakhov.game3d.objects.movable.ViewPoint;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * Loads the world from XML stream
- * 
- * @author Vasily Monakhov 
+ *
+ * @author Vasily Monakhov
  */
 public class XMLWorldLoader {
 
-    private final SAXParser saxParser;    
-   
+    private final SAXParser saxParser;
+
     public XMLWorldLoader() throws ParserConfigurationException, SAXException {
         SAXParserFactory spf = SAXParserFactory.newInstance();
         saxParser = spf.newSAXParser();
@@ -36,5 +35,5 @@ public class XMLWorldLoader {
             saxParser.parse(new InputSource(bisr), new XMLWorldHandler(world));
         }
     }
-    
+
 }

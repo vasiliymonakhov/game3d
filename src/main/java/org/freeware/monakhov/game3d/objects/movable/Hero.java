@@ -21,6 +21,11 @@ public class Hero extends ViewPoint {
         super(world, position);
     }
 
+    @Override
+    public boolean isCrossable() {
+        return false;
+    }
+
     /**
      * Максимальная скорость движения назад
      */
@@ -216,17 +221,34 @@ public class Hero extends ViewPoint {
         setAzimuth(getAzimuth() + turnSpeed * frameNanoTime);
         analyseMove(forward, backward, frameNanoTime);
         analyseStrafe(strafeLeft, strafeRight, frameNanoTime);
-        moveBy(moveSpeed * frameNanoTime, strafeSpeed * frameNanoTime);
+        moveByWithCheck(moveSpeed * frameNanoTime, strafeSpeed * frameNanoTime);
     }
 
     /**
      * изображение оружия в руках
      */
-    MultiImage weapon = MultiImage.get("axe");
+    MultiImage weapon = MultiImage.get("pistol");
 
 
     public List<MultiImage.ImageToDraw> getImagesToDraw(ScreenBuffer screen) {
         return weapon.getImagesToDraw(screen);
+    }
+
+     volatile long weaponTime = 100000000;
+
+    @Override
+    public void doSomething(long frameNanoTime) {
+        weaponTime -= frameNanoTime;
+    }
+
+    public void fire(boolean on) {
+        if (on) {
+            if (weaponTime <= 0) {
+                world.addNewObject(new FireBall(world, new Point(position.getX(), position.getY()), this, azimuth));
+                weaponTime = 100000000;
+            }
+        }
+
     }
 
 }

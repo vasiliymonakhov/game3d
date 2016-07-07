@@ -6,21 +6,22 @@ import org.freeware.monakhov.game3d.map.visiblelines.SimpleSwitch;
 import org.freeware.monakhov.game3d.map.visiblelines.Door;
 import org.freeware.monakhov.game3d.map.visiblelines.Wall;
 import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.movable.Entity;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Загружает мир из XML
- * @author Vasily Monakhov 
+ * @author Vasily Monakhov
  */
 class XMLWorldHandler extends DefaultHandler {
-    
+
     /**
      * Мир
      */
     private final World world;
-    
+
     /**
      * Содаёт загрузчик
      * @param world мир
@@ -33,7 +34,7 @@ class XMLWorldHandler extends DefaultHandler {
     private boolean loadingLines;
     private boolean loadingRooms;
     private String roomID;
-    
+
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attr)  throws SAXException {
         switch(qName) {
@@ -42,14 +43,14 @@ class XMLWorldHandler extends DefaultHandler {
                 world.setCeiling(attr.getValue("ceiling"));
                 world.setSky(attr.getValue("sky"));
                 break;
-            case "points" : 
+            case "points" :
                 loadingPoints = true;
                 break;
-            case "point" : 
+            case "point" :
                 if (loadingPoints) {
                      world.addPoint(attr.getValue("id"), new Point(attr));
                 }
-                break;                
+                break;
             case "lines":
                 loadingLines = true;
                 break;
@@ -59,12 +60,12 @@ class XMLWorldHandler extends DefaultHandler {
                 } else if (loadingRooms) {
                     String lineID = attr.getValue("id");
                     world.getRoom(roomID).addLine(lineID, world.getLine(lineID));
-                }                
+                }
                 break;
             case "wall" :
                 if (loadingLines) {
                     world.addLine(attr.getValue("id"), new Wall(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("texture")), world));
-                }                
+                }
                 break;
             case "door" :
                 if (loadingLines) {
@@ -75,18 +76,18 @@ class XMLWorldHandler extends DefaultHandler {
                 if (loadingLines) {
                     world.addLine(attr.getValue("id"), new SecretDoor(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("texture")), world));
                     break;
-                }            
+                }
             case "door_open_switch" :
                 if (loadingLines) {
                     world.addLine(attr.getValue("id"), new DoorOpenSwitch(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("on_texture")), Texture.get(attr.getValue("off_texture")), world.getLine(attr.getValue("door")), world));
                     break;
-                }            
+                }
             case "simple_switch" :
                 if (loadingLines) {
                     world.addLine(attr.getValue("id"), new SimpleSwitch(world.getPoint(attr.getValue("start")), world.getPoint(attr.getValue("end")), Texture.get(attr.getValue("on_texture")), Texture.get(attr.getValue("off_texture")), world));
                     break;
-                }            
-            case "rooms" : 
+                }
+            case "rooms" :
                 loadingRooms = true;
                 break;
             case "room" :
@@ -108,19 +109,22 @@ class XMLWorldHandler extends DefaultHandler {
             case "object":
                 world.addObject(attr.getValue("id"), WorldObject.createFromXML(world, attr));
                 break;
+            case "entity":
+                world.addObject(attr.getValue("id"), Entity.createFromXML(world, attr));
+                break;
         }
-    }        
+    }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch(qName) {
-            case "points" : 
+            case "points" :
                 loadingPoints = false;
                 break;
             case "lines":
                 loadingLines = false;
                 break;
-            case "rooms" : 
+            case "rooms" :
                 loadingRooms = false;
                 break;
         }

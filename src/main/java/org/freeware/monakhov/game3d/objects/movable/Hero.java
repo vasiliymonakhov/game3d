@@ -248,7 +248,8 @@ public class Hero extends ViewPoint {
     public void fire(boolean on) {
         if (on) {
             if (weaponTime <= 0) {
-                world.addNewObject(new FireBall(world, new Point(position.getX(), position.getY()), this, azimuth));
+                double azdelta = -0.1 * 0.2 * Math.random();
+                world.addNewObject(new FireBall(world, new Point(position.getX(), position.getY()), this, azimuth + azdelta));
                 weaponTime = 100000000;
             }
         }

@@ -103,7 +103,7 @@ public class GameEngine {
         }
     }
 
-    private final int PARTS = 32;
+    private final int PARTS = 100;
 
     /**
      * Выполнение одного такта несколькими частями

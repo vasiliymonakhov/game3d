@@ -33,7 +33,8 @@ public abstract class MovableObject extends WorldObject {
     public boolean touchAnyObject(Point newPosition) {
         // проверяем, не столкнулись ли мы с каким-то объектом
         for (WorldObject o : world.getAllObjects()) {
-            if (o != creator && !o.isCrossable()) {
+            if (o == creator) continue;
+            if (!o.isCrossable()) {
                 // Через объект нельзя пройти
                 double distance = SpecialMath.lineLength(o.getPosition(), newPosition);
                 double radiuses = o.getRadius() + getRadius();

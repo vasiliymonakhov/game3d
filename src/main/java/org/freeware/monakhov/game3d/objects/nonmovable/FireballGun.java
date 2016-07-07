@@ -19,7 +19,7 @@ public class FireballGun extends Entity {
 
     @Override
     public Sprite getSprite() {
-        return Sprite.get("fireball");
+        return Sprite.get("fireball0");
     }
 
     @Override

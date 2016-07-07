@@ -17,7 +17,11 @@
     <sprites path = "/org/freeware/monakhov/game3d/graphics/sprites/">
         <sprite id = "tree" width = "128" height = "256" y_offset="0" file = "tree_0.png"/>
         <sprite id = "green_barrel" width = "64" height = "64" y_offset="192" file = "green_barrel_0.png"/>
-        <sprite id = "fireball" width = "32" height = "32" y_offset="176" file = "fire_ball_0.png"/>
+        <sprite id = "fireball0" width = "32" height = "32" y_offset="176" file = "fire_ball_0.png"/>
+        <sprite id = "fireball1" width = "64" height = "64" y_offset="160" file = "fire_ball_1.png"/>
+        <sprite id = "fireball2" width = "64" height = "64" y_offset="160" file = "fire_ball_2.png"/>
+        <sprite id = "fireball3" width = "64" height = "64" y_offset="160" file = "fire_ball_3.png"/>
+        <sprite id = "fireball4" width = "64" height = "64" y_offset="160" file = "fire_ball_4.png"/>
         <sprite id = "boom" width = "256" height = "256" y_offset="0" file = "boom.png"/>
     </sprites>
     <images path = "/org/freeware/monakhov/game3d/graphics/images/">

@@ -10,7 +10,11 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
  */
 public abstract class Slug extends Entity {
 
-    protected boolean boom;
+    protected final static int ALIVE = 0;
+    protected final static int BOOMING = 1;
+    protected final static int DEAD = 2;
+
+    protected int state = ALIVE;
 
     public Slug(World world, Point position, WorldObject creator, double azimuth) {
         super(world, position, creator, azimuth);
@@ -18,7 +22,7 @@ public abstract class Slug extends Entity {
 
     @Override
     public void onInteractWith(WorldObject wo) {
-        if (boom) {
+        if (state == BOOMING) {
             wo.onGetDamage(getDamage());
         }
     }
@@ -30,8 +34,9 @@ public abstract class Slug extends Entity {
 
     @Override
     public void onCollapseWith(WorldObject wo) {
-        if (wo != creator) {
-            boom = true;
+        if (wo == creator) return;
+        if (state == ALIVE) {
+            state = BOOMING;
         }
     }
 
@@ -39,14 +44,25 @@ public abstract class Slug extends Entity {
     public void onGetDamage(double d) {
     }
 
+    protected long boomTime;
+    protected final long maxBoomTime = 200000000l;
+
     @Override
     public void doSomething(long frameNanoTime) {
-        if (boom) {
-            world.deleteObject(this);
-            return;
-        }
-        if (!moveByWithCheck(getSpeed() * frameNanoTime, 0)) {
-            boom = true;
+        switch (state) {
+            case DEAD:
+                world.deleteObject(this);
+                break;
+            case BOOMING:
+                boomTime += frameNanoTime;
+                if (boomTime >= maxBoomTime) {
+                    state = DEAD;
+                }
+                break;
+            case ALIVE:
+                if (!moveByWithCheck(getSpeed() * frameNanoTime, 0)) {
+                    state = BOOMING;
+                }
         }
     }
 

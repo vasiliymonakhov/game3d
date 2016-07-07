@@ -56,6 +56,7 @@ public class GameEngine {
     private void worldCollapsesWithHero() {
         // проверить взаимодействие с объектами мира
         for (WorldObject wo : world.getAllObjects()) {
+            if (wo.isCrossable()) continue;
             if (SpecialMath.lineLength(wo.getPosition(), world.getHero().getPosition()) < world.getHero().getRadius() + wo.getRadius()) {
                 wo.onCollapseWith(world.getHero());
             }
@@ -90,8 +91,10 @@ public class GameEngine {
         }
         for (int i = 0; i < wobjects.size() - 1; i++) {
             WorldObject wo1 = wobjects.get(i);
+            if (wo1.isCrossable()) continue;
             for (int j = i + 1; j < wobjects.size(); j++) {
                 WorldObject wo2 = wobjects.get(j);
+                if (wo2.isCrossable()) continue;
                 if (SpecialMath.lineLength(wo1.getPosition(), wo2.getPosition()) < wo1.getRadius() + wo2.getRadius()) {
                     wo1.onCollapseWith(wo2);
                     wo2.onCollapseWith(wo1);

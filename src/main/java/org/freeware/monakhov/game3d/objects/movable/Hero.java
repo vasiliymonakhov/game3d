@@ -221,7 +221,11 @@ public class Hero extends ViewPoint {
         setAzimuth(getAzimuth() + turnSpeed * frameNanoTime);
         analyseMove(forward, backward, frameNanoTime);
         analyseStrafe(strafeLeft, strafeRight, frameNanoTime);
-        moveByWithCheck(moveSpeed * frameNanoTime, strafeSpeed * frameNanoTime);
+        double ms = moveSpeed * frameNanoTime;
+        double ss = strafeSpeed * frameNanoTime;
+        if (ms != 0 || ss != 0) {
+            moveByWithCheck(ms, ss);
+        }
     }
 
     /**

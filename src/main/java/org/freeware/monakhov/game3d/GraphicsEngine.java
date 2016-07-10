@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import org.freeware.monakhov.game3d.map.visiblelines.Door;
 import org.freeware.monakhov.game3d.map.Image;
 import org.freeware.monakhov.game3d.map.Line;
@@ -125,15 +126,18 @@ public class GraphicsEngine {
      */
     private BufferedImage sky;
 
+    private final Semaphore semaphore;
+
     /**
      * Создаёт графическую систему
      *
      * @param world мир
      * @param screen экран
      */
-    GraphicsEngine(World world, ScreenBuffer screen) {
+    GraphicsEngine(World world, ScreenBuffer screen, Semaphore semaphore) {
         this.world = world;
         this.screen = screen;
+        this.semaphore = semaphore;
         mapLines = new VisibleLine[screen.getWidth()];
         wallHeight = new int[screen.getWidth()];
         distance = new double[screen.getWidth()];
@@ -209,8 +213,8 @@ public class GraphicsEngine {
     private void checkVisibleRooms() {
         for (int i = 0; i < screen.getWidth(); i++) {
             visibleRooms.add(world.getHero().getRoom());
-             checkedRooms.clear();
-             world.getHero().getRoom().traceRoom(mapLines, i, world.getHero().getPosition(), transformedRayPoints[i], wallsIntersectPoints[i], visibleRooms, checkedRooms);
+            checkedRooms.clear();
+            world.getHero().getRoom().traceRoom(mapLines, i, world.getHero().getPosition(), transformedRayPoints[i], wallsIntersectPoints[i], visibleRooms, checkedRooms);
         }
     }
 
@@ -329,7 +333,7 @@ public class GraphicsEngine {
                 double dist = SpecialMath.lineLength(world.getHero().getPosition(), wallsIntersectPoints[i]);
                 distance[i] = dist;
                 // вычисляем видимую высоту столбца
-                h = (int)Math.round(k[i] / dist);
+                h = (int) Math.round(k[i] / dist);
                 wallHeight[i] = h;
                 ch = (int) ((screen.getHeight() - h) / 2);
                 // получаем столбец текстуры
@@ -576,7 +580,7 @@ public class GraphicsEngine {
     private final Comparator<WorldObject> objectsSortComparator = new Comparator<WorldObject>() {
         @Override
         public int compare(WorldObject o1, WorldObject o2) {
-            return (int) (o2.distanceTo(world.getHero().getPosition()) - o1.distanceTo(world.getHero().getPosition()));
+            return Double.compare(o2.distanceTo(world.getHero().getPosition()), o1.distanceTo(world.getHero().getPosition()));
         }
     };
 
@@ -688,6 +692,7 @@ public class GraphicsEngine {
 
         /**
          * подготоваливает к работе
+         *
          * @param doneSignal сигнал окончания работы
          */
         void prepare(Graphics2D g, CountDownLatch doneSignal) {
@@ -741,7 +746,7 @@ public class GraphicsEngine {
                     }
                     if (started) {
                         // потенциально каждый столбец спрайта также и последний
-                        spriteXEndOffset = (int)  SpecialMath.lineLength(wo.getLeft(), rsp);
+                        spriteXEndOffset = (int) SpecialMath.lineLength(wo.getLeft(), rsp);
                         spriteXEnd = i;
                     }
                 }
@@ -767,12 +772,15 @@ public class GraphicsEngine {
 
     /**
      * Проверяет видимость объектов и создаёт список спрайтов
+     *
      * @return true - есть видимые спрайты
      */
     private boolean checkVisibleObjectsAndTakeSprites() {
         objectsSortList.clear();
         for (WorldObject wobj : world.getAllObjects()) {
-            if (wobj.getSprite() == null) continue;
+            if (wobj.getSprite() == null) {
+                continue;
+            }
             wobj.turnSpriteToViewPoint(world.getHero()); // повернуть спрайт к главному герою
             boolean flag = false;
             // проверить по списку видимых комнат
@@ -817,6 +825,7 @@ public class GraphicsEngine {
 
     /**
      * Рисует спрайты
+     *
      * @param g графический контекст
      * @throws InterruptedException
      */
@@ -958,11 +967,26 @@ public class GraphicsEngine {
         renderWalls(g);
         renderObjects(g);
 //        renderHeroLook(g);
+        renderAim(g);
         if (mapEnabled) {
             drawMap(g);
         }
         drawFPS(g);
         g.dispose();
+    }
+
+    private void renderAim(Graphics2D g) {
+        g.setColor(Color.RED);
+        int sx = screen.getWidth() / 2;
+        int sy = screen.getHeight() / 2;
+        int r = 10;
+        g.fillRect(sx, sy, 1, 1);
+        g.drawOval(sx - r, sy - r, 2 * r, 2 * r);
+        g.fillRect(sx, sy - 2 * r, 1, r);
+        g.fillRect(sx - 2 * r, sy, r, 1);
+        g.fillRect(sx + r, sy, r, 1);
+        g.fillRect(sx, sy + r, 1, r);
+
     }
 
     private double counter;
@@ -1006,8 +1030,10 @@ public class GraphicsEngine {
     void doCycle() throws InterruptedException {
         clearRender();
         transformRays();
+        semaphore.acquire();
         checkVisibleRooms();
         render();
+        semaphore.release();
         screen.swapBuffers();
     }
 
@@ -1076,8 +1102,11 @@ public class GraphicsEngine {
             }
         }
         for (WorldObject wo : world.getAllObjects()) {
-            if (wo.isCrossable()) g.setColor(UNSEEN_WALL_COLOR);
-            else g.setColor(WALL_COLOR);
+            if (wo.isCrossable()) {
+                g.setColor(UNSEEN_WALL_COLOR);
+            } else {
+                g.setColor(WALL_COLOR);
+            }
             ra = (int) (wo.getRadius() * mapScale);
             g.fillOval(dx - ra + (int) (wo.getPosition().getX() * mapScale), dy - ra - (int) (wo.getPosition().getY() * mapScale), 2 * ra, 2 * ra);
         }

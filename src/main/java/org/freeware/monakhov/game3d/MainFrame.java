@@ -12,6 +12,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -30,6 +32,8 @@ public class MainFrame extends javax.swing.JFrame {
     final GameEngine gameEngine;
     final World world;
     final Hero hero;
+    private final Semaphore semaphore = new Semaphore(1);
+
 
     public MainFrame() throws ParserConfigurationException, SAXException, IOException {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -53,16 +57,29 @@ public class MainFrame extends javax.swing.JFrame {
 
         makeScreenAndEngine();
 
-        gameEngine = new GameEngine(world);
+        gameEngine = new GameEngine(world, semaphore);
 
         ked = new KeyDispatcher(this, graphicsEngine, screen);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
 
-        final Thread t = new Thread(new Runnable() {
+        final Thread graphicsThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        graphicsEngine.doCycle();
+                        SwingUtilities.invokeLater(repainter);
+                    } catch (Throwable ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        graphicsThread.setPriority(Thread.MAX_PRIORITY);
+
+        final Thread gameThread = new Thread(new Runnable() {
 
             private long frameNanoTime;
-
-            int iter;
 
             @Override
             public void run() {
@@ -79,28 +96,26 @@ public class MainFrame extends javax.swing.JFrame {
                             remakeEngine = true;
                             percent -= 5;
                         }
+                        TimeUnit.MILLISECONDS.sleep(10);
                         if (remakeEngine) {
                             makeScreenAndEngine();
                             KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(ked);
                             ked = new KeyDispatcher(MainFrame.this, graphicsEngine, screen);
                             KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
                         }
-                        if (++iter % 16 == 0) {
-                            graphicsEngine.doCycle();
-                            SwingUtilities.invokeLater(repainter);
-                        }
                         frameNanoTime = System.nanoTime() - now;
-                    } catch (Throwable ex) {
+                    } catch (InterruptedException ex) {
                         Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
         });
-        t.setPriority(Thread.MAX_PRIORITY);
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
-                t.start();
+                graphicsThread.start();
+                gameThread.start();
             }
         });
     }
@@ -110,7 +125,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void makeScreenAndEngine() {
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         screen = new ScreenBuffer(rect.width * percent / 100, rect.height * percent / 100);
-        graphicsEngine = new GraphicsEngine(world, screen);
+        graphicsEngine = new GraphicsEngine(world, screen, semaphore);
     }
 
     private KeyDispatcher ked;

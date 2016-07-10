@@ -32,7 +32,7 @@ public class FireBall extends Slug {
                 return SPRITES[idx];
             }
         }
-        return null;
+        return SPRITES[SPRITES.length - 1];
     }
 
     @Override

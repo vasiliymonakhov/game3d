@@ -1,6 +1,7 @@
 package org.freeware.monakhov.game3d;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
@@ -17,13 +18,16 @@ public class GameEngine {
      */
     private final World world;
 
+    private final Semaphore semaphore;
+
     /**
      * Создаёт логику
      *
      * @param world мир
      */
-    public GameEngine(World world) {
+    public GameEngine(World world, Semaphore semaphore) {
         this.world = world;
+        this.semaphore = semaphore;
     }
 
     /**
@@ -113,8 +117,11 @@ public class GameEngine {
      * Выполнение одного такта несколькими частями
      *
      * @param nanoTime текущее системное время
+     * @param ked диспетчер событий от клавиатуры
+     * @throws java.lang.InterruptedException
      */
-    public void doCycle(long nanoTime, KeyDispatcher ked) {
+    public void doCycle(long nanoTime, KeyDispatcher ked) throws InterruptedException {
+        semaphore.acquire();
         world.getHero().analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), nanoTime);
         if (ked.isInteract()) {
             heroInteractWithWorld();
@@ -134,6 +141,7 @@ public class GameEngine {
         objectsCollapsWithObjects();
         worldCycleEnd();
         world.updateObjects();
+        semaphore.release();
     }
 
 }

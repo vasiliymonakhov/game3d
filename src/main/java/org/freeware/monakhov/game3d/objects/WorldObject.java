@@ -138,7 +138,7 @@ abstract public class WorldObject {
     abstract public Sprite getSprite();
 
     /**
-     * Вовзращает расстояние от объекта до заданной точки
+     * Возвращает расстояние от объекта до заданной точки
      * @param p точка
      * @return расстояние
      */

@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.Hero;
 
@@ -176,7 +175,7 @@ public class World {
      */
     private final Map<String, WorldObject> identifiedObjects = new HashMap<>();
 
-    private final Set<WorldObject> objects = new CopyOnWriteArraySet<>();
+    private final Set<WorldObject> objects = new HashSet<>();
 
     /**
      * Вовзращает список объектов мира

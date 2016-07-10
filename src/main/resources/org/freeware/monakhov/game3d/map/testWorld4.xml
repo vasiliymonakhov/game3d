@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root floor = "floor02" ceiling = "ceiling02">
+    <points>
+        <point id = "p01" x="0" y = "-4096"/>
+        <point id = "p02" x="0" y = "256"/>
+        <point id = "p03" x="128" y = "256"/>
+        <point id = "p04" x="128" y = "288"/>
+        <point id = "p05" x="128" y = "320"/>
+        <point id = "p06" x="-256" y = "320"/>
+        <point id = "p07" x="-256" y = "1344"/>
+        <point id = "p08" x="768" y = "1344"/>
+        <point id = "p09" x="768" y = "320"/>
+        <point id = "p10" x="384" y = "320"/>
+        <point id = "p11" x="384" y = "288"/>
+        <point id = "p12" x="384" y = "256"/>
+        <point id = "p13" x="512" y = "256"/>
+        <point id = "p14" x="512" y = "-4096"/>
+        <point id = "p15" x="288" y = "-4096"/>
+        <point id = "p16" x="224" y = "-4096"/>
+        <point id = "p17" x="0" y = "-2048"/>
+        <point id = "p18" x="0" y = "-1792"/>
+        <point id = "p19" x="-1024" y = "-1792"/>
+        <point id = "p20" x="-1024" y = "-2048"/>
+        <point id = "pxx" x="256" y = "256"/>
+    </points>
+    <lines>
+        <wall id = "w00" start = "p01" end = "p17" texture = "brick01"/>
+        <wall id = "w01" start = "p18" end = "p02" texture = "brick01"/>
+        <wall id = "w02" start = "p17" end = "p20" texture = "beton01"/>
+        <wall id = "w03" start = "p20" end = "p19" texture = "beton01"/>
+        <wall id = "w04" start = "p19" end = "p18" texture = "beton01"/>
+        <secret_door id = "sd01" start = "p17" end = "p18" texture = "brick01"/>
+        <wall id = "w1" start = "p02" end = "p03" texture = "brick01"/>
+        <wall id = "w2" start = "p03" end = "p04" texture = "door_border_left01"/>
+        <wall id = "w3" start = "p04" end = "p05" texture = "door_border_right01"/>
+        <wall id = "w4" start = "p05" end = "p06" texture = "brick02"/>
+        <wall id = "w5" start = "p06" end = "p07" texture = "block01"/>
+        <wall id = "w6" start = "p07" end = "p08" texture = "block01"/>
+        <wall id = "w7" start = "p08" end = "p09" texture = "block01"/>
+        <wall id = "w8" start = "p09" end = "p10" texture = "brick02"/>
+        <wall id = "w9" start = "p10" end = "p11" texture = "door_border_left01"/>
+        <wall id = "w10" start = "p11" end = "p12" texture = "door_border_right01"/>
+        <wall id = "w11" start = "p12" end = "p13" texture = "brick01"/>
+        <wall id = "w12" start = "p13" end = "p14" texture = "brick01"/>
+        <wall id = "w13" start = "p14" end = "p15" texture = "brick01"/>
+        <wall id = "w14" start = "p16" end = "p01" texture = "brick01"/>
+        <door id = "d0" start = "p04" end = "p11" open_texture = "door_open01" closed_texture = "door_closed01"/>
+        <door_open_switch id = "sw01" start = "p15" end = "p16" on_texture = "switch01_on" off_texture = "switch01_off" door = "sd01"/>
+        <line id = "l01" start = "p03" end = "pxx"/>
+        <line id = "l02" start = "pxx" end = "p12"/>
+        <line id = "l1" start = "p05" end = "p10"/>
+    </lines>
+    <rooms>
+        <room id = "r0">
+            <line id = "w00"/>
+            <line id = "sd01"/>
+            <line id = "w01"/>
+            <line id = "w1"/>
+            <line id = "l01"/>
+            <line id = "l02"/>
+            <line id = "w11"/>
+            <line id = "w12"/>
+            <line id = "w13"/>
+            <line id = "w14"/>
+            <line id = "sw01"/>
+        </room>
+        <room id = "r1">
+            <line id = "w2"/>
+            <line id = "d0"/>
+            <line id = "w10"/>
+            <line id = "l01"/>
+            <line id = "l02"/>
+        </room>
+        <room id = "r2">
+            <line id = "w3"/>
+            <line id = "d0"/>
+            <line id = "w9"/>
+            <line id = "l1"/>
+        </room>
+        <room id = "r3">
+            <line id = "w4"/>
+            <line id = "w5"/>
+            <line id = "w6"/>
+            <line id = "w7"/>
+            <line id = "w8"/>
+            <line id = "l1"/>
+        </room>
+        <room id = "r4">
+            <line id = "w02"/>
+            <line id = "w03"/>
+            <line id = "w04"/>
+            <line id = "sd01"/>
+        </room>
+    </rooms>
+    <portals>
+        <portal line = "l01" from = "r0" to = "r1"/>
+        <portal line = "l02" from = "r0" to = "r1"/>
+        <portal line = "d0" from = "r1" to = "r2"/>
+        <portal line = "l1" from = "r2" to = "r3"/>
+        <portal line = "sd01" from = "r0" to = "r4"/>
+    </portals>
+    <hero  x = "256" y = "-3840" azimuth = "0"/>
+    <objects>
+        <object class = "tree" id = "tree00" x = "64" y = "192"/>
+
+        <object class = "green_barrel" id = "gb0" x = "256" y = "0"/>
+
+        <entity class = "zombie" id = "gb01" x = "64" y = "576"/>
+        <entity class = "zombie" id = "gb03" x = "192" y = "576"/>
+        <entity class = "zombie" id = "gb05" x = "320" y = "576"/>
+        <entity class = "zombie" id = "gb07" x = "448" y = "576"/>
+
+
+        <entity class = "zombie" id = "gb21" x = "64" y = "704"/>
+        <entity class = "zombie" id = "gb23" x = "192" y = "704"/>
+        <entity class = "zombie" id = "gb25" x = "320" y = "704"/>
+        <entity class = "zombie" id = "gb27" x = "448" y = "704"/>
+
+        <entity class = "zombie" id = "gb41" x = "64" y = "832"/>
+        <entity class = "zombie" id = "gb43" x = "192" y = "832"/>
+        <entity class = "zombie" id = "gb45" x = "320" y = "832"/>
+        <entity class = "zombie" id = "gb47" x = "448" y = "832"/>
+
+
+        <entity class = "zombie" id = "gb61" x = "64" y = "960"/>
+        <entity class = "zombie" id = "gb63" x = "192" y = "960"/>
+        <entity class = "zombie" id = "gb65" x = "320" y = "960"/>
+        <entity class = "zombie" id = "gb67" x = "448" y = "960"/>
+
+        <object class = "green_barrel" id = "gb0_01" x = "368" y = "-1024"/>
+        <object class = "green_barrel" id = "gb0_02" x = "368" y = "-1124"/>
+        <object class = "green_barrel" id = "gb0_03" x = "368" y = "-1224"/>
+        <object class = "green_barrel" id = "gb0_04" x = "368" y = "-1324"/>
+        <object class = "green_barrel" id = "gb0_05" x = "368" y = "-1424"/>
+
+    </objects>
+    <entities>
+        <entity class = "fireball_gun" id = "fbg01" x = "256" y = "-3740" azimuth = "12"/>
+    </entities>
+</root>

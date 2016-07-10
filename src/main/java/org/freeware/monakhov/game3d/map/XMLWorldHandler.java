@@ -102,8 +102,8 @@ class XMLWorldHandler extends DefaultHandler {
                 l.setPortal(world.getRoom(attr.getValue("to")));
                 break;
             case "hero" :
-                world.getHero().getPosition().moveTo(Integer.parseInt(attr.getValue("x")), Integer.parseInt(attr.getValue("y")));
-                world.getHero().setAzimuth(Math.PI * 2 * Integer.parseInt(attr.getValue("azimuth")) / 360);
+                world.getHero().getPosition().moveTo(stringToInt(attr.getValue("x")), stringToInt(attr.getValue("y")));
+                world.getHero().setAzimuth(Math.PI * 2 * stringToInt(attr.getValue("azimuth")) / 360);
                 world.getHero().updateRoom();
                 break;
             case "object":
@@ -113,6 +113,11 @@ class XMLWorldHandler extends DefaultHandler {
                 world.addObject(attr.getValue("id"), Entity.createFromXML(world, attr));
                 break;
         }
+    }
+
+    static int stringToInt(String s) {
+        if (s == null || s.isEmpty()) return 0;
+        return Integer.parseInt(s);
     }
 
     @Override

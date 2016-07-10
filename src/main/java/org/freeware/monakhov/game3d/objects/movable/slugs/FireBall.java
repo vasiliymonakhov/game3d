@@ -1,4 +1,4 @@
-package org.freeware.monakhov.game3d.objects.movable;
+package org.freeware.monakhov.game3d.objects.movable.slugs;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Sprite;
@@ -42,7 +42,7 @@ public class FireBall extends Slug {
 
     @Override
     public double getInteractRadius() {
-        return 24;
+        return 64;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FireBall extends Slug {
 
     @Override
     public double getDamage() {
-        return 500;
+        return 25;
     }
 
 }

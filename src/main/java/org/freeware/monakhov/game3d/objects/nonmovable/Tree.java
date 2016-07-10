@@ -48,4 +48,8 @@ public class Tree extends NonMovableObject {
         world.deleteObject(this);
     }
 
+    @Override
+    public void onCycleEnd() {
+    }
+
 }

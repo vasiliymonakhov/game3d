@@ -1,11 +1,11 @@
-package org.freeware.monakhov.game3d.objects.nonmovable;
+package org.freeware.monakhov.game3d.objects.movable.enemies;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.Entity;
-import org.freeware.monakhov.game3d.objects.movable.FireBall;
+import org.freeware.monakhov.game3d.objects.movable.slugs.FireBall;
 
 /**
  *
@@ -56,6 +56,10 @@ public class FireballGun extends Entity {
     @Override
     public void onGetDamage(double d) {
         world.deleteObject(this);
+    }
+
+    @Override
+    public void onCycleEnd() {
     }
 
 }

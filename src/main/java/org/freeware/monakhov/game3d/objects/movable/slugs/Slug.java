@@ -1,8 +1,9 @@
-package org.freeware.monakhov.game3d.objects.movable;
+package org.freeware.monakhov.game3d.objects.movable.slugs;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.movable.Entity;
 
 /**
  *
@@ -16,6 +17,8 @@ public abstract class Slug extends Entity {
 
     protected int state = ALIVE;
 
+    protected boolean stopDamage;
+
     public Slug(World world, Point position, WorldObject creator, double azimuth) {
         super(world, position, creator, azimuth);
     }
@@ -23,7 +26,9 @@ public abstract class Slug extends Entity {
     @Override
     public void onInteractWith(WorldObject wo) {
         if (state == BOOMING) {
-            wo.onGetDamage(getDamage());
+            if (!stopDamage) {
+                wo.onGetDamage(getDamage());
+            }
         }
     }
 
@@ -69,5 +74,10 @@ public abstract class Slug extends Entity {
     public abstract double getSpeed();
 
     public abstract double getDamage();
+
+    public void onCycleEnd() {
+        if (state == BOOMING)
+            stopDamage = true;
+    }
 
 }

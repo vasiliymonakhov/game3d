@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root floor = "floor02" sky = "sky02">
+    <points>
+        <point id = "p0" x="0" y = "0"/>
+        <point id = "p1" x="0" y = "10000"/>
+        <point id = "p2" x="0" y = "20000"/>
+        <point id = "p3" x="10000" y = "20000"/>
+        <point id = "p4" x="10000" y = "10000"/>
+        <point id = "p5" x="10000" y = "0"/>
+        <point id = "p6" x="20000" y = "0"/>
+        <point id = "p7" x="20000" y = "20000"/>
+    </points>
+    <lines>
+        <wall id = "w0" start = "p0" end = "p1" texture = "brick01"/>
+        <wall id = "w1" start = "p1" end = "p2" texture = "brick02"/>
+        <wall id = "w2" start = "p2" end = "p3" texture = "brick03"/>
+        <wall id = "w3" start = "p3" end = "p7" texture = "brick01"/>
+        <wall id = "w4" start = "p7" end = "p6" texture = "brick02"/>
+        <wall id = "w5" start = "p6" end = "p5" texture = "brick03"/>
+        <wall id = "w6" start = "p5" end = "p0" texture = "brick01"/>
+        <line id = "l0" start = "p1" end = "p4"/>
+        <line id = "l1" start = "p3" end = "p4"/>
+        <line id = "l2" start = "p4" end = "p5"/>
+    </lines>
+    <rooms>
+        <room id = "r0">
+            <line id = "w0"/>
+            <line id = "l0"/>
+            <line id = "l2"/>
+            <line id = "w6"/>
+        </room>
+        <room id = "r1">
+            <line id = "w1"/>
+            <line id = "w2"/>
+            <line id = "l1"/>
+            <line id = "l0"/>
+        </room>
+        <room id = "r2">
+            <line id = "w3"/>
+            <line id = "w4"/>
+            <line id = "w5"/>
+            <line id = "l2"/>
+            <line id = "l1"/>
+        </room>
+    </rooms>
+    <portals>
+        <portal from = "r0" line = "l0" to = "r1"/>
+        <portal from = "r0" line = "l2" to = "r2"/>
+        <portal from = "r1" line = "l1" to = "r2"/>
+    </portals>
+    <hero  x = "1024" y = "256"  azimuth = "45"/>
+    <objects>
+        <object class = "green_barrel" id = "green_barrel601" x = "456" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel602" x = "456" y = "156"/>
+        <object class = "green_barrel" id = "green_barrel603" x = "456" y = "356"/>
+        <object class = "green_barrel" id = "green_barrel604" x = "256" y = "156"/>
+        <object class = "green_barrel" id = "green_barrel605" x = "256" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel606" x = "256" y = "356"/>
+        <object class = "green_barrel" id = "green_barrel607" x = "356" y = "156"/>
+        <object class = "green_barrel" id = "green_barrel608" x = "356" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel609" x = "356" y = "356"/>
+        <object class = "green_barrel" id = "green_barrel610" x = "556" y = "156"/>
+        <object class = "green_barrel" id = "green_barrel611" x = "556" y = "256"/>
+        <object class = "green_barrel" id = "green_barrel612" x = "556" y = "356"/>
+
+
+        <object class = "green_barrel" id = "green_barrel61" x = "10800" y = "1800"/>
+        <object class = "green_barrel" id = "green_barrel62" x = "10700" y = "1800"/>
+
+    </objects>
+    <entities>
+        <entity class = "zombie" id = "z0" x = "2048" y = "1256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z1" x = "2248" y = "1256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z2" x = "2448" y = "1256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z3" x = "2648" y = "1256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z4" x = "2848" y = "1256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z5" x = "3048" y = "1256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z6" x = "3248" y = "1256"  azimuth = "225"/>
+
+        <entity class = "zombie" id = "z00" x = "10000" y = "10000"/>
+        <entity class = "zombie" id = "z01" x = "10000" y = "11000"/>
+        <entity class = "zombie" id = "z02" x = "10000" y = "12000"/>
+        <entity class = "zombie" id = "z03" x = "10000" y = "13000"/>
+        <entity class = "zombie" id = "z04" x = "10000" y = "14000"/>
+        <entity class = "zombie" id = "z05" x = "10000" y = "15000"/>
+        <entity class = "zombie" id = "z06" x = "10000" y = "16000"/>
+        <entity class = "zombie" id = "z07" x = "10000" y = "17000"/>
+        <entity class = "zombie" id = "z08" x = "10000" y = "18000"/>
+        <entity class = "zombie" id = "z09" x = "10000" y = "19000"/>
+
+        <entity class = "zombie" id = "z10" x = "11000" y = "10000"/>
+        <entity class = "zombie" id = "z11" x = "11000" y = "11000"/>
+        <entity class = "zombie" id = "z12" x = "11000" y = "12000"/>
+        <entity class = "zombie" id = "z13" x = "11000" y = "13000"/>
+        <entity class = "zombie" id = "z14" x = "11000" y = "14000"/>
+        <entity class = "zombie" id = "z15" x = "11000" y = "15000"/>
+        <entity class = "zombie" id = "z16" x = "11000" y = "16000"/>
+        <entity class = "zombie" id = "z17" x = "11000" y = "17000"/>
+        <entity class = "zombie" id = "z18" x = "11000" y = "18000"/>
+        <entity class = "zombie" id = "z19" x = "11000" y = "19000"/>
+
+
+        <entity class = "zombie" id = "z20" x = "12000" y = "10000"/>
+        <entity class = "zombie" id = "z21" x = "12000" y = "11000"/>
+        <entity class = "zombie" id = "z22" x = "12000" y = "12000"/>
+        <entity class = "zombie" id = "z23" x = "12000" y = "13000"/>
+        <entity class = "zombie" id = "z24" x = "12000" y = "14000"/>
+        <entity class = "zombie" id = "z25" x = "12000" y = "15000"/>
+        <entity class = "zombie" id = "z26" x = "12000" y = "16000"/>
+        <entity class = "zombie" id = "z27" x = "12000" y = "17000"/>
+        <entity class = "zombie" id = "z28" x = "12000" y = "18000"/>
+        <entity class = "zombie" id = "z29" x = "12000" y = "19000"/>
+
+        <entity class = "zombie" id = "z30" x = "13000" y = "10000"/>
+        <entity class = "zombie" id = "z31" x = "13000" y = "11000"/>
+        <entity class = "zombie" id = "z32" x = "13000" y = "12000"/>
+        <entity class = "zombie" id = "z33" x = "13000" y = "13000"/>
+        <entity class = "zombie" id = "z34" x = "13000" y = "14000"/>
+        <entity class = "zombie" id = "z35" x = "13000" y = "15000"/>
+        <entity class = "zombie" id = "z36" x = "13000" y = "16000"/>
+        <entity class = "zombie" id = "z37" x = "13000" y = "17000"/>
+        <entity class = "zombie" id = "z38" x = "13000" y = "18000"/>
+        <entity class = "zombie" id = "z39" x = "13000" y = "19000"/>
+
+        <entity class = "zombie" id = "z40" x = "14000" y = "10000"/>
+        <entity class = "zombie" id = "z41" x = "14000" y = "11000"/>
+        <entity class = "zombie" id = "z42" x = "14000" y = "12000"/>
+        <entity class = "zombie" id = "z43" x = "14000" y = "13000"/>
+        <entity class = "zombie" id = "z44" x = "14000" y = "14000"/>
+        <entity class = "zombie" id = "z45" x = "14000" y = "15000"/>
+        <entity class = "zombie" id = "z46" x = "14000" y = "16000"/>
+        <entity class = "zombie" id = "z47" x = "14000" y = "17000"/>
+        <entity class = "zombie" id = "z48" x = "14000" y = "18000"/>
+        <entity class = "zombie" id = "z49" x = "14000" y = "19000"/>
+
+        <entity class = "zombie" id = "z50" x = "15000" y = "10000"/>
+        <entity class = "zombie" id = "z51" x = "15000" y = "11000"/>
+        <entity class = "zombie" id = "z52" x = "15000" y = "12000"/>
+        <entity class = "zombie" id = "z53" x = "15000" y = "13000"/>
+        <entity class = "zombie" id = "z54" x = "15000" y = "14000"/>
+        <entity class = "zombie" id = "z55" x = "15000" y = "15000"/>
+        <entity class = "zombie" id = "z56" x = "15000" y = "16000"/>
+        <entity class = "zombie" id = "z57" x = "15000" y = "17000"/>
+        <entity class = "zombie" id = "z58" x = "15000" y = "18000"/>
+        <entity class = "zombie" id = "z59" x = "15000" y = "19000"/>
+
+
+    </entities>
+
+</root>

@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d.objects.movable;
 
+import org.freeware.monakhov.game3d.objects.movable.slugs.FireBall;
 import java.util.List;
 import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.map.MultiImage;

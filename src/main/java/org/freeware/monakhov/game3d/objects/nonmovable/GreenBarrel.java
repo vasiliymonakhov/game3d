@@ -78,4 +78,8 @@ public class GreenBarrel extends NonMovableObject {
         }
     }
 
+    @Override
+    public void onCycleEnd() {
+    }
+
 }

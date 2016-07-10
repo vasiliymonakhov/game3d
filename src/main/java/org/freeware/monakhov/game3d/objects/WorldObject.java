@@ -224,4 +224,9 @@ abstract public class WorldObject {
      */
     public abstract void onGetDamage(double d);
 
+    /**
+     * Что-то сделать по завершении одного такта
+     */
+    public abstract void onCycleEnd();
+
 }

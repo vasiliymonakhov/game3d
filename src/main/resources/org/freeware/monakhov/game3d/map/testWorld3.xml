@@ -134,4 +134,37 @@
         <object class = "green_barrel" id = "green_barrel62" x = "10700" y = "1800"/>
 
     </objects>
+    <entities>
+        <entity class = "zombie" id = "z0" x = "2048" y = "6256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z1" x = "2248" y = "6256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z2" x = "2448" y = "6256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z3" x = "2648" y = "6256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z4" x = "2848" y = "6256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z5" x = "3048" y = "6256"  azimuth = "225"/>
+        <entity class = "zombie" id = "z6" x = "3248" y = "6256"  azimuth = "225"/>
+
+        <entity class = "zombie" id = "zmb40" x = "16000" y = "10000"/>
+        <entity class = "zombie" id = "zmb41" x = "16000" y = "11000"/>
+        <entity class = "zombie" id = "zmb42" x = "16000" y = "12000"/>
+        <entity class = "zombie" id = "zmb43" x = "16000" y = "13000"/>
+        <entity class = "zombie" id = "zmb44" x = "16000" y = "14000"/>
+        <entity class = "zombie" id = "zmb45" x = "16000" y = "15000"/>
+        <entity class = "zombie" id = "zmb46" x = "16000" y = "16000"/>
+        <entity class = "zombie" id = "zmb47" x = "16000" y = "17000"/>
+        <entity class = "zombie" id = "zmb48" x = "16000" y = "18000"/>
+        <entity class = "zombie" id = "zmb49" x = "16000" y = "19000"/>
+
+        <entity class = "zombie" id = "zmb50" x = "15200" y = "10000"/>
+        <entity class = "zombie" id = "zmb51" x = "15200" y = "11000"/>
+        <entity class = "zombie" id = "zmb52" x = "15200" y = "12000"/>
+        <entity class = "zombie" id = "zmb53" x = "15200" y = "13000"/>
+        <entity class = "zombie" id = "zmb54" x = "15200" y = "14000"/>
+        <entity class = "zombie" id = "zmb55" x = "15200" y = "15000"/>
+        <entity class = "zombie" id = "zmb56" x = "15200" y = "16000"/>
+        <entity class = "zombie" id = "zmb57" x = "15200" y = "17000"/>
+        <entity class = "zombie" id = "zmb58" x = "15200" y = "18000"/>
+        <entity class = "zombie" id = "zmb59" x = "15200" y = "19000"/>
+
+    </entities>
+
 </root>

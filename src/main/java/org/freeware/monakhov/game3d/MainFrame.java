@@ -60,7 +60,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         final Thread t = new Thread(new Runnable() {
 
-            // int iter;
+            private long frameNanoTime;
+
+            int iter;
+
             @Override
             public void run() {
                 while (true) {
@@ -82,10 +85,11 @@ public class MainFrame extends javax.swing.JFrame {
                             ked = new KeyDispatcher(MainFrame.this, graphicsEngine, screen);
                             KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
                         }
-                        graphicsEngine.doCycle();
-                        // if (++iter % 10 == 0) System.gc();
+                        if (++iter % 16 == 0) {
+                            graphicsEngine.doCycle();
+                            SwingUtilities.invokeLater(repainter);
+                        }
                         frameNanoTime = System.nanoTime() - now;
-                        SwingUtilities.invokeLater(repainter);
                     } catch (Throwable ex) {
                         Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -146,7 +150,5 @@ public class MainFrame extends javax.swing.JFrame {
             screen.paint(g, 0, 0, rr.width, rr.height);
         }
     }
-
-    private long frameNanoTime;
 
 }

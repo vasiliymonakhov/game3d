@@ -36,10 +36,11 @@ public class Boom extends NonMovableObject {
         return 256;
     }
 
-    double damage;
+    protected boolean stopDamage;
+    protected  final double damage = 100;
 
     private void makeDamage(WorldObject wo) {
-        if (damage <= 10) return;
+        if (stopDamage) return;
         wo.onGetDamage(damage * 256 / SpecialMath.lineLength(position, wo.getPosition()));
     }
 
@@ -62,12 +63,15 @@ public class Boom extends NonMovableObject {
         if (aliveTime > 1000000000l) {
             world.deleteObject(this);
         }
-        if (counter++ >= 2) damage = 1000;
-        else damage /= 10;
     }
 
     @Override
     public void onGetDamage(double d) {
+    }
+
+    @Override
+    public void onCycleEnd() {
+        stopDamage = true;
     }
 
 }

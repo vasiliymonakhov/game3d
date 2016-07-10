@@ -1076,7 +1076,8 @@ public class GraphicsEngine {
             }
         }
         for (WorldObject wo : world.getAllObjects()) {
-            g.setColor(WALL_COLOR);
+            if (wo.isCrossable()) g.setColor(UNSEEN_WALL_COLOR);
+            else g.setColor(WALL_COLOR);
             ra = (int) (wo.getRadius() * mapScale);
             g.fillOval(dx - ra + (int) (wo.getPosition().getX() * mapScale), dy - ra - (int) (wo.getPosition().getY() * mapScale), 2 * ra, 2 * ra);
         }

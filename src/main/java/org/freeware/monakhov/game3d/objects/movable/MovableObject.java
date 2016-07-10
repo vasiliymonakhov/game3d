@@ -31,8 +31,18 @@ public abstract class MovableObject extends WorldObject {
      * @return true если столкнулись
      */
     public boolean touchAnyObject(Point newPosition) {
+        if (this != world.getHero() && creator != world.getHero()) {
+            // если не герой, тол проверить на столкновение с героем
+            double distance = SpecialMath.lineLength(world.getHero().getPosition(), newPosition);
+            double radiuses = world.getHero().getRadius() + getRadius();
+            if (distance < radiuses) {
+                // расстояние между объектами слишком мало, пройти нельзя
+                return true;
+            }
+        }
         // проверяем, не столкнулись ли мы с каким-то объектом
         for (WorldObject o : world.getAllObjects()) {
+            if (o == this) continue;
             if (o == creator) continue;
             if (!o.isCrossable()) {
                 // Через объект нельзя пройти

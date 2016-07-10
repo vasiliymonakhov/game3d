@@ -1,9 +1,10 @@
 package org.freeware.monakhov.game3d.objects.movable;
 
-import org.freeware.monakhov.game3d.objects.nonmovable.FireballGun;
+import org.freeware.monakhov.game3d.objects.movable.enemies.FireballGun;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.movable.enemies.Zombie;
 import org.xml.sax.Attributes;
 
 /**
@@ -27,9 +28,16 @@ public abstract class Entity extends MovableObject {
         String clasz = attr.getValue("class");
         switch (clasz) {
             case "fireball_gun" :
-                return new FireballGun(world, new Point(attr), Math.PI * 2 * Integer.parseInt(attr.getValue("azimuth")) / 360);
+                return new FireballGun(world, new Point(attr), Math.PI * 2 * stringToInt(attr.getValue("azimuth")) / 360);
+            case "zombie" :
+                return new Zombie(world, new Point(attr), null, Math.PI * 2 * stringToInt(attr.getValue("azimuth")) / 360);
         }
         return null;
+    }
+
+    static int stringToInt(String s) {
+        if (s == null || s.isEmpty()) return 0;
+        return Integer.parseInt(s);
     }
 
 }

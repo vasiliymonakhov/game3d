@@ -48,9 +48,20 @@ public class ViewPoint extends MovableObject {
     public void onCollapseWith(WorldObject wo) {
     }
 
+    double health = 100;
+
     @Override
     public void onGetDamage(double d) {
-        System.out.println("Damaged on " + d);
+        System.out.print("Damaged on " + d);
+        health -= d;
+        System.out.println(" health " + health);
+        if (health <= 0 ) {
+            System.out.println("You are dead.");
+        }
+    }
+
+    @Override
+    public void onCycleEnd() {
     }
 
 }

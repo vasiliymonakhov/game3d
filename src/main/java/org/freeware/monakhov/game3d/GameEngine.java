@@ -65,7 +65,7 @@ public class GameEngine {
 
     ArrayList<WorldObject> wobjects = new ArrayList<>();
 
-    private void objectsInteractWithObjectsAndWalls() {
+    private void objectsInteractWithObjects() {
         wobjects.clear();
         wobjects.addAll(world.getAllObjects());
         if (wobjects.size() < 2) {
@@ -103,7 +103,11 @@ public class GameEngine {
         }
     }
 
-    private final int PARTS = 100;
+    private void worldCycleEnd() {
+        for (WorldObject wo : world.getAllObjects()) {
+            wo.onCycleEnd();
+        }
+    }
 
     /**
      * Выполнение одного такта несколькими частями
@@ -111,12 +115,6 @@ public class GameEngine {
      * @param nanoTime текущее системное время
      */
     public void doCycle(long nanoTime, KeyDispatcher ked) {
-        for (int i = 0; i < PARTS; i++) {
-            doMicroCycle(nanoTime / PARTS, ked);
-        }
-    }
-
-    private void doMicroCycle(long nanoTime, KeyDispatcher ked) {
         world.getHero().analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), nanoTime);
         if (ked.isInteract()) {
             heroInteractWithWorld();
@@ -131,9 +129,10 @@ public class GameEngine {
             l.doSomething(nanoTime);
         }
         worldInteractWithHero();
-        objectsInteractWithObjectsAndWalls();
+        objectsInteractWithObjects();
         worldCollapsesWithHero();
         objectsCollapsWithObjects();
+        worldCycleEnd();
         world.updateObjects();
     }
 

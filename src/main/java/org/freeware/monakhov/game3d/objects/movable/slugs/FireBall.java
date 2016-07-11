@@ -52,7 +52,7 @@ public class FireBall extends Slug {
 
     @Override
     public double getDamage() {
-        return 25;
+        return 50;
     }
 
 }

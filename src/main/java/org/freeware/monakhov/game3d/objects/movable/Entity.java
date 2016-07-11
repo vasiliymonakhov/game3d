@@ -1,7 +1,10 @@
 package org.freeware.monakhov.game3d.objects.movable;
 
+import org.freeware.monakhov.game3d.SpecialMath;
+import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.objects.movable.enemies.FireballGun;
 import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.enemies.Zombie;
@@ -39,5 +42,33 @@ public abstract class Entity extends MovableObject {
         if (s == null || s.isEmpty()) return 0;
         return Integer.parseInt(s);
     }
+
+    /**
+     * Проверяет, видит ли враг героя
+     * @return true если видит
+     */
+    protected boolean isCanSeeHero() {
+        if (world.getHero().getRoom() == this.getRoom()) {
+            // они в одной комнате
+            return true;
+        }
+        Point p = new Point();
+        // проверим все линии мира
+        for (Line l : world.getAllLines()) {
+            // проверим, не пересекает ли прямая от героя до врага какую-либо линию карты
+            if (SpecialMath.lineIntersection(world.getHero().getPosition(), position, l.getStart(), l.getEnd(), p)) {
+                // пересекает, определить отрезок
+                if (p.between(l.getStart(), l.getEnd()) && p.between(world.getHero().getPosition(), position)) {
+                    // точка пересечения лежит на отрезках
+                    if (l.pointIsVisible(p)) {
+                        // линия закрывает героя
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 
 }

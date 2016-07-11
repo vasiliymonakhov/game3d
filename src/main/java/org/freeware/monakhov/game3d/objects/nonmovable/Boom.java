@@ -33,7 +33,7 @@ public class Boom extends NonMovableObject {
 
     @Override
     public double getInteractRadius() {
-        return 256;
+        return 512;
     }
 
     protected boolean stopDamage;

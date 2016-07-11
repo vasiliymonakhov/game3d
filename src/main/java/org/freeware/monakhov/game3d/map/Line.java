@@ -158,6 +158,16 @@ public class Line {
     }
 
     /**
+     * Определяет, видна ли точка этой линии
+     *
+     * @param p точка
+     * @return true если должна быть видна
+     */
+    public boolean pointIsVisible(Point p) {
+        return false;
+    }
+
+    /**
      * Что нужно сделать при взаимодействии с объектом мира
      *
      * @param wo

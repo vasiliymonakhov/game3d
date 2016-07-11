@@ -35,14 +35,6 @@ public abstract class VisibleLine extends Line {
     public abstract Texture getTexture();
 
     /**
-     * Определяет, видна ли точка этой линии
-     *
-     * @param p точка
-     * @return true если должна быть видна
-     */
-    abstract public boolean pointIsVisible(Point p);
-
-    /**
      * Трассируем линию лучом
      * @param mapLines массив линий, попадающих в столбец на экране
      * @param index индекс луча

@@ -1,11 +1,9 @@
 package org.freeware.monakhov.game3d.objects.movable.enemies;
 
-import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
-import org.freeware.monakhov.game3d.objects.movable.slugs.FireBall;
 
 /**
  *
@@ -60,18 +58,35 @@ public class Zombie extends Enemy {
 
     long timeToDamage;
 
+    boolean active;
+
+    long activeTime, inactiveTime;
+
     @Override
     public void doSomething(long frameNanoTime) {
-        timeToDamage -= frameNanoTime;
-        if (timeToDamage < 0) {
-            damage = 5;
-            timeToDamage = 1000000000l;
-        }
         super.doSomething(frameNanoTime);
         switch (state) {
             case ALIVE:
-                move(frameNanoTime);
-                fire(frameNanoTime);
+                if (active) {
+                    timeToDamage -= frameNanoTime;
+                    if (timeToDamage < 0) {
+                        damage = 5;
+                        timeToDamage = 1000000000l;
+                    }
+                    move(frameNanoTime);
+//                    fire(frameNanoTime);
+                    activeTime += frameNanoTime;
+                    if (activeTime > 15000000000l) {
+                        activeTime = 0;
+                        active = isCanSeeHero();
+                    }
+                } else {
+                    inactiveTime += frameNanoTime;
+                    if (inactiveTime > 1000000000l) {
+                        inactiveTime = 0;
+                       active = isCanSeeHero();
+                    }
+                }
                 break;
         }
     }
@@ -119,16 +134,16 @@ public class Zombie extends Enemy {
         strafeSpeed = PANIC_STRAFE_SPEED;
     }
 
-    private long fireTime = Math.round(30l * Math.random() + 10000000000l);
-
-    protected void fire(long frameNanoTime) {
-        if (SpecialMath.lineLength(position, world.getHero().getPosition()) > 5000) {
-            fireTime -= frameNanoTime;
-            if (fireTime < 0) {
-                world.addNewObject(new FireBall(world, new Point(position.getX(), position.getY()), this, azimuth));
-                fireTime = Math.round(50000000000l * Math.random() + 3000000000l);
-            }
-        }
-    }
+//    private long fireTime = Math.round(30l * Math.random() + 10000000000l);
+//
+//    protected void fire(long frameNanoTime) {
+//        if (SpecialMath.lineLength(position, world.getHero().getPosition()) > 5000) {
+//            fireTime -= frameNanoTime;
+//            if (fireTime < 0) {
+//                world.addNewObject(new FireBall(world, new Point(position.getX(), position.getY()), this, azimuth));
+//                fireTime = Math.round(50000000000l * Math.random() + 3000000000l);
+//            }
+//        }
+//    }
 
 }

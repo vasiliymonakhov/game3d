@@ -979,7 +979,7 @@ public class GraphicsEngine {
         g.setColor(Color.RED);
         int sx = screen.getWidth() / 2;
         int sy = screen.getHeight() / 2;
-        int r = 10;
+        int r = 15;
         g.fillRect(sx, sy, 1, 1);
         g.drawOval(sx - r, sy - r, 2 * r, 2 * r);
         g.fillRect(sx, sy - 2 * r, 1, r);

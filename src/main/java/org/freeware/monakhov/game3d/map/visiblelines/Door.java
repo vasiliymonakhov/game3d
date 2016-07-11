@@ -102,7 +102,7 @@ public class Door extends AbstractDoor {
         }
         // проверить для остальных объектов мира
         for (WorldObject wo : world.getAllObjects()) {
-            if (SpecialMath.lineAndCircleIntersects(start, end, wo.getPosition(), wo.getRadius())) {
+            if (!wo.isCrossable() && SpecialMath.lineAndCircleIntersects(start, end, wo.getPosition(), wo.getRadius())) {
                 return true;
             }
         }

@@ -3,6 +3,7 @@ package org.freeware.monakhov.game3d;
 import org.freeware.monakhov.game3d.objects.movable.Hero;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
@@ -35,7 +36,7 @@ public class MainFrame extends javax.swing.JFrame {
     private final Semaphore semaphore = new Semaphore(1);
 
 
-    public MainFrame() throws ParserConfigurationException, SAXException, IOException {
+    public MainFrame() throws ParserConfigurationException, SAXException, IOException, FontFormatException {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
         setUndecorated(true);
@@ -104,7 +105,7 @@ public class MainFrame extends javax.swing.JFrame {
                             KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ked);
                         }
                         frameNanoTime = System.nanoTime() - now;
-                    } catch (InterruptedException ex) {
+                    } catch (InterruptedException | FontFormatException | IOException ex) {
                         Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -122,7 +123,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     int percent = 100;
 
-    private void makeScreenAndEngine() {
+    private void makeScreenAndEngine() throws FontFormatException, IOException {
         Rectangle rect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         screen = new ScreenBuffer(rect.width * percent / 100, rect.height * percent / 100);
         graphicsEngine = new GraphicsEngine(world, screen, semaphore);

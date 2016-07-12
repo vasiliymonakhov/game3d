@@ -129,9 +129,10 @@
         <object class = "green_barrel" id = "green_barrel611" x = "556" y = "256"/>
         <object class = "green_barrel" id = "green_barrel612" x = "556" y = "356"/>
 
-
-        <object class = "green_barrel" id = "green_barrel61" x = "10800" y = "1800"/>
-        <object class = "green_barrel" id = "green_barrel62" x = "10700" y = "1800"/>
+        <object class = "fireball_ammo" id = "fba1" x = "10800" y = "1800"/>
+        <object class = "fireball_ammo" id = "fba2" x = "10700" y = "1800"/>
+        <object class = "fireball_ammo" id = "fba3" x = "10850" y = "1800"/>
+        <object class = "fireball_ammo" id = "fba4" x = "10750" y = "1800"/>
 
     </objects>
     <entities>

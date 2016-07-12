@@ -21,11 +21,11 @@ public class HeroTest {
     final static double EPSILON = 0.0001d;   
     
     /**
-     * Test of getAsimuth method, of class ViewPoint.
+     * Test of getAsimuth method, of class Hero.
      */
     @Test
     public void testSetAndGetAsimuth() {
-        ViewPoint h = new ViewPoint(new World(), new Point(0, 0));
+        Hero h = new Hero(new World(), new Point(0, 0));
         assertEquals(0, h.getAzimuth(), EPSILON);
         h.setAzimuth(1);
         assertEquals(1, h.getAzimuth(), EPSILON);
@@ -38,11 +38,11 @@ public class HeroTest {
     }
 
     /**
-     * Test of getRoom method, of class ViewPoint.
+     * Test of getRoom method, of class Hero.
      */
     @Test
     public void testSetAndGetRoom1() {
-        ViewPoint h = new ViewPoint(new World(), new Point(0, 0));
+        Hero h = new Hero(new World(), new Point(0, 0));
         assertNull(h.getRoom());
         Room r1 = new Room();
         h.setRoom(r1);
@@ -55,16 +55,16 @@ public class HeroTest {
     }
     
     /**
-     * Test of getRoom method, of class ViewPoint.
+     * Test of getRoom method, of class Hero.
      */
     @Test (expected = Exception.class)
     public void testSetAndGetRoom2() {
-        ViewPoint h = new ViewPoint(new World(), new Point(0, 0));
+        Hero h = new Hero(new World(), new Point(0, 0));
         h.setRoom(null);
     }    
 
     /**
-     * Test of moveByWithCheck method, of class ViewPoint.
+     * Test of moveByWithCheck method, of class Hero.
      */
     @Test
     public void testMoveBy() {
@@ -109,7 +109,7 @@ public class HeroTest {
         w.addRoom("r1", r1);
         
         Point p = new Point(500, 500);
-        ViewPoint h = new ViewPoint(w, p);
+        Hero h = new Hero(w, p);
         h.setRoom(r0);
         
         h.moveByWithCheck(0, 1000); // strife right
@@ -136,12 +136,12 @@ public class HeroTest {
     }
 
     /**
-     * Test of getPosition method, of class ViewPoint.
+     * Test of getPosition method, of class Hero.
      */
     @Test
     public void testGetPosition() {
         Point p = new Point(0, 0);
-        ViewPoint h = new ViewPoint(new World(), p);
+        Hero h = new Hero(new World(), p);
         assertNotNull(h.getPosition());
         assertTrue(p == h.getPosition());
         assertEquals(0, h.getPosition().getX(), EPSILON);
@@ -150,12 +150,12 @@ public class HeroTest {
 
     @Test
     public void testHero1() {
-        assertNotNull(new ViewPoint(new World(), new Point(0, 0)));
+        assertNotNull(new Hero(new World(), new Point(0, 0)));
     }
     
     @Test (expected = Exception.class)
     public void testHero2() {
-        assertNotNull(new ViewPoint(new World(), null));
+        assertNotNull(new Hero(new World(), null));
     }    
     
 }

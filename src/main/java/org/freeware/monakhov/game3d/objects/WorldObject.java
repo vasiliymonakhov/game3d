@@ -1,11 +1,12 @@
 package org.freeware.monakhov.game3d.objects;
 
-import org.freeware.monakhov.game3d.objects.movable.ViewPoint;
+import org.freeware.monakhov.game3d.objects.movable.Hero;
 import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.nonmovable.FireBallAmmo;
 import org.freeware.monakhov.game3d.objects.nonmovable.GreenBarrel;
 import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
 import org.xml.sax.Attributes;
@@ -78,7 +79,7 @@ abstract public class WorldObject {
      * Поворачивает крайние точки объекта к главному герою
      * @param hero главный герой
      */
-    public void turnSpriteToViewPoint(ViewPoint hero) {
+    public void turnSpriteToViewPoint(Hero hero) {
         if (getSprite() != null) {
             int sw2 = getSprite().getWidth() / 2;
             double cos = sw2 * Math.cos(-hero.getAzimuth());
@@ -196,6 +197,8 @@ abstract public class WorldObject {
                 return new GreenBarrel(world, new Point(attr));
             case "tree" :
                 return new Tree(world, new Point(attr));
+            case "fireball_ammo":
+                return new FireBallAmmo(world, new Point(attr));
         }
         return null;
     }

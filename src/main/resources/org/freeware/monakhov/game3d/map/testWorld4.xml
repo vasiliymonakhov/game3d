@@ -135,6 +135,6 @@
 
     </objects>
     <entities>
-        <entity class = "fireball_gun" id = "fbg01" x = "256" y = "-3740" azimuth = "12"/>
+        <entity class = "fireball_gun" id = "fbg01" x = "16" y = "-2740" azimuth = "45"/>
     </entities>
 </root>

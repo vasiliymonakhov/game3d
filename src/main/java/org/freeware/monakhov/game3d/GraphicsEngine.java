@@ -4,12 +4,14 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +40,9 @@ import org.freeware.monakhov.game3d.map.World;
  * @author Vasily Monakhov
  */
 public class GraphicsEngine {
+
+    private final Font font;
+    private final Font mainFont;
 
     /**
      * Текущий мир
@@ -134,10 +139,13 @@ public class GraphicsEngine {
      * @param world мир
      * @param screen экран
      */
-    GraphicsEngine(World world, ScreenBuffer screen, Semaphore semaphore) {
+    GraphicsEngine(World world, ScreenBuffer screen, Semaphore semaphore) throws FontFormatException, IOException {
         this.world = world;
         this.screen = screen;
         this.semaphore = semaphore;
+        font = Font.createFont(Font.TRUETYPE_FONT, GraphicsEngine.class.getResourceAsStream("/BicubikCentralEurope.ttf"));
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+        mainFont = font.deriveFont(0, 25);
         mapLines = new VisibleLine[screen.getWidth()];
         wallHeight = new int[screen.getWidth()];
         distance = new double[screen.getWidth()];
@@ -933,12 +941,12 @@ public class GraphicsEngine {
      * @throws InterruptedException
      */
     private void renderHeroLook(Graphics2D g) throws InterruptedException {
-        List<MultiImage.ImageToDraw> images = world.getHero().getImagesToDraw(screen);
-        CountDownLatch doneSignal = new CountDownLatch(images.size());
-        for (final MultiImage.ImageToDraw mi2d : images) {
-            EXECUTOR.execute(new MultiImageDrawer(g, doneSignal, mi2d));
-        }
-        doneSignal.await();
+//        List<MultiImage.ImageToDraw> images = world.getHero().getImagesToDraw(screen);
+//        CountDownLatch doneSignal = new CountDownLatch(images.size());
+//        for (final MultiImage.ImageToDraw mi2d : images) {
+//            EXECUTOR.execute(new MultiImageDrawer(g, doneSignal, mi2d));
+//        }
+//        doneSignal.await();
     }
 
     /**
@@ -963,16 +971,38 @@ public class GraphicsEngine {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         renderCeilingAndFloor(g);
         renderWalls(g);
         renderObjects(g);
 //        renderHeroLook(g);
         renderAim(g);
+        renderHero(g);
         if (mapEnabled) {
             drawMap(g);
         }
         drawFPS(g);
         g.dispose();
+    }
+
+    private void renderHero(Graphics2D g) {
+        int pl = world.getHero().getPainLevel();
+        if (pl > 0) {
+            g.setColor(new Color(255, 0, 0, pl));
+            g.fillRect(0, 0, screen.getWidth(), screen.getHeight());
+        }
+        g.setFont(mainFont);
+
+        if (world.getHero().getHealth() == 0) {
+            GraphicsUtils.drawCenteredStringWithOutline(g, "SORRY, YOU ARE DEAD!", screen.getWidth() / 2, screen.getHeight() / 2,
+                    Color.GREEN, 5, Color.BLACK);
+        }
+        int sx = screen.getWidth() / 5;
+        int x = sx;
+        int y = screen.getHeight() - 30;
+        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getHealthString(), x, y, Color.GREEN, 5, Color.BLACK);
+        x = 4 * sx;
+        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getWeaponString(), x, y, Color.GREEN, 5, Color.BLACK);
     }
 
     private void renderAim(Graphics2D g) {
@@ -991,7 +1021,6 @@ public class GraphicsEngine {
 
     private double counter;
     long time = System.nanoTime();
-    private final Font f = new Font(Font.SANS_SERIF, 0, 25);
     private String fps = "";
 
     private void drawFPS(Graphics2D g) {
@@ -1003,7 +1032,7 @@ public class GraphicsEngine {
             counter = 0;
         }
         g.setColor(Color.GREEN);
-        g.setFont(f);
+        g.setFont(mainFont);
         g.drawString(fps, 25, 25);
     }
 

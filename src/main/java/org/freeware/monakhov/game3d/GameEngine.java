@@ -53,6 +53,7 @@ public class GameEngine {
         for (WorldObject wo : world.getAllObjects()) {
             if (SpecialMath.lineLength(wo.getPosition(), world.getHero().getPosition()) < world.getHero().getInteractRadius() + wo.getInteractRadius()) {
                 wo.onInteractWith(world.getHero());
+                world.getHero().onInteractWith(wo);
             }
         }
     }
@@ -63,6 +64,7 @@ public class GameEngine {
             if (wo.isCrossable()) continue;
             if (SpecialMath.lineLength(wo.getPosition(), world.getHero().getPosition()) < world.getHero().getRadius() + wo.getRadius()) {
                 wo.onCollapseWith(world.getHero());
+                world.getHero().onCollapseWith(wo);
             }
         }
     }
@@ -122,12 +124,16 @@ public class GameEngine {
      */
     public void doCycle(long nanoTime, KeyDispatcher ked) throws InterruptedException {
         semaphore.acquire();
-        world.getHero().analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), nanoTime);
-        if (ked.isInteract()) {
-            heroInteractWithWorld();
-            ked.setInteract(false);
+        if (world.getHero().getHealth() > 0) {
+            world.getHero().analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), nanoTime);
+            if (ked.isInteract()) {
+                heroInteractWithWorld();
+                ked.setInteract(false);
+            }
+            world.getHero().fire(ked.isFirePressed());
+        } else {
+            world.getHero().analyseKeys(ked.isLeft(), ked.isRight(), false, false, false, false, nanoTime);
         }
-        world.getHero().fire(ked.isFirePressed());
         world.getHero().doSomething(nanoTime);
         for (WorldObject wo : world.getAllObjects()) {
             wo.doSomething(nanoTime);

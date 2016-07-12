@@ -1,6 +1,7 @@
 package org.freeware.monakhov.game3d;
 
 import java.awt.EventQueue;
+import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -29,13 +30,13 @@ public class Game3D {
                     System.setProperty("sun.java2d.ddforcevram", "True");
                     System.setProperty("sun.java2d.transaccel", "True");
                     MainFrame mf = new MainFrame();
-                    GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(mf);                    
+                    GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(mf);
                     mf.setVisible(true);
-                } catch (ParserConfigurationException | SAXException | IOException ex) {
+                } catch (ParserConfigurationException | SAXException | IOException | FontFormatException ex) {
                     Logger.getLogger(Game3D.class.getName()).log(Level.SEVERE, "Не удалось запустить приложение", ex);
                 }
             }
         });
     }
-    
+
 }

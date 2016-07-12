@@ -1,25 +1,43 @@
 package org.freeware.monakhov.game3d.objects.movable;
 
-import org.freeware.monakhov.game3d.objects.movable.slugs.FireBall;
-import java.util.List;
-import org.freeware.monakhov.game3d.ScreenBuffer;
-import org.freeware.monakhov.game3d.map.MultiImage;
 import org.freeware.monakhov.game3d.map.Point;
+import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.weapons.FireBallGun;
+import org.freeware.monakhov.game3d.weapons.Weapon;
 
 /**
- * Главный герой
+ * Наш герой
+ *
  * @author Vasily Monakhov
  */
-public class Hero extends ViewPoint {
+public class Hero extends MovableObject {
 
     /**
-     * Создаёт героя
+     * Создаёт объект
      * @param world мир
-     * @param position позиция
+     * @param position мозиция
      */
     public Hero(World world, Point position) {
-        super(world, position);
+        super(world, position, null);
+        weapon = new FireBallGun(world);
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
+    }
+
+    @Override
+    public double getRadius() {
+        return 48;
+    }
+
+    @Override
+    public double getInteractRadius() {
+        return 96;
     }
 
     @Override
@@ -229,32 +247,87 @@ public class Hero extends ViewPoint {
         }
     }
 
-    /**
-     * изображение оружия в руках
-     */
-    MultiImage weapon = MultiImage.get("pistol");
+//    /**
+//     * изображение оружия в руках
+//     */
+//    MultiImage weapon = MultiImage.get("pistol");
+//
+//
+//    public List<MultiImage.ImageToDraw> getImagesToDraw(ScreenBuffer screen) {
+//        return weapon.getImagesToDraw(screen);
+//    }
 
+    private final Weapon weapon;
 
-    public List<MultiImage.ImageToDraw> getImagesToDraw(ScreenBuffer screen) {
-        return weapon.getImagesToDraw(screen);
-    }
-
-     volatile long weaponTime = 100000000;
+    private long painTime, painTimeCounter;
+    private int painLevel;
 
     @Override
     public void doSomething(long frameNanoTime) {
-        weaponTime -= frameNanoTime;
+        weapon.doSomething(frameNanoTime);
+        if (painLevel > 0) {
+            painTimeCounter += frameNanoTime;
+            painLevel = (int)Math.round(painLevel * (painTime - painTimeCounter) / painTime);
+        }
     }
 
     public void fire(boolean on) {
         if (on) {
-            if (weaponTime <= 0) {
-                double azdelta = -0.01 + 0.02 * Math.random();
-                world.addNewObject(new FireBall(world, new Point(position.getX(), position.getY()), this, azimuth + azdelta));
-                weaponTime = 100000000;
-            }
+            weapon.fire();
         }
-
     }
+
+    private double health = 100;
+
+    @Override
+    public void onGetDamage(double d) {
+        int newPainLevel = (int) d * 10;
+        if (newPainLevel > 255) newPainLevel = 255;
+        if (newPainLevel > painLevel) {
+            painLevel = newPainLevel;
+            painTime = Math.round(d * 100000000l);
+            painTimeCounter = 0;
+        }
+        health -= d;
+    }
+
+    @Override
+    public void onInteractWith(WorldObject wo) {
+        if (wo instanceof Ammo) {
+            weapon.pickUpAmmo((Ammo) wo);
+        }
+    }
+
+    @Override
+    public void onCollapseWith(WorldObject wo) {
+    }
+
+    @Override
+    public void onCycleEnd() {
+    }
+
+    /**
+     * @return the health
+     */
+    public double getHealth() {
+        return health > 0 ? health : 0;
+    }
+
+    public String getHealthString() {
+        return String.format("HEALTH : %d%%", (int)getHealth());
+    }
+
+    public String getWeaponString() {
+        return weapon.toString();
+    }
+
+    /**
+     * @return the painLevel
+     */
+    public int getPainLevel() {
+        return painLevel;
+    }
+
+
 
 }

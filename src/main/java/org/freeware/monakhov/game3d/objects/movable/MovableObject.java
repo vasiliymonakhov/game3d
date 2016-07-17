@@ -133,4 +133,6 @@ public abstract class MovableObject extends WorldObject {
         return newPosition;
     }
 
+    public abstract double getAimError();
+
 }

@@ -184,7 +184,4 @@
         <object class = "green_barrel" id = "gb0_05" x = "368" y = "-1424"/>
 
     </objects>
-    <entities>
-        <entity class = "fireball_gun" id = "fbg01" x = "256" y = "-3740" azimuth = "12"/>
-    </entities>
 </root>

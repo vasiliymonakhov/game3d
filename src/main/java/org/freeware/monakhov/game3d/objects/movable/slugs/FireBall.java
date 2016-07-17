@@ -52,7 +52,12 @@ public class FireBall extends Slug {
 
     @Override
     public double getDamage() {
-        return 50;
+        return 51;
+    }
+
+    @Override
+    public double getAimError() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -75,6 +75,7 @@ public abstract class Slug extends Entity {
 
     public abstract double getDamage();
 
+    @Override
     public void onCycleEnd() {
         if (state == BOOMING)
             stopDamage = true;

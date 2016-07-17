@@ -2,8 +2,7 @@ package org.freeware.monakhov.game3d.weapons;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
-import org.freeware.monakhov.game3d.objects.WorldObject;
-import org.freeware.monakhov.game3d.objects.movable.Hero;
+import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.objects.movable.slugs.FireBall;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
 import org.freeware.monakhov.game3d.objects.nonmovable.FireBallAmmo;
@@ -14,16 +13,14 @@ import org.freeware.monakhov.game3d.objects.nonmovable.FireBallAmmo;
  */
 public class FireBallGun extends Weapon {
 
-    public FireBallGun(World world) {
-        super(world);
+    public FireBallGun(World world, MovableObject owner) {
+        super(world, owner);
         ammo = 100;
     }
 
     @Override
     public void makeFire(World world) {
-        Hero h = world.getHero();
-        double azdelta = -0.01 + 0.02 * Math.random();
-        world.addNewObject(new FireBall(world, new Point(h.getPosition().getX(), h.getPosition().getY()), h, world.getHero().getAzimuth() + azdelta));
+        world.addNewObject(new FireBall(world, new Point(owner.getPosition().getX(), owner.getPosition().getY()), owner, aim()));
     }
 
     @Override
@@ -42,8 +39,13 @@ public class FireBallGun extends Weapon {
     }
 
     @Override
-    public String toString() {
-        return String.format("FIREBALLGUN AMMO : %d", ammo);
+    public double getAimError() {
+        return -0.01 + 0.02 * Math.random();
+    }
+
+    @Override
+    public String getName() {
+        return "FIREBALL GUN";
     }
 
 }

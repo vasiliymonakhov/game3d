@@ -15,4 +15,9 @@ public abstract class Ammo extends CrossableObject {
 
     public abstract int getAmmo();
 
+    @Override
+    public void onGetDamage(double d) {
+        world.deleteObject(this);
+    }
+
 }

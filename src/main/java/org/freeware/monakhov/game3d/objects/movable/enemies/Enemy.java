@@ -4,6 +4,7 @@ import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.Entity;
+import org.freeware.monakhov.game3d.weapons.Weapon;
 
 /**
  * Абстрактный враг
@@ -20,7 +21,12 @@ public abstract class Enemy extends Entity {
 
     public Enemy(World world, Point position, WorldObject creator, double azimuth) {
         super(world, position, creator, azimuth);
+        weapon = createWeapon(world, this);
     }
+
+    abstract Weapon createWeapon(World world, Enemy owner);
+
+    protected final Weapon weapon;
 
     protected double damageLimit = 100;
 
@@ -58,6 +64,7 @@ public abstract class Enemy extends Entity {
                 }
                 break;
             case ALIVE:
+                weapon.doSomething(frameNanoTime);
                 break;
         }
     }

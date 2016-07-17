@@ -33,11 +33,11 @@ public class Boom extends NonMovableObject {
 
     @Override
     public double getInteractRadius() {
-        return 512;
+        return 2048;
     }
 
     protected boolean stopDamage;
-    protected  final double damage = 100;
+    protected  final double damage = 64;
 
     private void makeDamage(WorldObject wo) {
         if (stopDamage) return;

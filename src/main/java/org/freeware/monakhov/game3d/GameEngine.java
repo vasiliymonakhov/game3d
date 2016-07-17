@@ -5,6 +5,7 @@ import java.util.concurrent.Semaphore;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.movable.Hero;
 
 /**
  * Логика игрового цикла
@@ -124,17 +125,19 @@ public class GameEngine {
      */
     public void doCycle(long nanoTime, KeyDispatcher ked) throws InterruptedException {
         semaphore.acquire();
-        if (world.getHero().getHealth() > 0) {
-            world.getHero().analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), nanoTime);
+        Hero h = world.getHero();
+        if (h.getHealth() > 0) {
+            h.analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), nanoTime);
             if (ked.isInteract()) {
                 heroInteractWithWorld();
                 ked.setInteract(false);
             }
-            world.getHero().fire(ked.isFirePressed());
+            h.changeWeapon(ked.isWeapon0(), ked.isWeapon1(), ked.isWeapon2(), ked.isWeapon3(), ked.isWeapon4());
+            h.fire(ked.isFirePressed());
         } else {
-            world.getHero().analyseKeys(ked.isLeft(), ked.isRight(), false, false, false, false, nanoTime);
+            h.analyseKeys(ked.isLeft(), ked.isRight(), false, false, false, false, nanoTime);
         }
-        world.getHero().doSomething(nanoTime);
+        h.doSomething(nanoTime);
         for (WorldObject wo : world.getAllObjects()) {
             wo.doSomething(nanoTime);
         }

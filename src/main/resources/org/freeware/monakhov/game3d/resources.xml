@@ -24,6 +24,7 @@
         <sprite id = "fireball4" width = "64" height = "64" y_offset="160" file = "fire_ball_4.png"/>
         <sprite id = "fireball_ammo" width = "32" height = "32" y_offset="224" file = "fireball_ammo.png"/>
         <sprite id = "boom" width = "256" height = "256" y_offset="0" file = "boom.png"/>
+        <sprite id = "medkit" width = "32" height = "32" y_offset="224" file = "medkit.png"/>
         <sprite id = "zombie_0" width = "128" height = "192" y_offset="64" file = "zombie_0.png"/>
         <sprite id = "zombie_1" width = "128" height = "192" y_offset="64" file = "zombie_1.png"/>
         <sprite id = "zombie_2" width = "128" height = "16" y_offset="240" file = "zombie_2.png"/>

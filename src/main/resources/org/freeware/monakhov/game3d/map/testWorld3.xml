@@ -48,7 +48,7 @@
         <portal from = "r0" line = "l2" to = "r2"/>
         <portal from = "r1" line = "l1" to = "r2"/>
     </portals>
-    <hero  x = "1024" y = "256"  azimuth = "45"/>
+    <hero  x = "1024" y = "256"  azimuth = "0"/>
     <objects>
         <object class = "green_barrel" id = "tree00" x = "10000" y = "10000"/>
         <object class = "green_barrel" id = "tree01" x = "10000" y = "11000"/>

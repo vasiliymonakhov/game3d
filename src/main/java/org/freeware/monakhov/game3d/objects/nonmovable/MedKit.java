@@ -4,25 +4,26 @@ import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.movable.Hero;
 
 /**
  *
  * @author Vasily Monakhov
  */
-public class FireBallAmmo extends Ammo {
+public class MedKit extends CrossableObject {
 
-    public FireBallAmmo(World world, Point position) {
+    public MedKit(World world, Point position) {
         super(world, position);
     }
 
     @Override
     public Sprite getSprite() {
-        return Sprite.get("fireball_ammo");
+        return Sprite.get("medkit");
     }
 
     @Override
     public double getRadius() {
-        return 32;
+        return 16;
     }
 
     @Override
@@ -32,6 +33,13 @@ public class FireBallAmmo extends Ammo {
 
     @Override
     public void onInteractWith(WorldObject wo) {
+        Hero h = world.getHero();
+        if (wo == h) {
+            if (h.getHealth() < 100) {
+                h.addHealth(25);
+                world.deleteObject(this);
+            }
+        }
     }
 
     @Override
@@ -43,12 +51,12 @@ public class FireBallAmmo extends Ammo {
     }
 
     @Override
-    public void onCycleEnd() {
+    public void onGetDamage(double d) {
+        world.deleteObject(this);
     }
 
     @Override
-    public int getAmmo() {
-        return 100;
+    public void onCycleEnd() {
     }
 
 }

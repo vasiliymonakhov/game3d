@@ -42,6 +42,7 @@ import org.freeware.monakhov.game3d.map.World;
 public class GraphicsEngine {
 
     private final Font font;
+    private final Font bigFont;
     private final Font mainFont;
 
     /**
@@ -146,6 +147,7 @@ public class GraphicsEngine {
         font = Font.createFont(Font.TRUETYPE_FONT, GraphicsEngine.class.getResourceAsStream("/BicubikCentralEurope.ttf"));
         GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
         mainFont = font.deriveFont(0, 25);
+        bigFont = font.deriveFont(0, 40);
         mapLines = new VisibleLine[screen.getWidth()];
         wallHeight = new int[screen.getWidth()];
         distance = new double[screen.getWidth()];
@@ -790,18 +792,7 @@ public class GraphicsEngine {
                 continue;
             }
             wobj.turnSpriteToViewPoint(world.getHero()); // повернуть спрайт к главному герою
-            boolean flag = false;
-            // проверить по списку видимых комнат
-            for (Room r : visibleRooms) {
-                if (r.insideThisRoom(wobj.getLeft()) || r.insideThisRoom(wobj.getRight())) {
-                    // если спрайт хотя бы частично пересекает одну из видимых комнат, его надо проверить на видимость
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag || visibleRooms.contains(wobj.getRoom())) {
-                objectsSortList.add(wobj);
-            }
+            objectsSortList.add(wobj);
         }
         // отсортировать объекты по расстоянию
         Collections.sort(objectsSortList, objectsSortComparator);
@@ -1000,9 +991,21 @@ public class GraphicsEngine {
         int sx = screen.getWidth() / 5;
         int x = sx;
         int y = screen.getHeight() - 30;
+        g.setFont(mainFont);
+        GraphicsUtils.drawCenteredStringWithOutline(g, "ARMOR", x, y - 40, Color.GREEN, 5, Color.BLACK);
+        g.setFont(bigFont);
+        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getArmorString(), x, y, Color.GREEN, 5, Color.BLACK);
+        x = 2 * sx;
+        g.setFont(mainFont);
+        GraphicsUtils.drawCenteredStringWithOutline(g, "HEALTH", x, y - 40, Color.GREEN, 5, Color.BLACK);
+        g.setFont(bigFont);
         GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getHealthString(), x, y, Color.GREEN, 5, Color.BLACK);
         x = 4 * sx;
-        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getWeaponString(), x, y, Color.GREEN, 5, Color.BLACK);
+        g.setFont(mainFont);
+        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getWeaponString(), x, y - 40, Color.GREEN, 5, Color.BLACK);
+        g.setFont(bigFont);
+        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getAmmoString(), x, y, Color.GREEN, 5, Color.BLACK);
+
     }
 
     private void renderAim(Graphics2D g) {

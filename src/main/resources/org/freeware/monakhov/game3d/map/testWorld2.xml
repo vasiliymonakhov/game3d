@@ -48,7 +48,7 @@
         <portal from = "r0" line = "l2" to = "r2"/>
         <portal from = "r1" line = "l1" to = "r2"/>
     </portals>
-    <hero  x = "1024" y = "256"  azimuth = "45"/>
+    <hero  x = "1024" y = "256"  azimuth = "0"/>
     <objects>
         <object class = "green_barrel" id = "green_barrel601" x = "456" y = "256"/>
         <object class = "green_barrel" id = "green_barrel602" x = "456" y = "156"/>
@@ -76,7 +76,10 @@
         <object class = "fireball_ammo" id = "fba11" x = "10850" y = "2000"/>
         <object class = "fireball_ammo" id = "fba12" x = "10750" y = "2000"/>
 
-
+        <object class = "medkit" id = "mk1" x = "10750" y = "2100"/>
+        <object class = "medkit" id = "mk2" x = "10750" y = "2200"/>
+        <object class = "medkit" id = "mk3" x = "10750" y = "2300"/>
+        <object class = "medkit" id = "mk4" x = "10750" y = "2400"/>
 
     </objects>
     <entities>

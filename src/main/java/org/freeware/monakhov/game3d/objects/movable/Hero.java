@@ -5,7 +5,11 @@ import org.freeware.monakhov.game3d.map.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.weapons.AssaultRifle;
 import org.freeware.monakhov.game3d.weapons.FireBallGun;
+import org.freeware.monakhov.game3d.weapons.MachineGun;
+import org.freeware.monakhov.game3d.weapons.Pistol;
+import org.freeware.monakhov.game3d.weapons.Rifle;
 import org.freeware.monakhov.game3d.weapons.Weapon;
 
 /**
@@ -22,7 +26,12 @@ public class Hero extends MovableObject {
      */
     public Hero(World world, Point position) {
         super(world, position, null);
-        weapon = new FireBallGun(world);
+        weapons = new Weapon[5] ;
+        weapons[0] = new Pistol(world, this);
+        weapons[1] = new AssaultRifle(world, this);
+        weapons[2] = new Rifle(world, this);
+        weapons[3] = new MachineGun(world, this);
+        weapons[4] = new FireBallGun(world, this);
     }
 
     @Override
@@ -257,14 +266,37 @@ public class Hero extends MovableObject {
 //        return weapon.getImagesToDraw(screen);
 //    }
 
-    private final Weapon weapon;
+    public void changeWeapon(boolean w0, boolean w1, boolean w2, boolean w3, boolean w4) {
+        if (w4) {
+            currentWeapon = 4;
+            return;
+        }
+        if (w3) {
+            currentWeapon = 3;
+            return;
+        }
+        if (w2) {
+            currentWeapon = 2;
+            return;
+        }
+        if (w1) {
+            currentWeapon = 1;
+            return;
+        }
+        if (w0) {
+            currentWeapon = 0;
+        }
+    }
+
+    private final Weapon[] weapons;
+    private int currentWeapon = 0;
 
     private long painTime, painTimeCounter;
     private int painLevel;
 
     @Override
     public void doSomething(long frameNanoTime) {
-        weapon.doSomething(frameNanoTime);
+        weapons[currentWeapon].doSomething(frameNanoTime);
         if (painLevel > 0) {
             painTimeCounter += frameNanoTime;
             painLevel = (int)Math.round(painLevel * (painTime - painTimeCounter) / painTime);
@@ -273,11 +305,18 @@ public class Hero extends MovableObject {
 
     public void fire(boolean on) {
         if (on) {
-            weapon.fire();
+            weapons[currentWeapon].fire();
         }
     }
 
+    private double armor = 100;
+
     private double health = 100;
+
+    public void addHealth(double val) {
+        health += val;
+        if (health > 100) health = 100;
+    }
 
     @Override
     public void onGetDamage(double d) {
@@ -285,16 +324,27 @@ public class Hero extends MovableObject {
         if (newPainLevel > 255) newPainLevel = 255;
         if (newPainLevel > painLevel) {
             painLevel = newPainLevel;
-            painTime = Math.round(d * 100000000l);
+            painTime = Math.round(d * 500000000l);
             painTimeCounter = 0;
         }
-        health -= d;
+        if (armor > 0) {
+            armor -= d;
+            if (armor < 0) {
+                health += armor;
+                armor = 0;
+            }
+        } else {
+            health -= d;
+        }
+        if (health < 0) health = 0;
     }
 
     @Override
     public void onInteractWith(WorldObject wo) {
         if (wo instanceof Ammo) {
-            weapon.pickUpAmmo((Ammo) wo);
+            for (Weapon wp : weapons) {
+                wp.pickUpAmmo((Ammo) wo);
+            }
         }
     }
 
@@ -310,15 +360,23 @@ public class Hero extends MovableObject {
      * @return the health
      */
     public double getHealth() {
-        return health > 0 ? health : 0;
+        return health >= 1 ? health : 0;
     }
 
     public String getHealthString() {
-        return String.format("HEALTH : %d%%", (int)getHealth());
+        return String.format("%d%%", (int)getHealth());
+    }
+
+    public String getArmorString() {
+        return String.format("%d%%", (int)armor);
     }
 
     public String getWeaponString() {
-        return weapon.toString();
+        return weapons[currentWeapon].getName();
+    }
+
+    public String getAmmoString() {
+        return weapons[currentWeapon].getAmmoString();
     }
 
     /**
@@ -326,6 +384,11 @@ public class Hero extends MovableObject {
      */
     public int getPainLevel() {
         return painLevel;
+    }
+
+    @Override
+    public double getAimError() {
+        return 0;
     }
 
 

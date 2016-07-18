@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d.weapons;
 
+import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
@@ -19,7 +20,7 @@ public class FireBallGun extends Weapon {
     }
 
     @Override
-    public void makeFire(World world) {
+    public void makeFire() {
         world.addNewObject(new FireBall(world, new Point(owner.getPosition().getX(), owner.getPosition().getY()), owner, aim()));
     }
 
@@ -46,6 +47,16 @@ public class FireBallGun extends Weapon {
     @Override
     public String getName() {
         return "FIREBALL GUN";
+    }
+
+    @Override
+    void playShotSound() {
+        SoundSystem.play("fireball_shot");
+    }
+
+    @Override
+    public double getFireDistance() {
+        return 1000000000;
     }
 
 }

@@ -2,7 +2,7 @@
  * This software is free. You can use it without any limitations, but I don't give any kind of warranties!
  */
 
-package org.freeware.monakhov.game3d.map;
+package org.freeware.monakhov.game3d.resources;
 
 import java.awt.image.BufferedImage;
 import org.junit.Test;

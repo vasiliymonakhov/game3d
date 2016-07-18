@@ -1,8 +1,9 @@
-package org.freeware.monakhov.game3d.map;
+package org.freeware.monakhov.game3d.resources;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -27,12 +28,9 @@ class XMLResourceHandler extends DefaultHandler {
         try {
             switch(qName) {
                 case "textures" :
-                    path = attr.getValue("path");
-                    break;
                 case "sprites" :
-                    path = attr.getValue("path");
-                    break;
                 case "images" :
+                case "audiofiles" :
                     path = attr.getValue("path");
                     break;
                 case "texture" :
@@ -55,6 +53,8 @@ class XMLResourceHandler extends DefaultHandler {
                 case "multiimage" :
                     currentMultiImage = MultiImage.add(attr.getValue("id"), Integer.parseInt(attr.getValue("width")), Integer.parseInt(attr.getValue("height")));
                     break;
+                case "audiofile" :
+                    AudioFile.add(attr.getValue("id"), path + attr.getValue("file"));
             }
         }
         catch (IOException | NumberFormatException ex) {

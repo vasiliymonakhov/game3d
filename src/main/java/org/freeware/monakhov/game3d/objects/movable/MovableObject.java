@@ -64,7 +64,7 @@ public abstract class MovableObject extends WorldObject {
      */
     Line touchWall(Point newPosition) {
         // проверить, не уткнулись ли мы с стенку
-        for (Line l : room.getAllLines()) {
+        for (Line l : world.getAllLines()) {
             // проверять только непроходимые линии
             if (!l.isCrossable()) {
                 // площади треугольников, которые образуют точки старой позиции и новой позиции и линия
@@ -85,7 +85,7 @@ public abstract class MovableObject extends WorldObject {
     Line crossWall(Point newPosition) {
         // проверить, не пересекли ли мы с стенку
         Point p = new Point();
-        for (Line l : room.getAllLines()) {
+        for (Line l : world.getAllLines()) {
             // проверять только непроходимые линии
             if (!l.isCrossable()) {
                 if (SpecialMath.lineIntersection(l.getStart(), l.getEnd(), newPosition, position, p)) {
@@ -106,10 +106,18 @@ public abstract class MovableObject extends WorldObject {
      */
     public boolean moveByWithCheck(double df, double ds) {
         Point newPosition = calcNewPosition(df, ds);
-        if (touchAnyObject(newPosition)) {
-            return false;
+        double l = SpecialMath.lineLength(position, newPosition) + 0.5;
+        Point tmpPosition = new Point();
+        for (long i = 1; i < l; i++) {
+            tmpPosition.moveTo(position.getX() + (newPosition.getX() - position.getX()) * i / l, position.getY() + (newPosition.getY() - position.getY()) * i / l);
+            if (touchAnyObject(tmpPosition)) {
+                return false;
+            }
+            if (touchWall(tmpPosition) != null) {
+                return false;
+            }
         }
-        if (touchWall(newPosition) != null || crossWall(newPosition) != null) {
+        if (crossWall(newPosition) != null) {
             return false;
         }
         oldPosition.moveTo(position.getX(), position.getY());

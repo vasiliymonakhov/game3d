@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d.map;
 
+import org.freeware.monakhov.game3d.resources.Texture;
 import org.freeware.monakhov.game3d.map.visiblelines.DoorOpenSwitch;
 import org.freeware.monakhov.game3d.map.visiblelines.SecretDoor;
 import org.freeware.monakhov.game3d.map.visiblelines.SimpleSwitch;

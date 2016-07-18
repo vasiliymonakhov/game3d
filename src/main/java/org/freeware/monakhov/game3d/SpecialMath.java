@@ -39,7 +39,7 @@ public class SpecialMath {
     /**
      * Точность сравнений
      */
-    public final static double EPSILON = 0.01d;
+    public final static double EPSILON = 0.5d;
 
     /**
      * Определяет, пересекаются ли две бесконечные линии, проходящие через заданные точки
@@ -131,5 +131,5 @@ public class SpecialMath {
         }
 
     }
-    
+
 }

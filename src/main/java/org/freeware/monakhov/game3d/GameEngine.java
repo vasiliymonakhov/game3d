@@ -25,6 +25,7 @@ public class GameEngine {
      * Создаёт логику
      *
      * @param world мир
+     * @param semaphore
      */
     public GameEngine(World world, Semaphore semaphore) {
         this.world = world;
@@ -37,7 +38,7 @@ public class GameEngine {
     public void heroInteractWithWorld() {
         // проверить взаимодействие с объектами мира
         for (WorldObject wo : world.getAllObjects()) {
-            if (SpecialMath.lineLength(wo.getPosition(), world.getHero().getPosition()) < world.getHero().getInteractRadius() + wo.getInteractRadius()) {
+            if (SpecialMath.lineLength(wo.getPosition(), world.getHero().getPosition()) < world.getHero().getInteractRadius() + wo.getRadius()) {
                 world.getHero().onInteractWith(wo);
             }
         }
@@ -73,17 +74,18 @@ public class GameEngine {
     ArrayList<WorldObject> wobjects = new ArrayList<>();
 
     private void objectsInteractWithObjects() {
-        wobjects.clear();
-        wobjects.addAll(world.getAllObjects());
         if (wobjects.size() < 2) {
             return;
         }
         for (int i = 0; i < wobjects.size() - 1; i++) {
             WorldObject wo1 = wobjects.get(i);
-            for (int j = i + 1; j < wobjects.size(); j++) {
+            for (int j = 0; j < wobjects.size(); j++) {
+                if (j == i) continue;
                 WorldObject wo2 = wobjects.get(j);
-                if (SpecialMath.lineLength(wo1.getPosition(), wo2.getPosition()) < wo1.getInteractRadius() + wo2.getInteractRadius()) {
+                if (SpecialMath.lineLength(wo1.getPosition(), wo2.getPosition()) < wo1.getInteractRadius() + wo2.getRadius()) {
                     wo1.onInteractWith(wo2);
+                }
+                if (SpecialMath.lineLength(wo1.getPosition(), wo2.getPosition()) < wo1.getRadius() + wo2.getInteractRadius()) {
                     wo2.onInteractWith(wo1);
                 }
             }
@@ -91,8 +93,6 @@ public class GameEngine {
     }
 
     private void objectsCollapsWithObjects() {
-        wobjects.clear();
-        wobjects.addAll(world.getAllObjects());
         if (wobjects.size() < 2) {
             return;
         }
@@ -125,6 +125,8 @@ public class GameEngine {
      */
     public void doCycle(long nanoTime, KeyDispatcher ked) throws InterruptedException {
         semaphore.acquire();
+        wobjects.clear();
+        wobjects.addAll(world.getAllObjects());
         Hero h = world.getHero();
         if (h.getHealth() > 0) {
             h.analyseKeys(ked.isLeft(), ked.isRight(), ked.isForward(), ked.isBackward(), ked.isStrafeLeft(), ked.isStrafeRight(), nanoTime);

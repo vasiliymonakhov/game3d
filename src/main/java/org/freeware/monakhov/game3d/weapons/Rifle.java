@@ -1,5 +1,6 @@
 package org.freeware.monakhov.game3d.weapons;
 
+import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
@@ -42,6 +43,11 @@ public class Rifle extends InstantBulletWeapon {
     @Override
     public String getName() {
         return "RIFLE";
+    }
+
+    @Override
+    void playShotSound() {
+            SoundSystem.play("rifle_shot");
     }
 
 }

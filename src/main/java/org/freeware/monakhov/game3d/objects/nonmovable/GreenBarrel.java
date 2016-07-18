@@ -1,7 +1,8 @@
 package org.freeware.monakhov.game3d.objects.nonmovable;
 
+import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.Point;
-import org.freeware.monakhov.game3d.map.Sprite;
+import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 
@@ -73,6 +74,7 @@ public class GreenBarrel extends NonMovableObject {
         if (state == ALIVE) {
             damaged += d;
             if (damaged >= MAX_DAMAGE) {
+                SoundSystem.play("boom");
                 state = BOOMING;
             }
         }

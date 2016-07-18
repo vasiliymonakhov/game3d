@@ -32,6 +32,8 @@ public abstract class Slug extends Entity {
         }
     }
 
+    abstract void playDamageSound();
+
     @Override
     public boolean isCrossable() {
         return true;
@@ -66,6 +68,7 @@ public abstract class Slug extends Entity {
                 break;
             case ALIVE:
                 if (!moveByWithCheck(getSpeed() * frameNanoTime, 0)) {
+                    playDamageSound();
                     state = BOOMING;
                 }
         }

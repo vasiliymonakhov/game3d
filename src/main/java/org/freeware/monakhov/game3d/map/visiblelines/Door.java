@@ -1,8 +1,9 @@
 package org.freeware.monakhov.game3d.map.visiblelines;
 
+import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Point;
-import org.freeware.monakhov.game3d.map.Texture;
+import org.freeware.monakhov.game3d.resources.Texture;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 
@@ -71,6 +72,7 @@ public class Door extends AbstractDoor {
                 if (somebodyInside()) return;
                 // если в двери никого нет, то закрываем
                 state = CLOSING;
+                SoundSystem.play("door");
             }
         } else if (state == CLOSING) {
             // дверь закрывается
@@ -114,16 +116,12 @@ public class Door extends AbstractDoor {
         if (state == CLOSED) {
             // если дверь была закрыта, то открываем
             state = OPENING;
+            SoundSystem.play("door");
         } else if (state == OPEN) {
             // если дверь была закрыта и в ней никого не было, то закрываем
             if (somebodyInside()) return;
             state = CLOSING;
-        } else if (state == OPENING) {
-            // если дверь открывалась, а кто-то её дёрнул, то пусть закрывается
-            state = CLOSING;
-        } else if (state == CLOSING) {
-            // если дверь закрывалась, а кто-то её дёрнул, то пусть открывается
-            state = OPENING;
+            SoundSystem.play("door");
         }
     }
 

@@ -1,7 +1,8 @@
 package org.freeware.monakhov.game3d.objects.movable.slugs;
 
+import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.Point;
-import org.freeware.monakhov.game3d.map.Sprite;
+import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 
@@ -58,6 +59,11 @@ public class FireBall extends Slug {
     @Override
     public double getAimError() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    void playDamageSound() {
+        SoundSystem.play("fireball_boom");
     }
 
 }

@@ -1,9 +1,10 @@
 package org.freeware.monakhov.game3d.map.visiblelines;
 
 import java.awt.image.BufferedImage;
+import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Point;
-import org.freeware.monakhov.game3d.map.Texture;
+import org.freeware.monakhov.game3d.resources.Texture;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 
@@ -17,7 +18,7 @@ public class SecretDoor extends AbstractDoor {
      * Текстура
      */
     private final Texture texture;
-    
+
     /**
      * Создаёт дверь
      * @param start точка начала
@@ -37,8 +38,8 @@ public class SecretDoor extends AbstractDoor {
     @Override
     public Texture getTexture() {
         return texture;
-    }    
-    
+    }
+
     /**
      * Возвращает участок текстуры шириной 1 пиксель
      * @param p точка, в которую попал трассирующий луч
@@ -74,7 +75,8 @@ public class SecretDoor extends AbstractDoor {
         if (state == CLOSED) {
             // если дверь была закрыта, открываем её
             state = OPENING;
-        } 
+            SoundSystem.play("door");
+        }
     }
 
 }

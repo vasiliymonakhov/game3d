@@ -36,9 +36,13 @@ public abstract class Enemy extends Entity {
             damageLimit -= d;
             if (damageLimit < 0) {
                 state = DIEING;
+                playDieSound();
             }
         }
     }
+
+    abstract void playDieSound();
+    abstract void playNearAttackSound();
 
     /**
      * Можно ли пройти сквозь объект

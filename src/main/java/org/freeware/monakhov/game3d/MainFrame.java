@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
-import org.freeware.monakhov.game3d.map.XMLResourceLoader;
+import org.freeware.monakhov.game3d.resources.XMLResourceLoader;
 import org.freeware.monakhov.game3d.map.XMLWorldLoader;
 import org.xml.sax.SAXException;
 
@@ -52,7 +52,7 @@ public class MainFrame extends javax.swing.JFrame {
         hero = new Hero(world, new Point());
         world.setHero(hero);
         XMLWorldLoader loader = new XMLWorldLoader();
-        try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld4.xml")) {
+        try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld2.xml")) {
             loader.parse(world, is);
         }
 
@@ -111,6 +111,8 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
+
+        SoundSystem.start();
 
         addWindowListener(new WindowAdapter() {
             @Override

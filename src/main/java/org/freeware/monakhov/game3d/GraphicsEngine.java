@@ -25,12 +25,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import org.freeware.monakhov.game3d.map.visiblelines.Door;
-import org.freeware.monakhov.game3d.map.Image;
+import org.freeware.monakhov.game3d.resources.Image;
 import org.freeware.monakhov.game3d.map.Line;
-import org.freeware.monakhov.game3d.map.MultiImage;
+import org.freeware.monakhov.game3d.resources.MultiImage;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
-import org.freeware.monakhov.game3d.map.Sprite;
+import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.visiblelines.VisibleLine;
 import org.freeware.monakhov.game3d.map.World;
 

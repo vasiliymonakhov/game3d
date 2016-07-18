@@ -1,4 +1,4 @@
-package org.freeware.monakhov.game3d.map;
+package org.freeware.monakhov.game3d.resources;
 
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;

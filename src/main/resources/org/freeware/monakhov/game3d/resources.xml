@@ -59,4 +59,14 @@
             <image id = "pistol" x = "416" y = "440"/>
         </multiimage>
     </multiimages>
+    <audiofiles path = "/org/freeware/monakhov/game3d/audio/">
+        <audiofile id = "pistol_shot" file = "pistol_shot.wav"/>
+        <audiofile id = "fireball_shot" file = "fireball_shot.wav"/>
+        <audiofile id = "rifle_shot" file = "rifle_shot.wav"/>
+        <audiofile id = "boom" file = "boom.wav"/>
+        <audiofile id = "fireball_boom" file = "fireball_boom.wav"/>
+        <audiofile id = "zombie_die" file = "zombie_die.wav"/>
+        <audiofile id = "zombie_bite" file = "zombie_bite.wav"/>
+        <audiofile id = "door" file = "door.wav"/>
+    </audiofiles>
 </root>

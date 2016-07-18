@@ -2,7 +2,7 @@ package org.freeware.monakhov.game3d.map.visiblelines;
 
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
-import org.freeware.monakhov.game3d.map.Texture;
+import org.freeware.monakhov.game3d.resources.Texture;
 import org.freeware.monakhov.game3d.map.World;
 import static org.freeware.monakhov.game3d.map.visiblelines.AbstractDoor.OPEN;
 import static org.freeware.monakhov.game3d.map.visiblelines.AbstractDoor.OPENING;

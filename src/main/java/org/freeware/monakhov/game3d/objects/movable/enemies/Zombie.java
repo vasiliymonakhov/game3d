@@ -1,7 +1,8 @@
 package org.freeware.monakhov.game3d.objects.movable.enemies;
 
+import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.Point;
-import org.freeware.monakhov.game3d.map.Sprite;
+import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.weapons.Pistol;
@@ -111,6 +112,16 @@ public class Zombie extends MovingEnemy {
     @Override
     double getFireRange() {
         return 500;
+    }
+
+    @Override
+    void playDieSound() {
+        SoundSystem.play("zombie_die");
+    }
+
+    @Override
+    void playNearAttackSound() {
+       SoundSystem.play("zombie_bite");
     }
 
 }

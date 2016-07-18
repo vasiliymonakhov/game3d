@@ -21,6 +21,7 @@ public abstract class MovingEnemy extends Enemy {
         if (wo == world.getHero() && state == ALIVE && damage != 0) {
             wo.onGetDamage(damage);
             damage = 0;
+            playNearAttackSound();
         }
     }
 
@@ -87,7 +88,7 @@ public abstract class MovingEnemy extends Enemy {
         panicTime -= frameNanoTime;
         if (panicTime < 0) {
             setAzimuth(-calcAngleToHero());
-            moveSpeed = getNormalMoveSpeed();;
+            moveSpeed = getNormalMoveSpeed();
             strafeSpeed = getNormalStrafeSpeed();
         }
         double ms = moveSpeed * frameNanoTime;
@@ -148,11 +149,13 @@ public abstract class MovingEnemy extends Enemy {
 
     protected void fire(long frameNanoTime) {
         if (weapon != null) {
+            fireTime -= frameNanoTime;
             if (SpecialMath.lineLength(position, world.getHero().getPosition()) > getFireRange()) {
-                fireTime -= frameNanoTime;
-                if (fireTime < 0) {
-                    weapon.fire();
-                    fireTime = getFireTime();
+                if (weapon.checkFireLine(azimuth) == world.getHero()) {
+                    if (fireTime < 0) {
+                        weapon.fire();
+                        fireTime = getFireTime();
+                    }
                 }
             }
         }

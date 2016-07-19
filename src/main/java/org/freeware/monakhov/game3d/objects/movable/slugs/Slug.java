@@ -49,10 +49,13 @@ public abstract class Slug extends Entity {
 
     @Override
     public void onGetDamage(double d) {
+        if (state == ALIVE) {
+            state = BOOMING;
+        }
     }
 
     protected long boomTime;
-    protected final long maxBoomTime = 200000000l;
+    abstract long getMaxBoomTime();
 
     @Override
     public void doSomething(long frameNanoTime) {
@@ -62,7 +65,7 @@ public abstract class Slug extends Entity {
                 break;
             case BOOMING:
                 boomTime += frameNanoTime;
-                if (boomTime >= maxBoomTime) {
+                if (boomTime >= getMaxBoomTime()) {
                     state = DEAD;
                 }
                 break;

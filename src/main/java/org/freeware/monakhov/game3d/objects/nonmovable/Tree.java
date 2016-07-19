@@ -43,9 +43,12 @@ public class Tree extends NonMovableObject {
     public void onCollapseWith(WorldObject wo) {
     }
 
+    double damage = 0;
+
     @Override
     public void onGetDamage(double d) {
-        if (d > 200) {
+        damage += d;
+        if (damage > 300) {
             world.deleteObject(this);
         }
     }

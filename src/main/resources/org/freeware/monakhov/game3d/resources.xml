@@ -36,27 +36,98 @@
         <image id = "ceiling02" file = "ceiling02.png"/>
         <image id = "sky01" file = "sky01.jpg"/>
         <image id = "sky02" file = "sky02.jpg"/>
-        <image id = "axe01_1" file = "axe01_1.png"/>
-        <image id = "axe01_2" file = "axe01_2.png"/>
-        <image id = "axe01_3" file = "axe01_3.png"/>
-        <image id = "fuck" file = "fuck.png"/>
+    </images>
+    <images path = "/org/freeware/monakhov/game3d/graphics/images/weapon/">
+        <image id = "assault_rifle01" file = "assault_rifle01.png"/>
+        <image id = "assault_rifle02" file = "assault_rifle02.png"/>
+        <image id = "assault_rifle03" file = "assault_rifle03.png"/>
+        <image id = "assault_rifle04" file = "assault_rifle04.png"/>
+        <image id = "machine_gun01" file = "machine_gun01.png"/>
+        <image id = "machine_gun02" file = "machine_gun02.png"/>
+        <image id = "machine_gun03" file = "machine_gun03.png"/>
+        <image id = "machine_gun04" file = "machine_gun04.png"/>
+        <image id = "machine_gun05" file = "machine_gun05.png"/>
         <image id = "knife" file = "knife01.png"/>
-        <image id = "pistol" file = "pistol01.png"/>
+        <image id = "pistol01" file = "pistol01.png"/>
+        <image id = "pistol02" file = "pistol02.png"/>
+        <image id = "pistol03" file = "pistol03.png"/>
+    </images>
+    <images path = "/org/freeware/monakhov/game3d/graphics/images/words/">
+        <image id = "sorry" file = "sorry_red.png"/>
+        <image id = "armor_green" file = "armor_green.png"/>
+        <image id = "armor_red" file = "armor_red.png"/>
+        <image id = "health_green" file = "health_green.png"/>
+        <image id = "health_red" file = "health_red.png"/>
+        <image id = "assault_rifle_green" file = "assault_rifle_green.png"/>
+        <image id = "assault_rifle_red" file = "assault_rifle_red.png"/>
+        <image id = "fireball_gun_green" file = "fireball_gun_green.png"/>
+        <image id = "fireball_gun_red" file = "fireball_gun_red.png"/>
+        <image id = "machine_gun_green" file = "machine_gun_green.png"/>
+        <image id = "machine_gun_red" file = "machine_gun_red.png"/>
+        <image id = "pistol_green" file = "pistol_green.png"/>
+        <image id = "pistol_red" file = "pistol_red.png"/>
+    </images>
+    <images path = "/org/freeware/monakhov/game3d/graphics/images/digits/">
+        <image id = "0_green" file = "0_green.png"/>
+        <image id = "0_red" file = "0_red.png"/>
+        <image id = "1_green" file = "1_green.png"/>
+        <image id = "1_red" file = "1_red.png"/>
+        <image id = "2_green" file = "2_green.png"/>
+        <image id = "2_red" file = "2_red.png"/>
+        <image id = "3_green" file = "3_green.png"/>
+        <image id = "3_red" file = "3_red.png"/>
+        <image id = "4_green" file = "4_green.png"/>
+        <image id = "4_red" file = "4_red.png"/>
+        <image id = "5_green" file = "5_green.png"/>
+        <image id = "5_red" file = "5_red.png"/>
+        <image id = "6_green" file = "6_green.png"/>
+        <image id = "6_red" file = "6_red.png"/>
+        <image id = "7_green" file = "7_green.png"/>
+        <image id = "7_red" file = "7_red.png"/>
+        <image id = "8_green" file = "8_green.png"/>
+        <image id = "8_red" file = "8_red.png"/>
+        <image id = "9_green" file = "9_green.png"/>
+        <image id = "9_red" file = "9_red.png"/>
     </images>
     <multiimages>
-        <multiimage id = "axe" width = "1920" height = "1080">
-            <image id = "axe01_1" x = "1365" y = "0"/>
-            <image id = "axe01_2" x = "1250" y = "328"/>
-            <image id = "axe01_3" x = "922" y = "758"/>
-        </multiimage>
-        <multiimage id = "fuck" width = "1920" height = "1080">
-            <image id = "fuck" x = "184" y = "248"/>
-        </multiimage>
         <multiimage id = "knife" width = "1920" height = "1080">
             <image id = "knife" x = "940" y = "416"/>
         </multiimage>
-        <multiimage id = "pistol" width = "1920" height = "1080">
-            <image id = "pistol" x = "416" y = "440"/>
+        <multiimage id = "pistol01" width = "1920" height = "1080">
+            <image id = "pistol01" x = "416" y = "666"/>
+        </multiimage>
+        <multiimage id = "pistol02" width = "1920" height = "1080">
+            <image id = "pistol02" x = "645" y = "585"/>
+        </multiimage>
+        <multiimage id = "pistol03" width = "1920" height = "1080">
+            <image id = "pistol03" x = "645" y = "585"/>
+        </multiimage>
+        <multiimage id = "assault_rifle01" width = "1920" height = "1080">
+            <image id = "assault_rifle01" x = "1423" y = "624"/>
+        </multiimage>
+        <multiimage id = "assault_rifle02" width = "1920" height = "1080">
+            <image id = "assault_rifle02" x = "1086" y = "460"/>
+        </multiimage>
+        <multiimage id = "assault_rifle03" width = "1920" height = "1080">
+            <image id = "assault_rifle02" x = "1086" y = "460"/>
+        </multiimage>
+        <multiimage id = "assault_rifle04" width = "1920" height = "1080">
+            <image id = "assault_rifle04" x = "1086" y = "460"/>
+        </multiimage>
+        <multiimage id = "machine_gun01" width = "1920" height = "1080">
+            <image id = "machine_gun01" x = "1070" y = "654"/>
+        </multiimage>
+        <multiimage id = "machine_gun02" width = "1920" height = "1080">
+            <image id = "machine_gun02" x = "822" y = "356"/>
+        </multiimage>
+        <multiimage id = "machine_gun03" width = "1920" height = "1080">
+            <image id = "machine_gun03" x = "822" y = "356"/>
+        </multiimage>
+        <multiimage id = "machine_gun04" width = "1920" height = "1080">
+            <image id = "machine_gun04" x = "822" y = "356"/>
+        </multiimage>
+        <multiimage id = "machine_gun05" width = "1920" height = "1080">
+            <image id = "machine_gun05" x = "822" y = "356"/>
         </multiimage>
     </multiimages>
     <audiofiles path = "/org/freeware/monakhov/game3d/audio/">

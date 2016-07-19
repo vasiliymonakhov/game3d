@@ -46,6 +46,7 @@ public class GreenBarrel extends NonMovableObject {
             case DEAD:
                 world.deleteObject(this);
                 world.addNewObject(new Boom(world, position));
+                SoundSystem.play("boom");
                 break;
             case BOOMING:
                 boomTime += frameNanoTime;
@@ -74,7 +75,6 @@ public class GreenBarrel extends NonMovableObject {
         if (state == ALIVE) {
             damaged += d;
             if (damaged >= MAX_DAMAGE) {
-                SoundSystem.play("boom");
                 state = BOOMING;
             }
         }

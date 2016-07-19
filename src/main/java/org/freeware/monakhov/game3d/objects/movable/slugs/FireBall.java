@@ -28,7 +28,7 @@ public class FireBall extends Slug {
         if (state == ALIVE) {
             return SPRITES[0];
         } else if (state == BOOMING) {
-            int idx = (int)(boomTime / 40000000);
+            int idx = (int)((SPRITES.length - 1)* boomTime / getMaxBoomTime());
             if (idx < SPRITES.length) {
                 return SPRITES[idx];
             }
@@ -64,6 +64,11 @@ public class FireBall extends Slug {
     @Override
     void playDamageSound() {
         SoundSystem.play("fireball_boom");
+    }
+
+    @Override
+    long getMaxBoomTime() {
+         return 200000000l;
     }
 
 }

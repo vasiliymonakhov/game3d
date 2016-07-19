@@ -1,5 +1,7 @@
 package org.freeware.monakhov.game3d.weapons;
 
+import java.util.List;
+import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
@@ -7,6 +9,7 @@ import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.objects.movable.slugs.FireBall;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
 import org.freeware.monakhov.game3d.objects.nonmovable.FireBallAmmo;
+import org.freeware.monakhov.game3d.resources.MultiImage;
 
 /**
  *
@@ -45,8 +48,8 @@ public class FireBallGun extends Weapon {
     }
 
     @Override
-    public String getName() {
-        return "FIREBALL GUN";
+    public String getImageName() {
+        return "fireball_gun";
     }
 
     @Override
@@ -57,6 +60,16 @@ public class FireBallGun extends Weapon {
     @Override
     public double getFireDistance() {
         return 1000000000;
+    }
+
+    @Override
+    public boolean isLowAmmo() {
+        return ammo < 15;
+    }
+
+    @Override
+    public List<MultiImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
+        return null;
     }
 
 }

@@ -74,6 +74,7 @@ public abstract class Enemy extends Entity {
     }
 
     protected double calcAngleToHero() {
+        // TODO по возможность протабулировать значения
         double dx = this.position.getX() - world.getHero().getPosition().getX();
         double dy = this.position.getY() - world.getHero().getPosition().getY();
         if (dx == 0) {

@@ -101,10 +101,6 @@
     </portals>
     <hero  x = "256" y = "-3840" azimuth = "0"/>
     <objects>
-        <object class = "tree" id = "tree00" x = "64" y = "192"/>
-
-        <object class = "green_barrel" id = "gb0" x = "256" y = "0"/>
-
         <entity class = "zombie" id = "gb01" x = "64" y = "576"/>
         <entity class = "zombie" id = "gb03" x = "192" y = "576"/>
         <entity class = "zombie" id = "gb05" x = "320" y = "576"/>
@@ -127,11 +123,9 @@
         <entity class = "zombie" id = "gb65" x = "320" y = "960"/>
         <entity class = "zombie" id = "gb67" x = "448" y = "960"/>
 
-        <object class = "green_barrel" id = "gb0_01" x = "368" y = "-1024"/>
-        <object class = "green_barrel" id = "gb0_02" x = "368" y = "-1124"/>
-        <object class = "green_barrel" id = "gb0_03" x = "368" y = "-1224"/>
-        <object class = "green_barrel" id = "gb0_04" x = "368" y = "-1324"/>
-        <object class = "green_barrel" id = "gb0_05" x = "368" y = "-1424"/>
+        <object class = "medkit" id = "mk1" x = "-256" y = "-1920"/>
+        <object class = "medkit" id = "mk2" x = "-512" y = "-1920"/>
+
 
     </objects>
 </root>

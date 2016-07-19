@@ -58,15 +58,37 @@ public abstract class MovingEnemy extends Enemy {
                     if (activeTime > getActiveTime()) {
                         activeTime = 0;
                         active = isCanSeeHero();
+                        if (active) {
+                            activateFriends();
+                        }
                     }
                 } else {
                     inactiveTime += frameNanoTime;
                     if (inactiveTime > getInactiveTime()) {
                         inactiveTime = 0;
                         active = isCanSeeHero();
+                        if (active) {
+                            activateFriends();
+                        }
                     }
                 }
                 break;
+        }
+    }
+
+    void activateFriends() {
+        for (WorldObject wo : world.getAllObjects()) {
+            if (wo instanceof MovingEnemy && wo.getRoom() == room) {
+                ((MovingEnemy)wo).active = true;
+            }
+        }
+    }
+
+    @Override
+    public void onGetDamage(double d) {
+        super.onGetDamage(d);
+        if (state == ALIVE) {
+            panic();
         }
     }
 
@@ -84,12 +106,21 @@ public abstract class MovingEnemy extends Enemy {
 
     private long panicTime;
 
+    private void panic() {
+        panicTime = getPanicTime();
+        setAzimuth(Math.PI * 2 * Math.random());
+        moveSpeed = getPanicMoveSpeed();
+        strafeSpeed = getPanicStrafeSpeed();
+    }
+
     protected void move(long frameNanoTime) {
         panicTime -= frameNanoTime;
         if (panicTime < 0) {
             setAzimuth(-calcAngleToHero());
             moveSpeed = getNormalMoveSpeed();
             strafeSpeed = getNormalStrafeSpeed();
+        } else {
+            panic();
         }
         double ms = moveSpeed * frameNanoTime;
         double ss = strafeSpeed * frameNanoTime;
@@ -121,22 +152,13 @@ public abstract class MovingEnemy extends Enemy {
             if (moveByWithCheck(-ms, ss)) {
                 return;
             }
-            if (moveByWithCheck(-ms, -ss)) {
-                return;
-            }
+            moveByWithCheck(-ms, -ss);
         } else {
             if (moveByWithCheck(-ms, -ss)) {
                 return;
             }
-            if (moveByWithCheck(-ms, ss)) {
-                return;
-            }
+            moveByWithCheck(-ms, ss);
         }
-
-        panicTime = getPanicTime();
-        setAzimuth(Math.PI * 2 * Math.random());
-        moveSpeed = getPanicMoveSpeed();
-        strafeSpeed = getPanicStrafeSpeed();
     }
 
     abstract long getPanicTime();
@@ -148,7 +170,7 @@ public abstract class MovingEnemy extends Enemy {
     abstract double getFireRange();
 
     protected void fire(long frameNanoTime) {
-        if (weapon != null) {
+        if (world.getHero().isAlive() && weapon != null) {
             fireTime -= frameNanoTime;
             if (SpecialMath.lineLength(position, world.getHero().getPosition()) > getFireRange()) {
                 if (weapon.checkFireLine(azimuth) == world.getHero()) {

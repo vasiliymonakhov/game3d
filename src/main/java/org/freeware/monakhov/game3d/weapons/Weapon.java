@@ -1,5 +1,7 @@
 package org.freeware.monakhov.game3d.weapons;
 
+import java.util.List;
+import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
@@ -8,6 +10,7 @@ import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.resources.MultiImage;
 
 /**
  *
@@ -25,6 +28,10 @@ public abstract class Weapon {
 
     protected int ammo;
 
+    public boolean isOutOfAmmo() {
+        return ammo == 0;
+    }
+
     long timeFromLastShot = getTimeBetweenShots();
 
     public void fire() {
@@ -35,6 +42,8 @@ public abstract class Weapon {
             timeFromLastShot = 0;
         }
     }
+
+    public abstract boolean isLowAmmo();
 
     /**
      * Прицеливание - возвращает азимут траектории полёта пули
@@ -56,7 +65,7 @@ public abstract class Weapon {
 
     abstract double getAimError();
 
-    public abstract String getName();
+    public abstract String getImageName();
 
     public String getAmmoString() {
         return String.format("%d", ammo);
@@ -143,6 +152,8 @@ public abstract class Weapon {
         // не попали ни во что!
         return null;
     }
+
+    abstract public List<MultiImage.ImageToDraw> getWeaponView(ScreenBuffer screen);
 
 
 }

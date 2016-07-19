@@ -50,6 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         world = new World();
         hero = new Hero(world, new Point());
+        hero.takeWeapons();
         world.setHero(hero);
         XMLWorldLoader loader = new XMLWorldLoader();
         try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld2.xml")) {
@@ -112,7 +113,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        SoundSystem.start();
+        SoundSystem.init();
 
         addWindowListener(new WindowAdapter() {
             @Override

@@ -1,15 +1,17 @@
 package org.freeware.monakhov.game3d.objects.movable;
 
+import java.util.List;
+import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.resources.MultiImage;
 import org.freeware.monakhov.game3d.weapons.AssaultRifle;
 import org.freeware.monakhov.game3d.weapons.FireBallGun;
 import org.freeware.monakhov.game3d.weapons.MachineGun;
 import org.freeware.monakhov.game3d.weapons.Pistol;
-import org.freeware.monakhov.game3d.weapons.Rifle;
 import org.freeware.monakhov.game3d.weapons.Weapon;
 
 /**
@@ -21,15 +23,18 @@ public class Hero extends MovableObject {
 
     /**
      * Создаёт объект
+     *
      * @param world мир
      * @param position мозиция
      */
     public Hero(World world, Point position) {
         super(world, position, null);
-        weapons = new Weapon[5] ;
-        weapons[0] = new Pistol(world, this);
-        weapons[1] = new AssaultRifle(world, this);
-        weapons[2] = new Rifle(world, this);
+        weapons = new Weapon[5];
+    }
+
+    public void takeWeapons() {
+        weapons[1] = new Pistol(world, this);
+        weapons[2] = new AssaultRifle(world, this);
         weapons[3] = new MachineGun(world, this);
         weapons[4] = new FireBallGun(world, this);
     }
@@ -116,6 +121,7 @@ public class Hero extends MovableObject {
 
     /**
      * Анализ поворота
+     *
      * @param left поворачивать влево
      * @param right поворачивать вправо
      * @param frameNanoTime время
@@ -156,6 +162,7 @@ public class Hero extends MovableObject {
 
     /**
      * Анализ двидения пряма
+     *
      * @param forward идти вперёд
      * @param backward идти назад
      * @param frameNanoTime время
@@ -196,6 +203,7 @@ public class Hero extends MovableObject {
 
     /**
      * Анализ вдидения в бок
+     *
      * @param strafeLeft двигаться влеов
      * @param strafeRight двигаться вправо
      * @param frameNanoTime время
@@ -236,6 +244,7 @@ public class Hero extends MovableObject {
 
     /**
      * Анализ движения
+     *
      * @param left поворачиваться влево
      * @param right поворачиваться вправо
      * @param forward двигаться вперёд
@@ -256,72 +265,104 @@ public class Hero extends MovableObject {
         }
     }
 
-//    /**
-//     * изображение оружия в руках
-//     */
-//    MultiImage weapon = MultiImage.get("pistol");
-//
-//
-//    public List<MultiImage.ImageToDraw> getImagesToDraw(ScreenBuffer screen) {
-//        return weapon.getImagesToDraw(screen);
-//    }
-
     public void changeWeapon(boolean w0, boolean w1, boolean w2, boolean w3, boolean w4) {
         if (w4) {
-            currentWeapon = 4;
+            changeWeapon(4);
             return;
         }
         if (w3) {
-            currentWeapon = 3;
+            changeWeapon(3);
             return;
         }
         if (w2) {
-            currentWeapon = 2;
+            changeWeapon(2);
             return;
         }
         if (w1) {
-            currentWeapon = 1;
+            changeWeapon(1);
             return;
         }
         if (w0) {
-            currentWeapon = 0;
+            changeWeapon(0);
         }
     }
 
     private final Weapon[] weapons;
-    private int currentWeapon = 0;
+    private volatile int currentWeapon = 1;
 
-    private long painTime, painTimeCounter;
-    private int painLevel;
+    private volatile long painTime, painTimeCounter;
+    private volatile int painLevel;
 
     @Override
     public void doSomething(long frameNanoTime) {
         weapons[currentWeapon].doSomething(frameNanoTime);
+        if (weaponChanging) {
+            weaponChangingTime += frameNanoTime;
+            if (weaponChangingTime > WEAPON_CHANGE_TIME) {
+                weaponChangingTime = WEAPON_CHANGE_TIME;
+                weaponChanging = false;
+                currentWeapon = newWeapon;
+            }
+        }
         if (painLevel > 0) {
             painTimeCounter += frameNanoTime;
-            painLevel = (int)Math.round(painLevel * (painTime - painTimeCounter) / painTime);
+            painLevel = (int) Math.round(painLevel * (painTime - painTimeCounter) / painTime);
         }
     }
 
-    public void fire(boolean on) {
-        if (on) {
-            weapons[currentWeapon].fire();
+    public void fire() {
+        if (weaponChanging) {
+            return;
+        }
+        weapons[currentWeapon].fire();
+        if (weapons[currentWeapon].isOutOfAmmo()) {
+            for (int i = currentWeapon; i >= 0; i--) {
+                if (weapons[i] != null && !weapons[i].isOutOfAmmo()) {
+                    changeWeapon(i);
+                    break;
+                }
+            }
         }
     }
 
-    private double armor = 100;
+    private volatile boolean weaponChanging;
+    private  volatile long weaponChangingTime;
+    private volatile int newWeapon;
 
-    private double health = 100;
+    private final long WEAPON_HIDE_TIME = 500000000l;
+    private final long WEAPON_TAKE_TIME = 500000000l;
+    private final long WEAPON_CHANGE_TIME = WEAPON_HIDE_TIME + WEAPON_TAKE_TIME;
+
+    void changeWeapon(int newWeapon) {
+        if (weaponChanging  || newWeapon == currentWeapon) return;
+        if (weapons[newWeapon] != null) {
+            weaponChanging = true;
+            weaponChangingTime = 0;
+            this.newWeapon = newWeapon;
+        }
+    }
+
+    private volatile double armor = 100;
+
+    private volatile double health = 100;
 
     public void addHealth(double val) {
         health += val;
-        if (health > 100) health = 100;
+        if (health > 100) {
+            health = 100;
+        }
+    }
+
+    public boolean isAlive() {
+        return health > 0;
     }
 
     @Override
     public void onGetDamage(double d) {
         int newPainLevel = (int) d * 10;
-        if (newPainLevel > 255) newPainLevel = 255;
+        if (newPainLevel > 255) {
+            newPainLevel = 255;
+        }
         if (newPainLevel > painLevel) {
             painLevel = newPainLevel;
             painTime = Math.round(d * 500000000l);
@@ -336,14 +377,18 @@ public class Hero extends MovableObject {
         } else {
             health -= d;
         }
-        if (health < 0) health = 0;
+        if (health < 0) {
+            health = 0;
+        }
     }
 
     @Override
     public void onInteractWith(WorldObject wo) {
         if (wo instanceof Ammo) {
             for (Weapon wp : weapons) {
-                wp.pickUpAmmo((Ammo) wo);
+                if (wp != null) {
+                    wp.pickUpAmmo((Ammo) wo);
+                }
             }
         }
     }
@@ -364,19 +409,31 @@ public class Hero extends MovableObject {
     }
 
     public String getHealthString() {
-        return String.format("%d%%", (int)getHealth());
+        return String.format("%d", (int) getHealth());
     }
 
     public String getArmorString() {
-        return String.format("%d%%", (int)armor);
+        return String.format("%d", (int) armor);
     }
 
     public String getWeaponString() {
-        return weapons[currentWeapon].getName();
+        return weapons[currentWeapon].getImageName();
     }
 
     public String getAmmoString() {
         return weapons[currentWeapon].getAmmoString();
+    }
+
+    public boolean isLowAmmo() {
+        return weapons[currentWeapon].isLowAmmo();
+    }
+
+    public boolean isLowArmor() {
+        return armor < 25;
+    }
+
+    public boolean isLowHealth() {
+        return health < 40;
     }
 
     /**
@@ -391,6 +448,30 @@ public class Hero extends MovableObject {
         return 0;
     }
 
+    public List<MultiImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
+        if (weaponChanging) {
+            if (weaponChangingTime < WEAPON_HIDE_TIME) {
+                return weapons[currentWeapon].getWeaponView(screen);
+            } else {
+                return weapons[newWeapon].getWeaponView(screen);
+            }
+        }
+        return weapons[currentWeapon].getWeaponView(screen);
+    }
 
+    public int getWeaponX(ScreenBuffer screen) {
+        return 0;
+    }
 
+    public int getWeaponY(ScreenBuffer screen) {
+        if (weaponChanging) {
+            long wct = weaponChangingTime;
+            if (wct < WEAPON_HIDE_TIME) {
+                return (int)(screen.getHeight() * wct / WEAPON_HIDE_TIME);
+            } else {
+                return (int)(screen.getHeight() - screen.getHeight() * (wct - WEAPON_HIDE_TIME) / WEAPON_TAKE_TIME);
+            }
+        }
+        return 0;
+    }
 }

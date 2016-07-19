@@ -1,9 +1,12 @@
 package org.freeware.monakhov.game3d.weapons;
 
+import java.util.List;
+import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.resources.MultiImage;
 
 /**
  * Пистолетик
@@ -41,13 +44,31 @@ public class AssaultRifle extends InstantBulletWeapon {
     }
 
     @Override
-    public String getName() {
-        return "ASSAULT RIFLE";
+    public String getImageName() {
+        return "assault_rifle";
     }
 
     @Override
     void playShotSound() {
             SoundSystem.play("rifle_shot");
     }
+
+      @Override
+    public boolean isLowAmmo() {
+        return ammo < 5;
+    }
+
+  @Override
+    public List<MultiImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
+        if (timeFromLastShot >= getTimeBetweenShots()) {
+            return images[images.length - 1].getImagesToDraw(screen);
+        } else {
+            int i = (int)((images.length - 1) * timeFromLastShot / getTimeBetweenShots());
+            return images[i].getImagesToDraw(screen);
+        }
+    }
+
+    private final static MultiImage[] images = {MultiImage.get("assault_rifle02"), MultiImage.get("assault_rifle03"),
+        MultiImage.get("assault_rifle04"), MultiImage.get("assault_rifle01")};
 
 }

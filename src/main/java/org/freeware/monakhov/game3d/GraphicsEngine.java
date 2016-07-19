@@ -3,7 +3,6 @@ package org.freeware.monakhov.game3d;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -16,9 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -40,10 +41,6 @@ import org.freeware.monakhov.game3d.map.World;
  * @author Vasily Monakhov
  */
 public class GraphicsEngine {
-
-    private final Font font;
-    private final Font bigFont;
-    private final Font mainFont;
 
     /**
      * Текущий мир
@@ -144,10 +141,6 @@ public class GraphicsEngine {
         this.world = world;
         this.screen = screen;
         this.semaphore = semaphore;
-        font = Font.createFont(Font.TRUETYPE_FONT, GraphicsEngine.class.getResourceAsStream("/BicubikCentralEurope.ttf"));
-        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
-        mainFont = font.deriveFont(0, 25);
-        bigFont = font.deriveFont(0, 40);
         mapLines = new VisibleLine[screen.getWidth()];
         wallHeight = new int[screen.getWidth()];
         distance = new double[screen.getWidth()];
@@ -727,6 +720,7 @@ public class GraphicsEngine {
      * @param wo объект
      */
     private boolean prepareToRenderObject(WorldObject wo) {
+        // TODO: оптимизировать!
         Point rsp = new Point();
         int spriteXStartOffset = 0;
         int spriteXEndOffset = -0;
@@ -901,6 +895,8 @@ public class GraphicsEngine {
          * сигнал завершения
          */
         private final CountDownLatch doneSignal;
+        private final int dx;
+        private final int dy;
 
         /**
          * Создайт объект
@@ -909,16 +905,18 @@ public class GraphicsEngine {
          * @param doneSignal сигнал завершения
          * @param mi2d участок комбинированного изображения
          */
-        MultiImageDrawer(Graphics2D g, CountDownLatch doneSignal, MultiImage.ImageToDraw mi2d) {
+        MultiImageDrawer(Graphics2D g, CountDownLatch doneSignal, MultiImage.ImageToDraw mi2d, int dx, int dy) {
             this.g = g;
             this.doneSignal = doneSignal;
             this.mi2d = mi2d;
+            this.dx = dx;
+            this.dy = dy;
         }
 
         @Override
         public void run() {
             try {
-                g.drawImage(mi2d.getI(), mi2d.getX(), mi2d.getY(), null);
+                g.drawImage(mi2d.getI(), mi2d.getX() + dx, mi2d.getY() + dy, null);
             } finally {
                 doneSignal.countDown();
             }
@@ -932,12 +930,15 @@ public class GraphicsEngine {
      * @throws InterruptedException
      */
     private void renderHeroLook(Graphics2D g) throws InterruptedException {
-//        List<MultiImage.ImageToDraw> images = world.getHero().getImagesToDraw(screen);
-//        CountDownLatch doneSignal = new CountDownLatch(images.size());
-//        for (final MultiImage.ImageToDraw mi2d : images) {
-//            EXECUTOR.execute(new MultiImageDrawer(g, doneSignal, mi2d));
-//        }
-//        doneSignal.await();
+        List<MultiImage.ImageToDraw> images = world.getHero().getWeaponView(screen);
+        int dx = world.getHero().getWeaponX(screen);
+        int dy = world.getHero().getWeaponY(screen);
+        if (images == null) return;
+        CountDownLatch doneSignal = new CountDownLatch(images.size());
+        for (final MultiImage.ImageToDraw mi2d : images) {
+            EXECUTOR.execute(new MultiImageDrawer(g, doneSignal, mi2d, dx, dy));
+        }
+        doneSignal.await();
     }
 
     /**
@@ -962,52 +963,146 @@ public class GraphicsEngine {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         renderCeilingAndFloor(g);
         renderWalls(g);
         renderObjects(g);
-//        renderHeroLook(g);
-        renderAim(g);
+        renderHeroLook(g);
         renderHero(g);
         if (mapEnabled) {
             drawMap(g);
         }
-        drawFPS(g);
         g.dispose();
     }
 
+    /**
+     * Рисует информацию о герое
+     * @param g графический контекст
+     */
     private void renderHero(Graphics2D g) {
         int pl = world.getHero().getPainLevel();
         if (pl > 0) {
             g.setColor(new Color(255, 0, 0, pl));
             g.fillRect(0, 0, screen.getWidth(), screen.getHeight());
         }
-        g.setFont(mainFont);
-
-        if (world.getHero().getHealth() == 0) {
-            GraphicsUtils.drawCenteredStringWithOutline(g, "SORRY, YOU ARE DEAD!", screen.getWidth() / 2, screen.getHeight() / 2,
-                    Color.GREEN, 5, Color.BLACK);
+        if (!world.getHero().isAlive()) {
+            renderImage(g, "sorry", screen.getWidth() / 2, screen.getHeight() / 2 - 100);
+        } else {
+            renderAim(g);
         }
         int sx = screen.getWidth() / 5;
         int x = sx;
         int y = screen.getHeight() - 30;
-        g.setFont(mainFont);
-        GraphicsUtils.drawCenteredStringWithOutline(g, "ARMOR", x, y - 40, Color.GREEN, 5, Color.BLACK);
-        g.setFont(bigFont);
-        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getArmorString(), x, y, Color.GREEN, 5, Color.BLACK);
+        renderImage(g, "armor", x, y - 40, world.getHero().isLowArmor());
+        renderString(g, world.getHero().getArmorString(), x, y, world.getHero().isLowArmor());
         x = 2 * sx;
-        g.setFont(mainFont);
-        GraphicsUtils.drawCenteredStringWithOutline(g, "HEALTH", x, y - 40, Color.GREEN, 5, Color.BLACK);
-        g.setFont(bigFont);
-        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getHealthString(), x, y, Color.GREEN, 5, Color.BLACK);
+        renderImage(g, "health", x, y - 40, world.getHero().isLowHealth());
+        renderString(g, world.getHero().getHealthString(), x, y, world.getHero().isLowHealth());
         x = 4 * sx;
-        g.setFont(mainFont);
-        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getWeaponString(), x, y - 40, Color.GREEN, 5, Color.BLACK);
-        g.setFont(bigFont);
-        GraphicsUtils.drawCenteredStringWithOutline(g, world.getHero().getAmmoString(), x, y, Color.GREEN, 5, Color.BLACK);
+        renderImage(g, world.getHero().getWeaponString(), x, y - 40, world.getHero().isLowAmmo());
+        renderString(g, world.getHero().getAmmoString(), x, y, world.getHero().isLowAmmo());
 
     }
 
+    /**
+     * Зелёные символы
+     */
+    private final static Map<Character, Image> green_chars = new HashMap<>();
+    /**
+     * Красные символы
+     */
+    private final static Map<Character, Image> red_chars = new HashMap<>();
+
+    static {
+        green_chars.put('0', Image.get("0_green"));
+        green_chars.put('1', Image.get("1_green"));
+        green_chars.put('2', Image.get("2_green"));
+        green_chars.put('3', Image.get("3_green"));
+        green_chars.put('4', Image.get("4_green"));
+        green_chars.put('5', Image.get("5_green"));
+        green_chars.put('6', Image.get("6_green"));
+        green_chars.put('7', Image.get("7_green"));
+        green_chars.put('8', Image.get("8_green"));
+        green_chars.put('9', Image.get("9_green"));
+        red_chars.put('0', Image.get("0_red"));
+        red_chars.put('1', Image.get("1_red"));
+        red_chars.put('2', Image.get("2_red"));
+        red_chars.put('3', Image.get("3_red"));
+        red_chars.put('4', Image.get("4_red"));
+        red_chars.put('5', Image.get("5_red"));
+        red_chars.put('6', Image.get("6_red"));
+        red_chars.put('7', Image.get("7_red"));
+        red_chars.put('8', Image.get("8_red"));
+        red_chars.put('9', Image.get("9_red"));
+    }
+
+    /**
+     * Рисует строку
+     * @param g графический контекст
+     * @param st строка
+     * @param x горизонтальная координата
+     * @param y вертикальная координата
+     * @param red определяет, взять красную или зелёную картинку для символа
+     */
+    private void renderString(Graphics2D g, String st, int x, int y, boolean red) {
+        int w = 0;
+        int h = 0;
+        for (int i = 0; i < st.length(); i++) {
+            char ch = st.charAt(i);
+            Image img;
+            if (red) {
+                img = red_chars.get(ch);
+            } else {
+                img = green_chars.get(ch);
+            }
+            w += img.getImage().getWidth();
+            h = Math.max(h, img.getImage().getHeight());
+        }
+        if (w == 0) return;
+        int sy = y - h / 2;
+        int sx = x - w / 2;
+        for (int i = 0; i < st.length(); i++) {
+            char ch = st.charAt(i);
+            Image img;
+            if (red) {
+                img = red_chars.get(ch);
+            } else {
+                img = green_chars.get(ch);
+            }
+            g.drawImage(img.getImage(), sx, sy, null);
+            sx += img.getImage().getWidth();
+        }
+    }
+
+    /**
+     * Рисует изображение с заданным идентификатором
+     * @param g графический контекст
+     * @param id идентификатор
+     * @param x горизонтальная координата
+     * @param y вертикальная координата
+     * @param red определяет, взять красную или зелёную картинку
+     */
+    private void renderImage(Graphics2D g, String id, int x, int y, boolean red) {
+        renderImage(g, id + (red ? "_red" : "_green"), x, y);
+    }
+
+    /**
+     * Рисует изображение с заданным идентификатором
+     * @param g графический контекст
+     * @param id идентификатор
+     * @param x горизонтальная координата
+     * @param y вертикальная координата
+     */
+    private void renderImage(Graphics2D g, String id, int x, int y) {
+        Image img = Image.get(id);
+        int sx = x - img.getImage().getWidth() / 2;
+        int sy = y - img.getImage().getHeight() / 2;
+        g.drawImage(img.getImage(), sx, sy, null);
+    }
+
+    /**
+     * Рисуте прицел
+     * @param g графический контекст
+     */
     private void renderAim(Graphics2D g) {
         g.setColor(Color.RED);
         int sx = screen.getWidth() / 2;
@@ -1020,23 +1115,6 @@ public class GraphicsEngine {
         g.fillRect(sx + r, sy, r, 1);
         g.fillRect(sx, sy + r, 1, r);
 
-    }
-
-    private double counter;
-    long time = System.nanoTime();
-    private String fps = "";
-
-    private void drawFPS(Graphics2D g) {
-        counter++;
-        if (counter >= 50) {
-            long nt = System.nanoTime();
-            fps = String.format("FPS = %d", (int) (1e9 * counter / (nt - time)));
-            time = nt;
-            counter = 0;
-        }
-        g.setColor(Color.GREEN);
-        g.setFont(mainFont);
-        g.drawString(fps, 25, 25);
     }
 
     /**
@@ -1143,5 +1221,6 @@ public class GraphicsEngine {
             g.fillOval(dx - ra + (int) (wo.getPosition().getX() * mapScale), dy - ra - (int) (wo.getPosition().getY() * mapScale), 2 * ra, 2 * ra);
         }
     }
+
 
 }

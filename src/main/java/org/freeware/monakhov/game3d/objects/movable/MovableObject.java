@@ -31,6 +31,7 @@ public abstract class MovableObject extends WorldObject {
      * @return true если столкнулись
      */
     public boolean touchAnyObject(Point newPosition) {
+        // TODO: оптимизировать!
         if (this != world.getHero() && creator != world.getHero()) {
             // если не герой, тол проверить на столкновение с героем
             double distance = SpecialMath.lineLength(world.getHero().getPosition(), newPosition);

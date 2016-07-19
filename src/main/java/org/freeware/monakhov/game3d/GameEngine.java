@@ -135,7 +135,9 @@ public class GameEngine {
                 ked.setInteract(false);
             }
             h.changeWeapon(ked.isWeapon0(), ked.isWeapon1(), ked.isWeapon2(), ked.isWeapon3(), ked.isWeapon4());
-            h.fire(ked.isFirePressed());
+            if (ked.isFirePressed()) {
+                h.fire();
+            }
         } else {
             h.analyseKeys(ked.isLeft(), ked.isRight(), false, false, false, false, nanoTime);
         }

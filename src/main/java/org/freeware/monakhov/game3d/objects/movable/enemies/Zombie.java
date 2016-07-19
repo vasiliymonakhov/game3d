@@ -51,7 +51,7 @@ public class Zombie extends MovingEnemy {
 
     @Override
     public double getAimError() {
-        return -0.4 + 0.8 * Math.random();
+        return -0.1 + 0.2 * Math.random();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class Zombie extends MovingEnemy {
 
     @Override
     double getFireRange() {
-        return 500;
+        return 256;
     }
 
     @Override

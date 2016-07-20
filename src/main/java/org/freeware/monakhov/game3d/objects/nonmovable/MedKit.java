@@ -51,7 +51,7 @@ public class MedKit extends CrossableObject {
     }
 
     @Override
-    public void onGetDamage(double d) {
+    public void onGetDamage(double d, WorldObject source) {
         world.deleteObject(this);
     }
 

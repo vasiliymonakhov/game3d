@@ -71,7 +71,7 @@ public class GreenBarrel extends NonMovableObject {
     double MAX_DAMAGE = 25;
 
     @Override
-    public void onGetDamage(double d) {
+    public void onGetDamage(double d, WorldObject source) {
         if (state == ALIVE) {
             damaged += d;
             if (damaged >= MAX_DAMAGE) {

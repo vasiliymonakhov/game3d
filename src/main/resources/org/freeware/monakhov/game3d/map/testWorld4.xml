@@ -118,10 +118,10 @@
         <entity class = "zombie" id = "gb47" x = "448" y = "832"/>
 
 
-        <entity class = "zombie" id = "gb61" x = "64" y = "960"/>
-        <entity class = "zombie" id = "gb63" x = "192" y = "960"/>
-        <entity class = "zombie" id = "gb65" x = "320" y = "960"/>
-        <entity class = "zombie" id = "gb67" x = "448" y = "960"/>
+        <entity class = "spider" id = "gb61" x = "64" y = "960"/>
+        <entity class = "spider" id = "gb63" x = "192" y = "960"/>
+        <entity class = "spider" id = "gb65" x = "320" y = "960"/>
+        <entity class = "spider" id = "gb67" x = "448" y = "960"/>
 
         <object class = "medkit" id = "mk1" x = "-256" y = "-1920"/>
         <object class = "medkit" id = "mk2" x = "-512" y = "-1920"/>

@@ -5,6 +5,7 @@ import org.freeware.monakhov.game3d.map.Line;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
+import org.freeware.monakhov.game3d.objects.movable.enemies.Spider;
 import org.freeware.monakhov.game3d.objects.movable.enemies.Zombie;
 import org.xml.sax.Attributes;
 
@@ -30,6 +31,8 @@ public abstract class Entity extends MovableObject {
         switch (clasz) {
             case "zombie" :
                 return new Zombie(world, new Point(attr), Math.PI * 2 * stringToInt(attr.getValue("azimuth")) / 360);
+            case "spider" :
+                return new Spider(world, new Point(attr), Math.PI * 2 * stringToInt(attr.getValue("azimuth")) / 360);
         }
         return null;
     }
@@ -43,7 +46,7 @@ public abstract class Entity extends MovableObject {
      * Проверяет, видит ли враг героя
      * @return true если видит
      */
-    protected boolean isCanSeeHero() {
+    protected boolean canSeeHero() {
         if (world.getHero().getRoom() == this.getRoom()) {
             // они в одной комнате
             return true;

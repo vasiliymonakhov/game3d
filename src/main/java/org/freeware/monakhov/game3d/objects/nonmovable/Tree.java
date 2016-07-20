@@ -46,9 +46,9 @@ public class Tree extends NonMovableObject {
     double damage = 0;
 
     @Override
-    public void onGetDamage(double d) {
+    public void onGetDamage(double d, WorldObject source) {
         damage += d;
-        if (damage > 300) {
+        if (damage > 1000) {
             world.deleteObject(this);
         }
     }

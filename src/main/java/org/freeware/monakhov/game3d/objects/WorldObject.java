@@ -227,12 +227,19 @@ abstract public class WorldObject {
     /**
      * Действие при получении ущерба
      * @param d количество ущерба
+     * @param source источник ущерба
      */
-    public abstract void onGetDamage(double d);
+    public abstract void onGetDamage(double d, WorldObject source);
 
     /**
      * Что-то сделать по завершении одного такта
      */
     public abstract void onCycleEnd();
+
+    /**
+     * Объект живой или не живой
+     * @return 
+     */
+    public abstract boolean isAlive();
 
 }

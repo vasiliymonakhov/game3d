@@ -28,7 +28,7 @@ public abstract class InstantBulletWeapon extends Weapon {
         WorldObject candidateToDie = checkFireLine(aim());
         if (candidateToDie != null) {
             // в кого-то попали, нанесём ему урон
-            candidateToDie.onGetDamage(getDamage(SpecialMath.lineLength(owner.getPosition(), candidateToDie.getPosition())));
+            candidateToDie.onGetDamage(getDamage(SpecialMath.lineLength(owner.getPosition(), candidateToDie.getPosition())), owner);
         }
     }
 

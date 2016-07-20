@@ -353,12 +353,13 @@ public class Hero extends MovableObject {
         }
     }
 
+    @Override
     public boolean isAlive() {
         return health > 0;
     }
 
     @Override
-    public void onGetDamage(double d) {
+    public void onGetDamage(double d, WorldObject source) {
         int newPainLevel = (int) d * 10;
         if (newPainLevel > 255) {
             newPainLevel = 255;

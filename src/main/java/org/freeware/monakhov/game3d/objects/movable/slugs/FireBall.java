@@ -71,4 +71,9 @@ public class FireBall extends Slug {
          return 200000000l;
     }
 
+    @Override
+    public boolean isAlive() {
+        return false;
+    }
+
 }

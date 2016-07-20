@@ -2,6 +2,7 @@ package org.freeware.monakhov.game3d.objects.nonmovable;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
  *
@@ -16,7 +17,7 @@ public abstract class Ammo extends CrossableObject {
     public abstract int getAmmo();
 
     @Override
-    public void onGetDamage(double d) {
+    public void onGetDamage(double d, WorldObject source) {
         world.deleteObject(this);
     }
 

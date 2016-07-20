@@ -6,7 +6,7 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
 
 /**
  * Неподвижный объект
- * @author Vasily Monakhov 
+ * @author Vasily Monakhov
  */
 abstract class NonMovableObject extends WorldObject {
 
@@ -19,4 +19,8 @@ abstract class NonMovableObject extends WorldObject {
         super(world, position);
     }
 
+    @Override
+    public boolean isAlive() {
+        return false;
+    }
 }

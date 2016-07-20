@@ -83,13 +83,13 @@
 
     </objects>
     <entities>
-        <entity class = "zombie" id = "z0" x = "2048" y = "1256"  azimuth = "225"/>
-        <entity class = "zombie" id = "z1" x = "2248" y = "1256"  azimuth = "225"/>
-        <entity class = "zombie" id = "z2" x = "2448" y = "1256"  azimuth = "225"/>
-        <entity class = "zombie" id = "z3" x = "2648" y = "1256"  azimuth = "225"/>
-        <entity class = "zombie" id = "z4" x = "2848" y = "1256"  azimuth = "225"/>
-        <entity class = "zombie" id = "z5" x = "3048" y = "1256"  azimuth = "225"/>
-        <entity class = "zombie" id = "z6" x = "3248" y = "1256"  azimuth = "225"/>
+        <entity class = "spider" id = "z0" x = "2048" y = "1256"  azimuth = "225"/>
+        <entity class = "spider" id = "z1" x = "2248" y = "1256"  azimuth = "225"/>
+        <entity class = "spider" id = "z2" x = "2448" y = "1256"  azimuth = "225"/>
+        <entity class = "spider" id = "z3" x = "2648" y = "1256"  azimuth = "225"/>
+        <entity class = "spider" id = "z4" x = "2848" y = "1256"  azimuth = "225"/>
+        <entity class = "spider" id = "z5" x = "3048" y = "1256"  azimuth = "225"/>
+        <entity class = "spider" id = "z6" x = "3248" y = "1256"  azimuth = "225"/>
 
         <entity class = "zombie" id = "z00" x = "10000" y = "10000"/>
         <entity class = "zombie" id = "z01" x = "10000" y = "11000"/>

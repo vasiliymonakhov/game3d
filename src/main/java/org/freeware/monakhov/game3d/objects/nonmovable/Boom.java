@@ -41,7 +41,7 @@ public class Boom extends NonMovableObject {
 
     private void makeDamage(WorldObject wo) {
         if (stopDamage) return;
-        wo.onGetDamage(damage * 256 / SpecialMath.lineLength(position, wo.getPosition()));
+        wo.onGetDamage(damage * 256 / SpecialMath.lineLength(position, wo.getPosition()), this);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Boom extends NonMovableObject {
     }
 
     @Override
-    public void onGetDamage(double d) {
+    public void onGetDamage(double d, WorldObject source) {
     }
 
     @Override

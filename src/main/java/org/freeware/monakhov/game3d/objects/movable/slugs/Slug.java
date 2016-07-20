@@ -27,7 +27,7 @@ public abstract class Slug extends Entity {
     public void onInteractWith(WorldObject wo) {
         if (state == BOOMING) {
             if (!stopDamage) {
-                wo.onGetDamage(getDamage());
+                wo.onGetDamage(getDamage(), creator);
             }
         }
     }
@@ -41,14 +41,14 @@ public abstract class Slug extends Entity {
 
     @Override
     public void onCollapseWith(WorldObject wo) {
-        if (wo == creator) return;
+        if (wo == creator || wo.isCrossable()) return;
         if (state == ALIVE) {
             state = BOOMING;
         }
     }
 
     @Override
-    public void onGetDamage(double d) {
+    public void onGetDamage(double d, WorldObject source) {
         if (state == ALIVE) {
             state = BOOMING;
         }

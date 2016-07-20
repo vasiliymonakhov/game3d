@@ -5,7 +5,6 @@ import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
-import org.freeware.monakhov.game3d.weapons.Pistol;
 import org.freeware.monakhov.game3d.weapons.Weapon;
 
 /**
@@ -56,12 +55,12 @@ public class Zombie extends MovingEnemy {
 
     @Override
     Weapon createWeapon(World world, Enemy owner) {
-        return new Pistol(world, owner);
+        return null;
     }
 
     @Override
     double getNearAttackDamage() {
-        return 5;
+        return 10;
     }
 
     @Override
@@ -86,32 +85,32 @@ public class Zombie extends MovingEnemy {
 
     @Override
     long getPanicTime() {
-        return Math.round(5000000000l * Math.random());
+        return Math.round(5.0e9 * Math.random());
     }
 
     @Override
     long getActiveTime() {
-        return 15000000000l;
+        return Math.round(15.0e9 * Math.random());
     }
 
     @Override
     long getInactiveTime() {
-        return 1000000000l;
+        return Math.round(1.0e10 * Math.random());
     }
 
     @Override
     long getTimeToDamage() {
-        return 1000000000l;
+        return Math.round(1.0e9* Math.random() + 0.3e9);
     }
 
     @Override
     long getFireTime() {
-        return Math.round(5000000000l * Math.random() + 3000000000l);
+        return Math.round(5.0e9 * Math.random() + 3.0e9);
     }
 
     @Override
     double getFireRange() {
-        return 256;
+        return 0;
     }
 
     @Override
@@ -124,4 +123,30 @@ public class Zombie extends MovingEnemy {
        SoundSystem.play("zombie_bite");
     }
 
+    @Override
+    boolean targetAcceptable(WorldObject wobj) {
+        // может атаковать других врагов и главного героя
+        return wobj instanceof Enemy || wobj == world.getHero();
+    }
+
+    @Override
+    double getStartHealth() {
+        return 100;
+    }
+
+    @Override
+    void playActivatedSound() {
+        SoundSystem.play("zombie_activated");
+    }
+
+    @Override
+    void playGetDamageSound() {
+        SoundSystem.play("zombie_get_damage");
+    }
+
+    @Override
+    double getNearAttackProbability(WorldObject wo) {
+        if (wo instanceof Zombie) return 0.001;
+        return 0.1;
+    }
 }

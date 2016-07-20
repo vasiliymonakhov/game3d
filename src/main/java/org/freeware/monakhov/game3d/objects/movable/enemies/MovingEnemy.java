@@ -16,10 +16,12 @@ public abstract class MovingEnemy extends Enemy {
         super(world, position, creator, azimuth);
     }
 
+    abstract double getNearAttackProbability(WorldObject wo);
+
     @Override
     public void onInteractWith(WorldObject wo) {
-        if (wo == world.getHero() && state == ALIVE && damage != 0) {
-            wo.onGetDamage(damage);
+        if ((wo == target || Math.random() < getNearAttackProbability(wo)) && (wo.isAlive() || wo == world.getHero()) && this.isAlive() && damage != 0) {
+            wo.onGetDamage(damage, this);
             damage = 0;
             playNearAttackSound();
         }
@@ -41,6 +43,8 @@ public abstract class MovingEnemy extends Enemy {
 
     abstract long getTimeToDamage();
 
+    abstract void playActivatedSound();
+
     @Override
     public void doSomething(long frameNanoTime) {
         super.doSomething(frameNanoTime);
@@ -52,23 +56,22 @@ public abstract class MovingEnemy extends Enemy {
                         damage = getNearAttackDamage();
                         timeToDamage = getTimeToDamage();
                     }
-                    move(frameNanoTime);
-                    fire(frameNanoTime);
+                    if (!fire(frameNanoTime)) {
+                        move(frameNanoTime);
+                    }
                     activeTime += frameNanoTime;
-                    if (activeTime > getActiveTime()) {
-                        activeTime = 0;
-                        active = isCanSeeHero();
-                        if (active) {
-                            activateFriends();
+                    if (getTarget() == null) {
+                        if (activeTime > getActiveTime()) {
+                            deactivate();
                         }
                     }
                 } else {
                     inactiveTime += frameNanoTime;
                     if (inactiveTime > getInactiveTime()) {
-                        inactiveTime = 0;
-                        active = isCanSeeHero();
-                        if (active) {
+                        if (getTarget() != null) {
+                            activate();
                             activateFriends();
+                            playActivatedSound();
                         }
                     }
                 }
@@ -79,17 +82,34 @@ public abstract class MovingEnemy extends Enemy {
     void activateFriends() {
         for (WorldObject wo : world.getAllObjects()) {
             if (wo instanceof MovingEnemy && wo.getRoom() == room) {
-                ((MovingEnemy)wo).active = true;
+                MovingEnemy me = (MovingEnemy)wo;
+                me.active = true;
+                if (me.target == null) {
+                    me.target = target;
+                }
             }
         }
     }
 
     @Override
-    public void onGetDamage(double d) {
-        super.onGetDamage(d);
+    public void onGetDamage(double d, WorldObject source) {
+        super.onGetDamage(d, source);
         if (state == ALIVE) {
+            activate();
             panic();
         }
+    }
+
+    void deactivate() {
+        active = true;
+        activeTime = 0;
+        inactiveTime = 0;
+    }
+
+    void activate() {
+        active = true;
+        activeTime = 0;
+        inactiveTime = 0;
     }
 
     abstract double getNormalMoveSpeed();
@@ -101,26 +121,37 @@ public abstract class MovingEnemy extends Enemy {
     abstract double getPanicStrafeSpeed();
 
     private double moveSpeed = getNormalMoveSpeed();
-    ;
+
     private double strafeSpeed = getNormalStrafeSpeed();
 
     private long panicTime;
 
-    private void panic() {
+    protected void panic() {
+        inPanic = true;
         panicTime = getPanicTime();
         setAzimuth(Math.PI * 2 * Math.random());
         moveSpeed = getPanicMoveSpeed();
         strafeSpeed = getPanicStrafeSpeed();
     }
 
+    boolean inPanic;
+
     protected void move(long frameNanoTime) {
-        panicTime -= frameNanoTime;
-        if (panicTime < 0) {
-            setAzimuth(-calcAngleToHero());
-            moveSpeed = getNormalMoveSpeed();
-            strafeSpeed = getNormalStrafeSpeed();
+        if (inPanic) {
+            panicTime -= frameNanoTime;
+            if (panicTime <= 0) {
+                inPanic = false;
+            }
         } else {
-            panic();
+            if (target != null && (target.isAlive() || target == world.getHero())) {
+                setAzimuth(-calcAngleToObject(target));
+                moveSpeed = getNormalMoveSpeed();
+                strafeSpeed = getNormalStrafeSpeed();
+            } else {
+                active = false;
+                inactiveTime = 0;
+                return;
+            }
         }
         double ms = moveSpeed * frameNanoTime;
         double ss = strafeSpeed * frameNanoTime;
@@ -159,6 +190,7 @@ public abstract class MovingEnemy extends Enemy {
             }
             moveByWithCheck(-ms, ss);
         }
+        panic();
     }
 
     abstract long getPanicTime();
@@ -169,18 +201,18 @@ public abstract class MovingEnemy extends Enemy {
 
     abstract double getFireRange();
 
-    protected void fire(long frameNanoTime) {
-        if (world.getHero().isAlive() && weapon != null) {
-            fireTime -= frameNanoTime;
-            if (SpecialMath.lineLength(position, world.getHero().getPosition()) > getFireRange()) {
-                if (weapon.checkFireLine(azimuth) == world.getHero()) {
-                    if (fireTime < 0) {
-                        weapon.fire();
-                        fireTime = getFireTime();
-                    }
+    protected boolean fire(long frameNanoTime) {
+        fireTime -= frameNanoTime;
+        if (fireTime < 0 && target != null && target.isAlive() && weapon != null) {
+            if (SpecialMath.lineLength(position, target.getPosition()) > getFireRange()) {
+                if (weapon.checkFireLine(azimuth) == target || inPanic) {
+                    weapon.fire();
+                    fireTime = getFireTime();
+                    return true;
                 }
             }
         }
+        return false;
     }
 
 }

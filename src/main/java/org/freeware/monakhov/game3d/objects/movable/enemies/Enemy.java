@@ -28,20 +28,29 @@ public abstract class Enemy extends Entity {
 
     protected final Weapon weapon;
 
-    protected double damageLimit = 100;
+    protected double health = getStartHealth();
+
+    abstract double getStartHealth();
 
     @Override
-    public void onGetDamage(double d) {
+    public void onGetDamage(double d, WorldObject source) {
         if (state == ALIVE) {
-            damageLimit -= d;
-            if (damageLimit < 0) {
+            health -= d;
+            if (health <= 0) {
                 state = DIEING;
                 playDieSound();
+            } else {
+                playGetDamageSound();
+                if (targetAcceptable(source)) {
+                    target = source;
+                }
             }
+
         }
     }
 
     abstract void playDieSound();
+    abstract void playGetDamageSound();
     abstract void playNearAttackSound();
 
     /**
@@ -68,15 +77,22 @@ public abstract class Enemy extends Entity {
                 }
                 break;
             case ALIVE:
-                weapon.doSomething(frameNanoTime);
+                if (weapon != null) {
+                    weapon.doSomething(frameNanoTime);
+                }
                 break;
         }
     }
 
-    protected double calcAngleToHero() {
+    @Override
+    public boolean isAlive() {
+        return state == ALIVE;
+    }
+
+    protected double calcAngleToObject(WorldObject wo) {
         // TODO по возможность протабулировать значения
-        double dx = this.position.getX() - world.getHero().getPosition().getX();
-        double dy = this.position.getY() - world.getHero().getPosition().getY();
+        double dx = this.position.getX() - wo.getPosition().getX();
+        double dy = this.position.getY() - wo.getPosition().getY();
         if (dx == 0) {
             if (dy >= 0) {
                 return Math.PI;
@@ -93,5 +109,22 @@ public abstract class Enemy extends Entity {
             }
         }
     }
+
+    protected WorldObject target;
+
+    WorldObject getTarget() {
+        if (!world.getAllObjects().contains(target) || target != null && !target.isAlive()) {
+            // цели нет, её надо найти и уничтожить
+            if (canSeeHero()) {
+                // видит героя - вот он и цель
+                target = world.getHero();
+            } else {
+                target = null;
+            }
+        }
+        return target;
+    }
+
+    abstract boolean targetAcceptable(WorldObject wobj);
 
 }

@@ -31,7 +31,7 @@ public class AssaultRifle extends InstantBulletWeapon {
 
     @Override
     public double getDamage(double distance) {
-        return 16 * getFireDistance() / distance;
+        return 8 * getFireDistance() / distance;
     }
 
     @Override

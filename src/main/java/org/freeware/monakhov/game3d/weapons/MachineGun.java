@@ -21,17 +21,17 @@ public class MachineGun extends InstantBulletWeapon {
 
     @Override
     public double getAimError() {
-         return -0.01 + 0.02 * Math.random();
+         return -0.02 + 0.04 * Math.random();
     }
 
     @Override
     public double getFireDistance() {
-        return 32768;
+        return 65535;
     }
 
     @Override
     public double getDamage(double distance) {
-        return 8 * getFireDistance() / distance;
+        return 16 * getFireDistance() / distance;
     }
 
     @Override

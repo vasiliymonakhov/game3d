@@ -84,4 +84,9 @@ public class GreenBarrel extends NonMovableObject {
     public void onCycleEnd() {
     }
 
+    @Override
+    public boolean needFlashFromBullet() {
+        return true;
+    }
+
 }

@@ -475,4 +475,9 @@ public class Hero extends MovableObject {
         }
         return 0;
     }
+
+    @Override
+    public boolean needFlashFromBullet() {
+        return armor > 0;
+    }
 }

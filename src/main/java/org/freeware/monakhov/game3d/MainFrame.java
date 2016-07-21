@@ -53,7 +53,7 @@ public class MainFrame extends javax.swing.JFrame {
         hero.takeWeapons();
         world.setHero(hero);
         XMLWorldLoader loader = new XMLWorldLoader();
-        try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld2.xml")) {
+        try (InputStream is = MainFrame.class.getResourceAsStream("/org/freeware/monakhov/game3d/map/testWorld3.xml")) {
             loader.parse(world, is);
         }
 

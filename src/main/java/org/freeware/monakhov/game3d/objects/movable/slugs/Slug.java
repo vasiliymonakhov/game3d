@@ -87,4 +87,9 @@ public abstract class Slug extends Entity {
             stopDamage = true;
     }
 
+    @Override
+    public boolean needFlashFromBullet() {
+        return false;
+    }
+
 }

@@ -47,7 +47,8 @@ public abstract class Weapon {
 
     /**
      * Прицеливание - возвращает азимут траектории полёта пули
-     * @return  азимут
+     *
+     * @return азимут
      */
     double aim() {
         return owner.getAzimuth() + owner.getAimError() + getAimError();
@@ -73,29 +74,35 @@ public abstract class Weapon {
 
     /**
      * Максимальная дистанция стрельбы
+     *
      * @return
      */
     public abstract double getFireDistance();
 
     abstract void playShotSound();
 
+    Point pointInTarget;
+
     public WorldObject checkFireLine(double azimuth) {
         double distance = getFireDistance();
         // самая дальняя точка, куда может долететь пуля
-        Point pt = new Point(owner.getPosition().getX() + distance * Math.sin(azimuth),
-            owner.getPosition().getY() + distance * Math.cos(azimuth));
-        Point pw = findNearestWall(pt, owner.getRoom(), null);
+        pointInTarget = new Point(owner.getPosition().getX() + distance * Math.sin(azimuth),
+                owner.getPosition().getY() + distance * Math.cos(azimuth));
+        Point pw = findNearestWall(pointInTarget, owner.getRoom(), null);
         if (pw != null) {
             // попали в какую-то стенку
-            pt = pw;
+            pointInTarget = pw;
+            distance = SpecialMath.lineLength(owner.getPosition(), pointInTarget);
         }
         // проверить попадание в какой-либо объект между стрелком и точкой попадания в стенку или дальней точкой выстрела
         WorldObject candidateToDie = null; // кандидат на получение пули
         for (WorldObject wo : world.getAllObjects()) {
-            if (wo == owner) continue; // в себя не стрелять
+            if (wo == owner) {
+                continue; // в себя не стрелять
+            }
             // найдём ближайший объект, в который попала пуля
             if (!wo.isCrossable()) { // объект должен быть непроходимым
-                if (SpecialMath.lineAndCircleIntersects(owner.getPosition(), pt, wo.getPosition(), wo.getRadius())) {
+                if (SpecialMath.lineAndCircleIntersects(owner.getPosition(), pointInTarget, wo.getPosition(), wo.getRadius())) {
                     // попали
                     double nd = SpecialMath.lineLength(owner.getPosition(), wo.getPosition());
                     if (nd < distance) {
@@ -108,19 +115,23 @@ public abstract class Weapon {
         }
         if (candidateToDie == null && owner != world.getHero()) {
             // никуда не попали, но владелец оружия враг, а не герой, надо проверить, попал ли он в героя
-            if (SpecialMath.lineAndCircleIntersects(owner.getPosition(), pt, world.getHero().getPosition(), world.getHero().getRadius())) {
+            if (SpecialMath.lineAndCircleIntersects(owner.getPosition(), pointInTarget, world.getHero().getPosition(), world.getHero().getRadius())) {
                 double nd = SpecialMath.lineLength(owner.getPosition(), world.getHero().getPosition());
                 if (nd < distance) {
-                        // пуля попала в героя
-                        candidateToDie = world.getHero();
-                    }
+                    // пуля попала в героя
+                    candidateToDie = world.getHero();
+                    distance = nd;
+                }
             }
         }
+        pointInTarget.moveTo(owner.getPosition().getX() + (distance - 16) * Math.sin(azimuth),
+                owner.getPosition().getY() + (distance - 16) * Math.cos(azimuth));
         return candidateToDie;
     }
 
     /**
      * Найти точку на стене, куда попала пуля
+     *
      * @param pt дальняя точка
      * @param inRoom в какой комнате проверять
      * @param inLine линия, через которую пуля влетела
@@ -129,7 +140,9 @@ public abstract class Weapon {
     private Point findNearestWall(Point pt, Room inRoom, Line inLine) {
         Point p = new Point();
         for (Line l : inRoom.getAllLines()) {
-            if (l == inLine) continue;
+            if (l == inLine) {
+                continue;
+            }
             // проверить все стены в комнате
             if (SpecialMath.lineIntersection(l.getStart(), l.getEnd(), pt, owner.getPosition(), p)) {
                 if (p.between(l.getStart(), l.getEnd()) && p.between(pt, owner.getPosition())) {
@@ -154,6 +167,5 @@ public abstract class Weapon {
     }
 
     abstract public List<BigImage.ImageToDraw> getWeaponView(ScreenBuffer screen);
-
 
 }

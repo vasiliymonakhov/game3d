@@ -27,7 +27,11 @@ public class Sprite {
     /**
      * Смещение спрайта по вертикали и его высота
      */
-    private final int yOffset, height;
+    private int yOffset;
+    /**
+     * Высота спрайта
+     */
+    private final int height;
 
     /**
      * Таблицы для определения, какое изображение нужно использовать для вывода на экран в зависимости от высоты
@@ -52,10 +56,16 @@ public class Sprite {
         addMipMappedImage(0, bi.getWidth(), bi.getHeight(), bi);
         for (int i = 1; i < min.length; i++) {
             int nw = width >> i;
-            if (nw < 1) nw = 1;
             int nh = height >> i;
-            if (nh < 1) nh = 1;
             int bs = 1 << i;
+            if (nw < 1) {
+                nw = 1;
+                bs = width;
+            }
+            if (nh < 1) {
+                nh = 1;
+                bs = height;
+            }
             BufferedImage mmi = new BufferedImage(nw, nh, bi.getType());
             for (int x = 0; x < nw; x ++) {
                 for (int y = 0; y < nh; y ++) {
@@ -64,6 +74,13 @@ public class Sprite {
             }
             addMipMappedImage(i, nw, nh, mmi);
         }
+    }
+
+    private Sprite(Sprite sprite) {
+        this.images = sprite.images;
+        this.width = sprite.width;
+        this.height = sprite.height;
+        this.yOffset = sprite.yOffset;
     }
 
     /**
@@ -139,6 +156,16 @@ public class Sprite {
     }
 
     /**
+     * Возвращает копию спрайта по его идентификаторукопия будет иметь те же самые изображения,
+     * но поля будут свои  их можно будет изменять как нужно
+     * @param id идентификатор спрайта
+     * @return спрайт
+     */
+    public static Sprite getCopy(String id) {
+        return new Sprite(get(id));
+    }
+
+    /**
      * Добавляет новый спрайт
      *
      * @param id идентификатор спрайта
@@ -169,7 +196,7 @@ public class Sprite {
      * @return the yOffset
      */
     public int getYOffset() {
-        return yOffset;
+        return getyOffset();
     }
 
     /**
@@ -177,6 +204,20 @@ public class Sprite {
      */
     public int getHeight() {
         return height;
+    }
+
+    /**
+     * @return the yOffset
+     */
+    public int getyOffset() {
+        return yOffset;
+    }
+
+    /**
+     * @param yOffset the yOffset to set
+     */
+    public void setyOffset(int yOffset) {
+        this.yOffset = yOffset;
     }
 
 }

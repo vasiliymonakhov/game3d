@@ -4,6 +4,7 @@ import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
+import org.freeware.monakhov.game3d.objects.nonmovable.BulletFlash;
 
 /**
  *
@@ -15,9 +16,9 @@ public abstract class InstantBulletWeapon extends Weapon {
         super(world, owner);
     }
 
-
     /**
      * Расчёт повреждений в зависимости от расстояния до цели
+     *
      * @param distance расстояние до цели
      * @return величина повреждения в % здоровья
      */
@@ -29,7 +30,15 @@ public abstract class InstantBulletWeapon extends Weapon {
         if (candidateToDie != null) {
             // в кого-то попали, нанесём ему урон
             candidateToDie.onGetDamage(getDamage(SpecialMath.lineLength(owner.getPosition(), candidateToDie.getPosition())), owner);
+            if (candidateToDie.needFlashFromBullet()) {
+                // нужна вспышка от пули
+                world.addNewObject(new BulletFlash(world, pointInTarget, candidateToDie));
+            }
+        } else {
+            // попали в какую-то стенку, сделаем вспышку
+            world.addNewObject(new BulletFlash(world, pointInTarget));
         }
+
     }
 
 }

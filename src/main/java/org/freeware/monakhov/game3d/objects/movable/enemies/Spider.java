@@ -162,5 +162,10 @@ public class Spider extends MovingEnemy {
         return 0.1;
     }
 
+    @Override
+    public boolean needFlashFromBullet() {
+        return false;
+    }
+
 
 }

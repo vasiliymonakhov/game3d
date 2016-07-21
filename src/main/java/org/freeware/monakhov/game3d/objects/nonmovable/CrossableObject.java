@@ -5,13 +5,13 @@ import org.freeware.monakhov.game3d.map.World;
 
 /**
  * Статический объект, через который можно перейти
- * @author Vasily Monakhov 
+ * @author Vasily Monakhov
  */
 abstract public class CrossableObject extends NonMovableObject {
 
     /**
      * Создаёт объект
-     * @param world мир 
+     * @param world мир
      * @param position позиция
      */
     public CrossableObject(World world, Point position) {
@@ -21,6 +21,11 @@ abstract public class CrossableObject extends NonMovableObject {
     @Override
     public boolean isCrossable() {
         return true;
-    }    
+    }
+
+    @Override
+    public boolean needFlashFromBullet() {
+        return false;
+    }
 
 }

@@ -238,8 +238,14 @@ abstract public class WorldObject {
 
     /**
      * Объект живой или не живой
-     * @return 
+     * @return
      */
     public abstract boolean isAlive();
+
+    /**
+     * При попадании пули должны ли лететь искры
+     * @return
+     */
+    public abstract boolean needFlashFromBullet();
 
 }

@@ -1,6 +1,5 @@
 package org.freeware.monakhov.game3d.objects.nonmovable;
 
-import org.freeware.monakhov.game3d.SpecialMath;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
@@ -10,15 +9,29 @@ import org.freeware.monakhov.game3d.objects.WorldObject;
  *
  * @author Vasily Monakhov
  */
-public class Boom extends NonMovableObject {
+public class BulletFlash extends NonMovableObject {
 
-    public Boom(World world, Point position) {
+    private final Sprite flashSprite;
+
+    public BulletFlash(World world, Point position) {
         super(world, position);
+        flashSprite = Sprite.getCopy("bullet_flash");
+        double r = 32 * Math.random();
+        flashSprite.setyOffset(64 + (int) ( - 16 + r));
     }
+
+    public BulletFlash(World world, Point position, WorldObject wo) {
+        super(world, position);
+        flashSprite = Sprite.getCopy("bullet_flash");
+        double r = 32 * Math.random();
+        flashSprite.setyOffset(wo.getSprite().getYOffset() + wo.getSprite().getHeight() / 2 - 64  + (int) (-16 + r));
+    }
+
+    private final static long FLASH_TIME = 100000000l;
 
     @Override
     public Sprite getSprite() {
-        return Sprite.get("boom");
+         return flashSprite;
     }
 
     @Override
@@ -33,25 +46,15 @@ public class Boom extends NonMovableObject {
 
     @Override
     public double getInteractRadius() {
-        return 2048;
-    }
-
-    protected boolean stopDamage;
-    protected  final double damage = 64;
-
-    private void makeDamage(WorldObject wo) {
-        if (stopDamage) return;
-        wo.onGetDamage(damage * 256 / SpecialMath.lineLength(position, wo.getPosition()), this);
+        return 0;
     }
 
     @Override
     public void onInteractWith(WorldObject wo) {
-        makeDamage(wo);
     }
 
     @Override
     public void onCollapseWith(WorldObject wo) {
-        makeDamage(wo);
     }
 
     private long aliveTime;
@@ -60,7 +63,7 @@ public class Boom extends NonMovableObject {
     @Override
     public void doSomething(long frameNanoTime) {
         aliveTime += frameNanoTime;
-        if (aliveTime > 1000000000l) {
+        if (aliveTime > FLASH_TIME) {
             world.deleteObject(this);
         }
     }
@@ -71,11 +74,11 @@ public class Boom extends NonMovableObject {
 
     @Override
     public void onCycleEnd() {
-        stopDamage = true;
     }
 
     @Override
     public boolean needFlashFromBullet() {
         return false;
     }
+
 }

@@ -149,4 +149,9 @@ public class Zombie extends MovingEnemy {
         if (wo instanceof Zombie) return 0.001;
         return 0.1;
     }
+
+    @Override
+    public boolean needFlashFromBullet() {
+        return false;
+    }
 }

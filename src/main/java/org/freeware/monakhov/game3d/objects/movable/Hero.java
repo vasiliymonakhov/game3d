@@ -7,7 +7,7 @@ import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
-import org.freeware.monakhov.game3d.resources.MultiImage;
+import org.freeware.monakhov.game3d.resources.BigImage;
 import org.freeware.monakhov.game3d.weapons.AssaultRifle;
 import org.freeware.monakhov.game3d.weapons.FireBallGun;
 import org.freeware.monakhov.game3d.weapons.MachineGun;
@@ -449,7 +449,7 @@ public class Hero extends MovableObject {
         return 0;
     }
 
-    public List<MultiImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
+    public List<BigImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
         if (weaponChanging) {
             if (weaponChangingTime < WEAPON_HIDE_TIME) {
                 return weapons[currentWeapon].getWeaponView(screen);

@@ -15,8 +15,10 @@ import java.util.logging.Logger;
 public class AudioFile {
 
     private byte[] bytes;
+    private final int priority;
 
-    AudioFile(String fileName) {
+    AudioFile(String fileName, int priority) {
+        this.priority = priority;
         try {
             InputStream is = AudioFile.class.getResourceAsStream(fileName);
             BufferedInputStream bis = new BufferedInputStream(is);
@@ -31,13 +33,17 @@ public class AudioFile {
         return bytes;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
     private final static Map<String, AudioFile> audios = new LinkedHashMap<>();
 
-    public static void add(String id, String fileName) {
+    public static void add(String id, String fileName, int priority) {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("Audiofile id is null or empty");
         }
-        audios.put(id, new AudioFile(fileName));
+        audios.put(id, new AudioFile(fileName, priority));
     }
 
     public static AudioFile get(String id) {

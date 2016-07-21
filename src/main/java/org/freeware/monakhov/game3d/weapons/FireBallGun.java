@@ -9,7 +9,7 @@ import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.objects.movable.slugs.FireBall;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
 import org.freeware.monakhov.game3d.objects.nonmovable.FireBallAmmo;
-import org.freeware.monakhov.game3d.resources.MultiImage;
+import org.freeware.monakhov.game3d.resources.BigImage;
 
 /**
  *
@@ -68,7 +68,7 @@ public class FireBallGun extends Weapon {
     }
 
     @Override
-    public List<MultiImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
+    public List<BigImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
         return null;
     }
 

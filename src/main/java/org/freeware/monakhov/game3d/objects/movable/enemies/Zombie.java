@@ -65,22 +65,22 @@ public class Zombie extends MovingEnemy {
 
     @Override
     double getNormalMoveSpeed() {
-        return 256 / 1.0E9;
-    }
-
-    @Override
-    double getNormalStrafeSpeed() {
-        return 128 / 1.0E9;
-    }
-
-    @Override
-    double getPanicMoveSpeed() {
         return 512 / 1.0E9;
     }
 
     @Override
-    double getPanicStrafeSpeed() {
+    double getNormalStrafeSpeed() {
         return 256 / 1.0E9;
+    }
+
+    @Override
+    double getPanicMoveSpeed() {
+        return 1024 / 1.0E9;
+    }
+
+    @Override
+    double getPanicStrafeSpeed() {
+        return 512 / 1.0E9;
     }
 
     @Override

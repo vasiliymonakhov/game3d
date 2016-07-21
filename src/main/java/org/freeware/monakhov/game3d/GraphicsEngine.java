@@ -28,7 +28,7 @@ import java.util.concurrent.Semaphore;
 import org.freeware.monakhov.game3d.map.visiblelines.Door;
 import org.freeware.monakhov.game3d.resources.Image;
 import org.freeware.monakhov.game3d.map.Line;
-import org.freeware.monakhov.game3d.resources.MultiImage;
+import org.freeware.monakhov.game3d.resources.BigImage;
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.resources.Sprite;
@@ -58,7 +58,7 @@ public class GraphicsEngine {
     private final double farFarFrontier;
 
     /**
-     * Массив, в котором определяется, какая линия видна в данном столюце экрана
+     * Массив, в котором определяется, какая линия видна в данном столбце экрана
      */
     private final VisibleLine[] mapLines;
     /**
@@ -321,11 +321,17 @@ public class GraphicsEngine {
     private final List<VisibleWallColumn> visibleWallColumns = new ArrayList<>();
 
     /**
+     * Самая дальняя точка видимых стен
+     */
+    private int farestWallIntersectPointIndex;
+
+    /**
      * Подготавливает список видимых столбцов стен
      */
     private void prepareVisibleWallColumns() {
         visibleWallColumns.clear();
         VisibleWallColumn lastColumn = null;
+        int minH = Integer.MAX_VALUE;
         int h = 0, ch = 0;
         BufferedImage bi = null;
         for (int i = 0; i < mapLines.length; i++) {
@@ -341,6 +347,10 @@ public class GraphicsEngine {
                 ch = (int) ((screen.getHeight() - h) / 2);
                 // получаем столбец текстуры
                 bi = l.getSubImage(wallsIntersectPoints[i], h);
+                if (h < minH) {
+                    minH = h;
+                    farestWallIntersectPointIndex = i;
+                }
             }
             if (lastColumn == null) {
                 lastColumn = new VisibleWallColumn(bi, i, h, ch);
@@ -720,7 +730,25 @@ public class GraphicsEngine {
      * @param wo объект
      */
     private boolean prepareToRenderObject(WorldObject wo) {
-        // TODO: оптимизировать!
+        Point cp = new Point();
+        if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), world.getHero().getPosition(), wallsIntersectPoints[farestWallIntersectPointIndex], cp)) {
+            if (!cp.between(world.getHero().getPosition(), wallsIntersectPoints[farestWallIntersectPointIndex])) {
+                // точка пересечения левого луча и линии спрайта где-то сзади или очень далеко или закрыто стенами
+                return false;
+            }
+        }
+        if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), world.getHero().getPosition(), transformedRayPoints[0], cp)) {
+            if (wo.getRight().between(wo.getLeft(), cp)) {
+                // спрайт слева за пределами экрана
+                return false;
+            }
+        }
+        if (SpecialMath.lineIntersection(wo.getLeft(), wo.getRight(), world.getHero().getPosition(), transformedRayPoints[screen.getWidth() - 1], cp)) {
+            if (wo.getLeft().between(cp, wo.getRight())) {
+                // спрайт справа за пределами экрана
+                return false;
+            }
+        }
         Point rsp = new Point();
         int spriteXStartOffset = 0;
         int spriteXEndOffset = -0;
@@ -881,12 +909,12 @@ public class GraphicsEngine {
     /**
      * Класс для рисования комбинированных изображений
      */
-    private static class MultiImageDrawer implements Runnable {
+    private static class BigImageDrawer implements Runnable {
 
         /**
          * Участок комбинированного изображения
          */
-        private final MultiImage.ImageToDraw mi2d;
+        private final BigImage.ImageToDraw mi2d;
         /**
          * Графический контекст
          */
@@ -905,7 +933,7 @@ public class GraphicsEngine {
          * @param doneSignal сигнал завершения
          * @param mi2d участок комбинированного изображения
          */
-        MultiImageDrawer(Graphics2D g, CountDownLatch doneSignal, MultiImage.ImageToDraw mi2d, int dx, int dy) {
+        BigImageDrawer(Graphics2D g, CountDownLatch doneSignal, BigImage.ImageToDraw mi2d, int dx, int dy) {
             this.g = g;
             this.doneSignal = doneSignal;
             this.mi2d = mi2d;
@@ -930,13 +958,15 @@ public class GraphicsEngine {
      * @throws InterruptedException
      */
     private void renderHeroLook(Graphics2D g) throws InterruptedException {
-        List<MultiImage.ImageToDraw> images = world.getHero().getWeaponView(screen);
+        List<BigImage.ImageToDraw> images = world.getHero().getWeaponView(screen);
         int dx = world.getHero().getWeaponX(screen);
         int dy = world.getHero().getWeaponY(screen);
-        if (images == null) return;
+        if (images == null) {
+            return;
+        }
         CountDownLatch doneSignal = new CountDownLatch(images.size());
-        for (final MultiImage.ImageToDraw mi2d : images) {
-            EXECUTOR.execute(new MultiImageDrawer(g, doneSignal, mi2d, dx, dy));
+        for (BigImage.ImageToDraw mi2d : images) {
+            EXECUTOR.execute(new BigImageDrawer(g, doneSignal, mi2d, dx, dy));
         }
         doneSignal.await();
     }
@@ -976,6 +1006,7 @@ public class GraphicsEngine {
 
     /**
      * Рисует информацию о герое
+     *
      * @param g графический контекст
      */
     private void renderHero(Graphics2D g) {
@@ -1037,6 +1068,7 @@ public class GraphicsEngine {
 
     /**
      * Рисует строку
+     *
      * @param g графический контекст
      * @param st строка
      * @param x горизонтальная координата
@@ -1057,7 +1089,9 @@ public class GraphicsEngine {
             w += img.getImage().getWidth();
             h = Math.max(h, img.getImage().getHeight());
         }
-        if (w == 0) return;
+        if (w == 0) {
+            return;
+        }
         int sy = y - h / 2;
         int sx = x - w / 2;
         for (int i = 0; i < st.length(); i++) {
@@ -1075,6 +1109,7 @@ public class GraphicsEngine {
 
     /**
      * Рисует изображение с заданным идентификатором
+     *
      * @param g графический контекст
      * @param id идентификатор
      * @param x горизонтальная координата
@@ -1087,6 +1122,7 @@ public class GraphicsEngine {
 
     /**
      * Рисует изображение с заданным идентификатором
+     *
      * @param g графический контекст
      * @param id идентификатор
      * @param x горизонтальная координата
@@ -1101,6 +1137,7 @@ public class GraphicsEngine {
 
     /**
      * Рисуте прицел
+     *
      * @param g графический контекст
      */
     private void renderAim(Graphics2D g) {
@@ -1221,6 +1258,5 @@ public class GraphicsEngine {
             g.fillOval(dx - ra + (int) (wo.getPosition().getX() * mapScale), dy - ra - (int) (wo.getPosition().getY() * mapScale), 2 * ra, 2 * ra);
         }
     }
-
 
 }

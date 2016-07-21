@@ -41,19 +41,19 @@
         <image id = "sky02" file = "sky02.jpg"/>
     </images>
     <images path = "/org/freeware/monakhov/game3d/graphics/images/weapon/">
-        <image id = "assault_rifle01" file = "assault_rifle01.png"/>
-        <image id = "assault_rifle02" file = "assault_rifle02.png"/>
-        <image id = "assault_rifle03" file = "assault_rifle03.png"/>
-        <image id = "assault_rifle04" file = "assault_rifle04.png"/>
-        <image id = "machine_gun01" file = "machine_gun01.png"/>
-        <image id = "machine_gun02" file = "machine_gun02.png"/>
-        <image id = "machine_gun03" file = "machine_gun03.png"/>
-        <image id = "machine_gun04" file = "machine_gun04.png"/>
-        <image id = "machine_gun05" file = "machine_gun05.png"/>
-        <image id = "knife" file = "knife01.png"/>
-        <image id = "pistol01" file = "pistol01.png"/>
-        <image id = "pistol02" file = "pistol02.png"/>
-        <image id = "pistol03" file = "pistol03.png"/>
+        <bigimage id = "assault_rifle01" file = "assault_rifle01.png"/>
+        <bigimage id = "assault_rifle02" file = "assault_rifle02.png"/>
+        <bigimage id = "assault_rifle03" file = "assault_rifle03.png"/>
+        <bigimage id = "assault_rifle04" file = "assault_rifle04.png"/>
+        <bigimage id = "machine_gun01" file = "machine_gun01.png"/>
+        <bigimage id = "machine_gun02" file = "machine_gun02.png"/>
+        <bigimage id = "machine_gun03" file = "machine_gun03.png"/>
+        <bigimage id = "machine_gun04" file = "machine_gun04.png"/>
+        <bigimage id = "machine_gun05" file = "machine_gun05.png"/>
+        <bigimage id = "knife" file = "knife01.png"/>
+        <bigimage id = "pistol01" file = "pistol01.png"/>
+        <bigimage id = "pistol02" file = "pistol02.png"/>
+        <bigimage id = "pistol03" file = "pistol03.png"/>
     </images>
     <images path = "/org/freeware/monakhov/game3d/graphics/images/words/">
         <image id = "sorry" file = "sorry_red.png"/>
@@ -92,57 +92,16 @@
         <image id = "9_green" file = "9_green.png"/>
         <image id = "9_red" file = "9_red.png"/>
     </images>
-    <multiimages>
-        <multiimage id = "knife" width = "1920" height = "1080">
-            <image id = "knife" x = "940" y = "416"/>
-        </multiimage>
-        <multiimage id = "pistol01" width = "1920" height = "1080">
-            <image id = "pistol01" x = "416" y = "666"/>
-        </multiimage>
-        <multiimage id = "pistol02" width = "1920" height = "1080">
-            <image id = "pistol02" x = "645" y = "585"/>
-        </multiimage>
-        <multiimage id = "pistol03" width = "1920" height = "1080">
-            <image id = "pistol03" x = "645" y = "585"/>
-        </multiimage>
-        <multiimage id = "assault_rifle01" width = "1920" height = "1080">
-            <image id = "assault_rifle01" x = "1423" y = "624"/>
-        </multiimage>
-        <multiimage id = "assault_rifle02" width = "1920" height = "1080">
-            <image id = "assault_rifle02" x = "1086" y = "460"/>
-        </multiimage>
-        <multiimage id = "assault_rifle03" width = "1920" height = "1080">
-            <image id = "assault_rifle02" x = "1086" y = "460"/>
-        </multiimage>
-        <multiimage id = "assault_rifle04" width = "1920" height = "1080">
-            <image id = "assault_rifle04" x = "1086" y = "460"/>
-        </multiimage>
-        <multiimage id = "machine_gun01" width = "1920" height = "1080">
-            <image id = "machine_gun01" x = "1070" y = "654"/>
-        </multiimage>
-        <multiimage id = "machine_gun02" width = "1920" height = "1080">
-            <image id = "machine_gun02" x = "822" y = "356"/>
-        </multiimage>
-        <multiimage id = "machine_gun03" width = "1920" height = "1080">
-            <image id = "machine_gun03" x = "822" y = "356"/>
-        </multiimage>
-        <multiimage id = "machine_gun04" width = "1920" height = "1080">
-            <image id = "machine_gun04" x = "822" y = "356"/>
-        </multiimage>
-        <multiimage id = "machine_gun05" width = "1920" height = "1080">
-            <image id = "machine_gun05" x = "822" y = "356"/>
-        </multiimage>
-    </multiimages>
     <audiofiles path = "/org/freeware/monakhov/game3d/audio/">
-        <audiofile id = "pistol_shot" file = "pistol_shot.wav"/>
-        <audiofile id = "fireball_shot" file = "fireball_shot.wav"/>
-        <audiofile id = "rifle_shot" file = "rifle_shot.wav"/>
-        <audiofile id = "boom" file = "boom.wav"/>
-        <audiofile id = "fireball_boom" file = "fireball_boom.wav"/>
-        <audiofile id = "zombie_activated" file = "zombie_activated.wav"/>
-        <audiofile id = "zombie_bite" file = "zombie_bite.wav"/>
-        <audiofile id = "zombie_die" file = "zombie_die.wav"/>
-        <audiofile id = "zombie_get_damage" file = "zombie_get_damage.wav"/>
-        <audiofile id = "door" file = "door.wav"/>
+        <audiofile id = "pistol_shot" file = "pistol_shot.wav" priority = "2"/>
+        <audiofile id = "fireball_shot" file = "fireball_shot.wav" priority = "2"/>
+        <audiofile id = "rifle_shot" file = "rifle_shot.wav" priority = "2"/>
+        <audiofile id = "boom" file = "boom.wav" priority = "3"/>
+        <audiofile id = "fireball_boom" file = "fireball_boom.wav" priority = "0"/>
+        <audiofile id = "zombie_activated" file = "zombie_activated.wav" priority = "0"/>
+        <audiofile id = "zombie_bite" file = "zombie_bite.wav" priority = "0"/>
+        <audiofile id = "zombie_die" file = "zombie_die.wav" priority = "1"/>
+        <audiofile id = "zombie_get_damage" file = "zombie_get_damage.wav" priority = "0"/>
+        <audiofile id = "door" file = "door.wav" priority = "0"/>
     </audiofiles>
 </root>

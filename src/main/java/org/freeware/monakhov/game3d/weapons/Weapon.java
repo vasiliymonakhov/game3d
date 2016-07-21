@@ -10,7 +10,7 @@ import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
-import org.freeware.monakhov.game3d.resources.MultiImage;
+import org.freeware.monakhov.game3d.resources.BigImage;
 
 /**
  *
@@ -153,7 +153,7 @@ public abstract class Weapon {
         return null;
     }
 
-    abstract public List<MultiImage.ImageToDraw> getWeaponView(ScreenBuffer screen);
+    abstract public List<BigImage.ImageToDraw> getWeaponView(ScreenBuffer screen);
 
 
 }

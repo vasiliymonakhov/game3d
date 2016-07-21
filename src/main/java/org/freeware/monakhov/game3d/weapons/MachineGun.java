@@ -6,7 +6,7 @@ import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
-import org.freeware.monakhov.game3d.resources.MultiImage;
+import org.freeware.monakhov.game3d.resources.BigImage;
 
 /**
  * Пистолетик
@@ -59,7 +59,7 @@ public class MachineGun extends InstantBulletWeapon {
     }
 
   @Override
-    public List<MultiImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
+    public List<BigImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
         if (timeFromLastShot >= getTimeBetweenShots()) {
             return images[images.length - 1].getImagesToDraw(screen);
         } else {
@@ -68,7 +68,7 @@ public class MachineGun extends InstantBulletWeapon {
         }
     }
 
-    private final static MultiImage[] images = {MultiImage.get("machine_gun02"), MultiImage.get("machine_gun03"),
-        MultiImage.get("machine_gun04"), MultiImage.get("machine_gun05"), MultiImage.get("machine_gun01")};
+    private final static BigImage[] images = {BigImage.get("machine_gun02"), BigImage.get("machine_gun03"),
+        BigImage.get("machine_gun04"), BigImage.get("machine_gun05"), BigImage.get("machine_gun01")};
 
 }

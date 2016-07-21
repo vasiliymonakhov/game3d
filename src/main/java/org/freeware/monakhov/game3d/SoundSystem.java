@@ -1,18 +1,14 @@
 package org.freeware.monakhov.game3d;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineEvent.Type;
-import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import org.freeware.monakhov.game3d.resources.AudioFile;
 
@@ -22,10 +18,15 @@ import org.freeware.monakhov.game3d.resources.AudioFile;
  */
 public class SoundSystem {
 
-    private final static BlockingQueue<String> bq = new LinkedBlockingQueue<>();
+    private final static PriorityBlockingQueue<AudioFile> bq = new PriorityBlockingQueue<>(64, new Comparator<AudioFile>() {
+        @Override
+        public int compare(AudioFile o1, AudioFile o2) {
+            return o2.getPriority() - o1.getPriority();
+        }
+    });
 
     public static void play(final String id) {
-        bq.add(id);
+        bq.add(AudioFile.get(id));
     }
 
     public static void init() {
@@ -36,82 +37,54 @@ public class SoundSystem {
 
     private static final int MAX_SOUNDS = 16;
 
-    private static class Player implements Runnable {
+    static class Player implements Runnable {
+
+        private final Set<AudioFile> nowPlaying = new HashSet<>();
 
         private final Executor EXECUTOR = Executors.newFixedThreadPool(MAX_SOUNDS);
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        String id = bq.take();
-                        if (soundsCount.get() > MAX_SOUNDS) {
-                            continue;
-                        }
-                        AudioFile af = AudioFile.get(id);
-                        EXECUTOR.execute(new Sound(af, this));
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(SoundSystem.class.getName()).log(Level.SEVERE, "Can't play audiofile", ex);
-                    }
-                }
-            }
 
-            private final AtomicInteger soundsCount = new AtomicInteger();
+        ReentrantLock lock = new ReentrantLock();
 
-            synchronized void  incSoundsCount(Sound sound) {
-                soundsCount.incrementAndGet();
-            }
-
-            synchronized void  decSoundsCount(Sound sound) {
-                soundsCount.decrementAndGet();
-            }
-
-    }
-
-    private final static AudioFormat auf = new AudioFormat(44100, 16, 1, true, false);
-
-    private static class Sound implements Runnable, LineListener {
-
-        Sound(AudioFile af, Player player) {
-            this.af = af;
-            this.player = player;
-        }
-
-        private final AudioFile af;
-        private final Player player;
+        int soundsCount;
 
         @Override
         public void run() {
-            try (Clip clip = AudioSystem.getClip()) {
-                player.incSoundsCount(this);
-                clip.addLineListener(this);
-                clip.open(auf, af.getBytes(), 0, af.getBytes().length);
-                clip.setMicrosecondPosition(0);
-                clip.start();
-                waitUntilDone();
-                clip.stop();
-            } catch (LineUnavailableException | InterruptedException ex) {
-                Logger.getLogger(SoundSystem.class.getName()).log(Level.SEVERE, "Can't play audiofile", ex);
+            SoundRunnable nsr;
+            cycle: while (true) {
+                try {
+                    AudioFile af = bq.take();
+                    try {
+                        lock.lock();
+                        if (soundsCount > MAX_SOUNDS) {
+                            int priority = af.getPriority();
+                            for (AudioFile npaf : nowPlaying) {
+                                if (npaf == af || npaf.getPriority() > priority) {
+                                    continue cycle;
+                                }
+                            }
+                        }
+                        nsr = new SoundRunnable(af, this);
+                        nowPlaying.add(af);
+                        soundsCount++;
+                    } finally {
+                        lock.unlock();
+                    }
+                    EXECUTOR.execute(nsr);
+                } catch (InterruptedException | LineUnavailableException ex) {
+                    Logger.getLogger(SoundSystem.class.getName()).log(Level.SEVERE, "Can't play audiofile", ex);
+                }
+            }
+        }
+
+        synchronized void onEndPlaying(SoundRunnable sound) {
+            try {
+                lock.lock();
+                soundsCount--;
+                nowPlaying.remove(sound.getAf());
             } finally {
-                player.decSoundsCount(this);
+                lock.unlock();
             }
         }
 
-        private boolean done = false;
-
-        @Override
-        public synchronized void update(LineEvent event) {
-            Type eventType = event.getType();
-            if (eventType == Type.STOP || eventType == Type.CLOSE) {
-                done = true;
-                notifyAll();
-            }
-        }
-
-        public synchronized void waitUntilDone() throws InterruptedException {
-            while (!done) {
-                wait();
-            }
-        }
     }
-
 }

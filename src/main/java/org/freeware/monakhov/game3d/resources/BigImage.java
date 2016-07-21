@@ -4,11 +4,14 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import org.freeware.monakhov.game3d.ScreenBuffer;
 
 /**
@@ -16,7 +19,7 @@ import org.freeware.monakhov.game3d.ScreenBuffer;
  * разбить его на несколько частей, которые можно будет потом отрисовать параллельно, а прозрачные участки не рисовать вообще
  * @author Vasily Monakhov
  */
-public class MultiImage {
+public class BigImage {
 
     /**
      * Узел для элемента списка
@@ -25,7 +28,7 @@ public class MultiImage {
         /**
          * Изображение
          */
-        private final Image i;
+        private final BufferedImage i;
         /**
          * Горизонтальная координата оригинального изображения
          */
@@ -41,7 +44,7 @@ public class MultiImage {
          * @param x горизонталная координата
          * @param y вертикальная координата
          */
-        Node(Image i, int x, int y) {
+        Node(BufferedImage i, int x, int y) {
             this.i = i;
             this.x = x;
             this.y = y;
@@ -51,21 +54,61 @@ public class MultiImage {
     /**
      * Ширина полного изображения
      */
-    private final int width;
+    private final static int WIDTH = 1920;
     /**
      * Высота полного изображения
      */
-    private final int height;
+    private final static int HEIGHT = 1080;
+
+    private final static int CHUNK_WIDTH = 60;
+    private final static int CHUNK_HEIGHT = 60;
 
     /**
-     * Создайт комбинированное изображение
-     * @param width ширина
-     * @param height высота
+     * Создаёт комбинированное изображение
      */
-    public MultiImage(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public BigImage(String fileName) throws IOException {
+        BufferedImage bi = ImageIO.read(BigImage.class.getResourceAsStream(fileName));
+        GraphicsConfiguration gfx_config = GraphicsEnvironment.
+                getLocalGraphicsEnvironment().getDefaultScreenDevice().
+                getDefaultConfiguration();
+        for (int x = 0; x < WIDTH / CHUNK_WIDTH; x++) {
+            for (int y = 0; y < HEIGHT / CHUNK_HEIGHT; y++) {
+                int ix = x * CHUNK_WIDTH;
+                int iy = y * CHUNK_HEIGHT;
+                BufferedImage subImage = bi.getSubimage(ix, iy, CHUNK_WIDTH, CHUNK_HEIGHT);
+                int opaq = checkChunkTransparency(subImage);
+                if (opaq != 0) {
+                    BufferedImage image = gfx_config.createCompatibleImage(CHUNK_WIDTH, CHUNK_HEIGHT, opaq == 1 ? Transparency.OPAQUE : Transparency.TRANSLUCENT);
+                    image.setAccelerationPriority(1);
+                    Graphics2D g = (Graphics2D) image.createGraphics();
+                    g.drawImage(subImage, 0, 0, null);
+                    g.dispose();
+                    nodes.add(new Node(image, x, y));
+                }
+            }
+        }
     }
+
+    private static int  checkChunkTransparency(BufferedImage bi) {
+        int transparent = 0;
+        int opaque = 0;
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                int argb = bi.getRGB(x, y);
+                int alpha = argb >>> 24;
+                if (alpha == 0) {
+                    transparent++;
+                } else if (alpha == 255) {
+                    opaque++;
+                }
+            }
+        }
+        int pixels = bi.getWidth() * bi.getHeight();
+        if (transparent == pixels) return 0;
+        if (opaque == pixels) return 1;
+        return 2;
+    }
+
 
     /**
      * Список частей изображения
@@ -73,37 +116,22 @@ public class MultiImage {
     private final List<Node> nodes = new ArrayList<>();
 
     /**
-     * Добавляет новое иображение в комбинированное изображение
-     * @param i изображене участка
-     * @param x горизонталная координата участка в изображении
-     * @param y вертикальная координата участка в изображении
-     */
-    void addImage(Image i, int x, int y) {
-        if (i == null) {
-            throw new IllegalArgumentException("Image is null or empty");
-        }
-        nodes.add(new Node(i, x, y));
-    }
-
-    /**
      * Карта для хранения изображений
      */
-    private final static Map<String, MultiImage> multiImages = new LinkedHashMap<>();
+    private final static Map<String, BigImage> bigImages = new LinkedHashMap<>();
 
     /**
      * Добавляет комбинированное изображение
      * @param id идентификатор
-     * @param width ширина
-     * @param height высоте
      * @return ссылка на созданное комбинированное изображение
      * @throws IllegalArgumentException
      */
-    public static MultiImage add(String id, int width, int height) throws IllegalArgumentException {
+    public static BigImage add(String id, String fileName) throws IllegalArgumentException, IOException {
         if (id == null || id.isEmpty()) {
-            throw new IllegalArgumentException("MultiImage id is null or empty");
+            throw new IllegalArgumentException("BigImage id is null or empty");
         }
-        MultiImage mi = new MultiImage(width, height);
-        multiImages.put(id, mi);
+        BigImage mi = new BigImage(fileName);
+        bigImages.put(id, mi);
         return mi;
     }
 
@@ -112,10 +140,10 @@ public class MultiImage {
      * @param id идентификатор
      * @return изображение
      */
-    public static MultiImage get(String id) {
-        MultiImage img = multiImages.get(id);
+    public static BigImage get(String id) {
+        BigImage img = bigImages.get(id);
         if (img == null) {
-            throw new IllegalArgumentException("MultiImage " + id + " not exists");
+            throw new IllegalArgumentException("BigImage " + id + " not exists");
         }
         return img;
     }
@@ -144,20 +172,22 @@ public class MultiImage {
             GraphicsConfiguration gfx_config = GraphicsEnvironment.
                     getLocalGraphicsEnvironment().getDefaultScreenDevice().
                     getDefaultConfiguration();
-            // вычислим координаты и размер в соответсвии с масштабом
-            x = (int)Math.round((double)n.x * screen.getWidth() / width);
-            y = (int)Math.round((double)n.y * screen.getHeight() / height);
-            int w = (int)Math.round((double)n.i.getImage().getWidth() * screen.getWidth() / width);
-            int h = (int)Math.round((double)n.i.getImage().getHeight() * screen.getHeight() / height);
+            // вычислим координаты и размер в соответствии с масштабом
+            x = n.x * CHUNK_WIDTH * screen.getWidth() / WIDTH;
+            y = n.y * CHUNK_HEIGHT * screen.getHeight() / HEIGHT;
+            int x1 = (n.x + 1) * CHUNK_WIDTH * screen.getWidth() / WIDTH;
+            int y1 = (n.y  + 1) * CHUNK_HEIGHT * screen.getHeight() / HEIGHT;
+            int w = x1 - x;
+            int h = y1 - y;
             // создадим новое изображение, совместимое с буфером
-            i = gfx_config.createCompatibleImage(w, h, n.i.getImage().getColorModel().getTransparency());
+            i = gfx_config.createCompatibleImage(w, h, n.i.getColorModel().getTransparency());
             i.setAccelerationPriority(1);
             Graphics2D g = (Graphics2D) i.createGraphics();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
             // рисуем его красиво
-            g.drawImage(n.i.getImage(), 0, 0, w, h, null);
+            g.drawImage(n.i, 0, 0, w, h, null);
             g.dispose();
         }
 

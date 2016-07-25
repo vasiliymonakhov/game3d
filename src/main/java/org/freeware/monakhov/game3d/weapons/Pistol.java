@@ -5,7 +5,9 @@ import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
-import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.objects.nonmovable.CanGiveAmmo;
+import org.freeware.monakhov.game3d.objects.nonmovable.PistolAmmo;
+import org.freeware.monakhov.game3d.objects.nonmovable.PistolOnMap;
 import org.freeware.monakhov.game3d.resources.BigImage;
 
 /**
@@ -14,9 +16,9 @@ import org.freeware.monakhov.game3d.resources.BigImage;
  */
 public class Pistol extends InstantBulletWeapon {
 
-    public Pistol(World world, MovableObject owner) {
-        super(world, owner);
-        ammo = 17;
+    public Pistol(World world, MovableObject owner, int ammo) {
+        super(world, owner, ammo);
+        ammo = 10;
     }
 
     @Override
@@ -27,10 +29,6 @@ public class Pistol extends InstantBulletWeapon {
     @Override
     public double getDamage(double distance) {
         return 8 * getFireDistance() / distance;
-    }
-
-    @Override
-    public void pickUpAmmo(Ammo wo) {
     }
 
     @Override
@@ -69,5 +67,15 @@ public class Pistol extends InstantBulletWeapon {
     }
 
     private final static BigImage[] images = {BigImage.get("pistol02"), BigImage.get("pistol03"), BigImage.get("pistol01")};
+
+     @Override
+    public void pickUpAmmo(CanGiveAmmo wo) {
+        if (ammo == 100) return;
+        if (wo instanceof PistolAmmo || wo instanceof PistolOnMap) {
+            ammo += wo.getAmmo();
+            if (ammo > 100) ammo = 100;
+            world.deleteObject(wo);
+        }
+    }
 
 }

@@ -7,11 +7,8 @@ import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.objects.nonmovable.WeaponOnMap;
 import org.freeware.monakhov.game3d.resources.BigImage;
-import org.freeware.monakhov.game3d.weapons.AssaultRifle;
-import org.freeware.monakhov.game3d.weapons.FireBallGun;
-import org.freeware.monakhov.game3d.weapons.MachineGun;
-import org.freeware.monakhov.game3d.weapons.Pistol;
 import org.freeware.monakhov.game3d.weapons.Weapon;
 
 /**
@@ -30,13 +27,6 @@ public class Hero extends MovableObject {
     public Hero(World world, Point position) {
         super(world, position, null);
         weapons = new Weapon[5];
-    }
-
-    public void takeWeapons() {
-        weapons[1] = new Pistol(world, this);
-        weapons[2] = new AssaultRifle(world, this);
-        weapons[3] = new MachineGun(world, this);
-        weapons[4] = new FireBallGun(world, this);
     }
 
     @Override
@@ -288,14 +278,17 @@ public class Hero extends MovableObject {
     }
 
     private final Weapon[] weapons;
-    private volatile int currentWeapon = 1;
+    private int currentWeapon = 0;
+    private int coolestWeapon = 0;
 
     private volatile long painTime, painTimeCounter;
     private volatile int painLevel;
 
     @Override
     public void doSomething(long frameNanoTime) {
-        weapons[currentWeapon].doSomething(frameNanoTime);
+        if (weapons[currentWeapon] != null) {
+            weapons[currentWeapon].doSomething(frameNanoTime);
+        }
         if (weaponChanging) {
             weaponChangingTime += frameNanoTime;
             if (weaponChangingTime > WEAPON_CHANGE_TIME) {
@@ -326,7 +319,7 @@ public class Hero extends MovableObject {
     }
 
     private volatile boolean weaponChanging;
-    private  volatile long weaponChangingTime;
+    private volatile long weaponChangingTime;
     private volatile int newWeapon;
 
     private final long WEAPON_HIDE_TIME = 500000000l;
@@ -334,7 +327,9 @@ public class Hero extends MovableObject {
     private final long WEAPON_CHANGE_TIME = WEAPON_HIDE_TIME + WEAPON_TAKE_TIME;
 
     void changeWeapon(int newWeapon) {
-        if (weaponChanging  || newWeapon == currentWeapon) return;
+        if (weaponChanging || newWeapon == currentWeapon) {
+            return;
+        }
         if (weapons[newWeapon] != null) {
             weaponChanging = true;
             weaponChangingTime = 0;
@@ -391,6 +386,19 @@ public class Hero extends MovableObject {
                     wp.pickUpAmmo((Ammo) wo);
                 }
             }
+        } else if (wo instanceof WeaponOnMap) {
+            WeaponOnMap wom = (WeaponOnMap) wo;
+            int slot = wom.getSlot();
+            if (weapons[slot] != null) {
+                weapons[slot].pickUpAmmo(wom);
+            } else {
+                weapons[slot] = wom.create(this);
+                if (slot > coolestWeapon) {
+                    coolestWeapon = slot;
+                    changeWeapon(slot);
+                }
+            }
+            world.deleteObject(wo);
         }
     }
 
@@ -418,15 +426,24 @@ public class Hero extends MovableObject {
     }
 
     public String getWeaponString() {
-        return weapons[currentWeapon].getImageName();
+        if (weapons[currentWeapon] != null) {
+            return weapons[currentWeapon].getImageName();
+        }
+        return null;
     }
 
     public String getAmmoString() {
-        return weapons[currentWeapon].getAmmoString();
+        if (weapons[currentWeapon] != null) {
+            return weapons[currentWeapon].getAmmoString();
+        }
+        return null;
     }
 
     public boolean isLowAmmo() {
-        return weapons[currentWeapon].isLowAmmo();
+        if (weapons[currentWeapon] != null) {
+            return weapons[currentWeapon].isLowAmmo();
+        }
+        return false;
     }
 
     public boolean isLowArmor() {
@@ -452,12 +469,17 @@ public class Hero extends MovableObject {
     public List<BigImage.ImageToDraw> getWeaponView(ScreenBuffer screen) {
         if (weaponChanging) {
             if (weaponChangingTime < WEAPON_HIDE_TIME) {
-                return weapons[currentWeapon].getWeaponView(screen);
+                if (weapons[currentWeapon] != null) {
+                    return weapons[currentWeapon].getWeaponView(screen);
+                }
             } else {
                 return weapons[newWeapon].getWeaponView(screen);
             }
         }
-        return weapons[currentWeapon].getWeaponView(screen);
+        if (weapons[currentWeapon] != null) {
+            return weapons[currentWeapon].getWeaponView(screen);
+        }
+        return null;
     }
 
     public int getWeaponX(ScreenBuffer screen) {
@@ -468,9 +490,9 @@ public class Hero extends MovableObject {
         if (weaponChanging) {
             long wct = weaponChangingTime;
             if (wct < WEAPON_HIDE_TIME) {
-                return (int)(screen.getHeight() * wct / WEAPON_HIDE_TIME);
+                return (int) (screen.getHeight() * wct / WEAPON_HIDE_TIME);
             } else {
-                return (int)(screen.getHeight() - screen.getHeight() * (wct - WEAPON_HIDE_TIME) / WEAPON_TAKE_TIME);
+                return (int) (screen.getHeight() - screen.getHeight() * (wct - WEAPON_HIDE_TIME) / WEAPON_TAKE_TIME);
             }
         }
         return 0;

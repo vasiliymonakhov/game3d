@@ -5,7 +5,9 @@ import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
-import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.objects.nonmovable.AssaultRifleAmmo;
+import org.freeware.monakhov.game3d.objects.nonmovable.AssaultRifleOnMap;
+import org.freeware.monakhov.game3d.objects.nonmovable.CanGiveAmmo;
 import org.freeware.monakhov.game3d.resources.BigImage;
 
 /**
@@ -14,9 +16,8 @@ import org.freeware.monakhov.game3d.resources.BigImage;
  */
 public class AssaultRifle extends InstantBulletWeapon {
 
-    public AssaultRifle(World world, MovableObject owner) {
-        super(world, owner);
-        ammo = 30;
+    public AssaultRifle(World world, MovableObject owner, int ammo) {
+        super(world, owner, ammo);
     }
 
     @Override
@@ -34,8 +35,14 @@ public class AssaultRifle extends InstantBulletWeapon {
         return 8 * getFireDistance() / distance;
     }
 
-    @Override
-    public void pickUpAmmo(Ammo wo) {
+     @Override
+    public void pickUpAmmo(CanGiveAmmo wo) {
+        if (ammo == 100) return;
+        if (wo instanceof AssaultRifleAmmo || wo instanceof AssaultRifleOnMap) {
+            ammo += wo.getAmmo();
+            if (ammo > 100) ammo = 100;
+            world.deleteObject(wo);
+        }
     }
 
     @Override

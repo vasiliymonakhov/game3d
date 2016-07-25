@@ -129,10 +129,24 @@
         <object class = "green_barrel" id = "green_barrel611" x = "556" y = "256"/>
         <object class = "green_barrel" id = "green_barrel612" x = "556" y = "356"/>
 
-        <object class = "fireball_ammo" id = "fba1" x = "10800" y = "1800"/>
-        <object class = "fireball_ammo" id = "fba2" x = "10700" y = "1800"/>
-        <object class = "fireball_ammo" id = "fba3" x = "10850" y = "1800"/>
-        <object class = "fireball_ammo" id = "fba4" x = "10750" y = "1800"/>
+        <object class = "medkit" id = "fba1" x = "10800" y = "1800"/>
+        <object class = "assault_rifle_ammo" id = "fba2" x = "10700" y = "1800"/>
+        <object class = "machine_gun_ammo" id = "fba3" x = "10850" y = "1800"/>
+        <object class = "pistol_ammo" id = "fba4" x = "10750" y = "1800"/>
+
+        <object class = "medkit" id = "fba5" x = "1800" y = "11800"/>
+        <object class = "assault_rifle_ammo" id = "fba7" x = "1700" y = "11800"/>
+        <object class = "machine_gun_ammo" id = "fba6" x = "1850" y = "11800"/>
+        <object class = "pistol_ammo" id = "fba8" x = "1750" y = "11800"/>
+
+        <object class = "pistol" id = "weapon01" x = "512" y = "512"/>
+        <object class = "assault_rifle" id = "weapon02" x = "512" y = "768"/>
+        <object class = "machine_gun" id = "weapon03" x = "512" y = "1024"/>
+
+        <object class = "pistol_ammo" id = "weapon01-1" x = "512" y = "1512"/>
+        <object class = "assault_rifle_ammo" id = "weapon02-1" x = "512" y = "1768"/>
+        <object class = "machine_gun_ammo" id = "weapon03-1" x = "512" y = "2024"/>
+
 
     </objects>
     <entities>

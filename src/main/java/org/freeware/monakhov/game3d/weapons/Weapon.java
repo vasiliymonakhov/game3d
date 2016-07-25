@@ -9,7 +9,7 @@ import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
-import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.objects.nonmovable.CanGiveAmmo;
 import org.freeware.monakhov.game3d.resources.BigImage;
 
 /**
@@ -21,9 +21,10 @@ public abstract class Weapon {
     protected final World world;
     protected final MovableObject owner;
 
-    public Weapon(World world, MovableObject owner) {
+    public Weapon(World world, MovableObject owner, int ammo) {
         this.world = world;
         this.owner = owner;
+        this.ammo = ammo;
     }
 
     protected int ammo;
@@ -56,7 +57,7 @@ public abstract class Weapon {
 
     abstract void makeFire();
 
-    public abstract void pickUpAmmo(Ammo wo);
+    public abstract void pickUpAmmo(CanGiveAmmo wo);
 
     public void doSomething(long frameNanoTime) {
         timeFromLastShot += frameNanoTime;

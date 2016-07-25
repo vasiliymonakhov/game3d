@@ -32,6 +32,13 @@
         <sprite id = "spider_2" width = "32" height = "32" y_offset="224" file = "spider_2.png"/>
         <sprite id = "spider_3" width = "32" height = "16" y_offset="240" file = "spider_3.png"/>
         <sprite id = "bullet_flash" width = "128" height = "128" y_offset="0" file = "bullet_flash.png"/>
+        <sprite id = "pistol" width = "32" height = "24" y_offset="232" file = "pistol.png"/>
+        <sprite id = "machine_gun" width = "128" height = "64" y_offset="192" file = "machine_gun.png"/>
+        <sprite id = "assault_rifle" width = "128" height = "48" y_offset="208" file = "assault_rifle.png"/>
+        <sprite id = "pistol_ammo" width = "16" height = "32" y_offset="224" file = "pistol_ammo.png"/>
+        <sprite id = "machine_gun_ammo" width = "64" height = "48" y_offset="208" file = "machine_gun_ammo.png"/>
+        <sprite id = "assault_rifle_ammo" width = "32" height = "48" y_offset="208" file = "assault_rifle_ammo.png"/>
+
     </sprites>
     <images path = "/org/freeware/monakhov/game3d/graphics/images/">
         <image id = "floor01" file = "floor01.png"/>

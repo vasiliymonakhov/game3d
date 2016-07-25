@@ -12,8 +12,8 @@ import org.freeware.monakhov.game3d.objects.nonmovable.BulletFlash;
  */
 public abstract class InstantBulletWeapon extends Weapon {
 
-    public InstantBulletWeapon(World world, MovableObject owner) {
-        super(world, owner);
+    public InstantBulletWeapon(World world, MovableObject owner, int ammo) {
+        super(world, owner, ammo);
     }
 
     /**

@@ -1029,9 +1029,11 @@ public class GraphicsEngine {
         renderImage(g, "health", x, y - 40, world.getHero().isLowHealth());
         renderString(g, world.getHero().getHealthString(), x, y, world.getHero().isLowHealth());
         x = 4 * sx;
-        renderImage(g, world.getHero().getWeaponString(), x, y - 40, world.getHero().isLowAmmo());
-        renderString(g, world.getHero().getAmmoString(), x, y, world.getHero().isLowAmmo());
-
+        String weaponString = world.getHero().getWeaponString();
+        if (weaponString != null) {
+            renderImage(g, weaponString, x, y - 40, world.getHero().isLowAmmo());
+            renderString(g, world.getHero().getAmmoString(), x, y, world.getHero().isLowAmmo());
+        }
     }
 
     /**

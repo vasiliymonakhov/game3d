@@ -6,9 +6,15 @@ import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.nonmovable.AssaultRifleAmmo;
+import org.freeware.monakhov.game3d.objects.nonmovable.AssaultRifleOnMap;
 import org.freeware.monakhov.game3d.objects.nonmovable.FireBallAmmo;
 import org.freeware.monakhov.game3d.objects.nonmovable.GreenBarrel;
+import org.freeware.monakhov.game3d.objects.nonmovable.MachineGunAmmo;
+import org.freeware.monakhov.game3d.objects.nonmovable.MachineGunOnMap;
 import org.freeware.monakhov.game3d.objects.nonmovable.MedKit;
+import org.freeware.monakhov.game3d.objects.nonmovable.PistolAmmo;
+import org.freeware.monakhov.game3d.objects.nonmovable.PistolOnMap;
 import org.freeware.monakhov.game3d.objects.nonmovable.Tree;
 import org.xml.sax.Attributes;
 
@@ -202,6 +208,19 @@ abstract public class WorldObject {
                 return new FireBallAmmo(world, new Point(attr));
             case "medkit":
                 return new MedKit(world, new Point(attr));
+            case "pistol":
+                return new PistolOnMap(world,  new Point(attr));
+            case "assault_rifle":
+                return new AssaultRifleOnMap(world,  new Point(attr));
+            case "machine_gun":
+                return new MachineGunOnMap(world,  new Point(attr));
+            case "pistol_ammo":
+                return new PistolAmmo(world,  new Point(attr));
+            case "assault_rifle_ammo":
+                return new AssaultRifleAmmo(world,  new Point(attr));
+            case "machine_gun_ammo":
+                return new MachineGunAmmo(world,  new Point(attr));
+
         }
         return null;
     }

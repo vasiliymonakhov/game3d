@@ -5,7 +5,9 @@ import org.freeware.monakhov.game3d.ScreenBuffer;
 import org.freeware.monakhov.game3d.SoundSystem;
 import org.freeware.monakhov.game3d.map.World;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
-import org.freeware.monakhov.game3d.objects.nonmovable.Ammo;
+import org.freeware.monakhov.game3d.objects.nonmovable.CanGiveAmmo;
+import org.freeware.monakhov.game3d.objects.nonmovable.MachineGunAmmo;
+import org.freeware.monakhov.game3d.objects.nonmovable.MachineGunOnMap;
 import org.freeware.monakhov.game3d.resources.BigImage;
 
 /**
@@ -14,9 +16,8 @@ import org.freeware.monakhov.game3d.resources.BigImage;
  */
 public class MachineGun extends InstantBulletWeapon {
 
-    public MachineGun(World world, MovableObject owner) {
-        super(world, owner);
-        ammo = 200;
+    public MachineGun(World world, MovableObject owner, int ammo) {
+        super(world, owner, ammo);
     }
 
     @Override
@@ -32,10 +33,6 @@ public class MachineGun extends InstantBulletWeapon {
     @Override
     public double getDamage(double distance) {
         return 16 * getFireDistance() / distance;
-    }
-
-    @Override
-    public void pickUpAmmo(Ammo wo) {
     }
 
     @Override
@@ -70,5 +67,15 @@ public class MachineGun extends InstantBulletWeapon {
 
     private final static BigImage[] images = {BigImage.get("machine_gun02"), BigImage.get("machine_gun03"),
         BigImage.get("machine_gun04"), BigImage.get("machine_gun05"), BigImage.get("machine_gun01")};
+
+    @Override
+    public void pickUpAmmo(CanGiveAmmo wo) {
+        if (ammo == 500) return;
+        if (wo instanceof MachineGunAmmo || wo instanceof MachineGunOnMap) {
+            ammo += wo.getAmmo();
+            if (ammo > 500) ammo = 500;
+            world.deleteObject(wo);
+        }
+    }
 
 }

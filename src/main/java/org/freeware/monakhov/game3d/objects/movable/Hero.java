@@ -26,7 +26,7 @@ public class Hero extends MovableObject {
      */
     public Hero(World world, Point position) {
         super(world, position, null);
-        weapons = new Weapon[5];
+        weapons = new Weapon[6];
     }
 
     @Override
@@ -301,18 +301,23 @@ public class Hero extends MovableObject {
             painTimeCounter += frameNanoTime;
             painLevel = (int) Math.round(painLevel * (painTime - painTimeCounter) / painTime);
         }
+        if (!isAlive()) {
+            changeWeapon(0);
+        }
     }
 
     public void fire() {
         if (weaponChanging) {
             return;
         }
-        weapons[currentWeapon].fire();
-        if (weapons[currentWeapon].isOutOfAmmo()) {
-            for (int i = currentWeapon; i >= 0; i--) {
-                if (weapons[i] != null && !weapons[i].isOutOfAmmo()) {
-                    changeWeapon(i);
-                    break;
+        if (weapons[currentWeapon] != null) {
+            weapons[currentWeapon].fire();
+            if (weapons[currentWeapon].isOutOfAmmo()) {
+                for (int i = currentWeapon; i >= 0; i--) {
+                    if (weapons[i] != null && !weapons[i].isOutOfAmmo()) {
+                        changeWeapon(i);
+                        break;
+                    }
                 }
             }
         }
@@ -337,7 +342,14 @@ public class Hero extends MovableObject {
         }
     }
 
-    private volatile double armor = 100;
+    private volatile double armor;
+
+    public void addArmor(double val) {
+        armor += val;
+        if (armor > 200) {
+            armor = 200;
+        }
+    }
 
     private volatile double health = 100;
 
@@ -355,15 +367,6 @@ public class Hero extends MovableObject {
 
     @Override
     public void onGetDamage(double d, WorldObject source) {
-        int newPainLevel = (int) d * 10;
-        if (newPainLevel > 255) {
-            newPainLevel = 255;
-        }
-        if (newPainLevel > painLevel) {
-            painLevel = newPainLevel;
-            painTime = Math.round(d * 500000000l);
-            painTimeCounter = 0;
-        }
         if (armor > 0) {
             armor -= d;
             if (armor < 0) {
@@ -375,6 +378,17 @@ public class Hero extends MovableObject {
         }
         if (health < 0) {
             health = 0;
+        }
+        if (isAlive()) {
+            int newPainLevel = (int) d * 10;
+            if (newPainLevel > 255) {
+                newPainLevel = 255;
+            }
+            if (newPainLevel > painLevel) {
+                painLevel = newPainLevel;
+                painTime = Math.round(d * 500000000l);
+                painTimeCounter = 0;
+            }
         }
     }
 
@@ -410,15 +424,16 @@ public class Hero extends MovableObject {
     public void onCycleEnd() {
     }
 
-    /**
-     * @return the health
-     */
     public double getHealth() {
         return health >= 1 ? health : 0;
     }
 
+    public double getArmor() {
+        return armor >= 1 ? armor : 0;
+    }
+
     public String getHealthString() {
-        return String.format("%d", (int) getHealth());
+        return String.format("%d", (int) health);
     }
 
     public String getArmorString() {
@@ -426,21 +441,21 @@ public class Hero extends MovableObject {
     }
 
     public String getWeaponString() {
-        if (weapons[currentWeapon] != null) {
+        if (weapons[currentWeapon] != null && currentWeapon != 0) {
             return weapons[currentWeapon].getImageName();
         }
         return null;
     }
 
     public String getAmmoString() {
-        if (weapons[currentWeapon] != null) {
+        if (weapons[currentWeapon] != null && currentWeapon != 0) {
             return weapons[currentWeapon].getAmmoString();
         }
         return null;
     }
 
     public boolean isLowAmmo() {
-        if (weapons[currentWeapon] != null) {
+        if (weapons[currentWeapon] != null && currentWeapon != 0) {
             return weapons[currentWeapon].isLowAmmo();
         }
         return false;

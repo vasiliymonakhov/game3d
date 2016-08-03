@@ -60,11 +60,13 @@ public class BigImage {
      */
     private final static int HEIGHT = 1080;
 
-    private final static int CHUNK_WIDTH = 60;
-    private final static int CHUNK_HEIGHT = 60;
+    private final static int CHUNK_WIDTH = 32;
+    private final static int CHUNK_HEIGHT = 20;
 
     /**
      * Создаёт комбинированное изображение
+     * @param fileName
+     * @throws java.io.IOException
      */
     public BigImage(String fileName) throws IOException {
         BufferedImage bi = ImageIO.read(BigImage.class.getResourceAsStream(fileName));
@@ -123,8 +125,10 @@ public class BigImage {
     /**
      * Добавляет комбинированное изображение
      * @param id идентификатор
+     * @param fileName
      * @return ссылка на созданное комбинированное изображение
      * @throws IllegalArgumentException
+     * @throws java.io.IOException
      */
     public static BigImage add(String id, String fileName) throws IllegalArgumentException, IOException {
         if (id == null || id.isEmpty()) {

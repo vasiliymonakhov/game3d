@@ -18,7 +18,6 @@ public class Pistol extends InstantBulletWeapon {
 
     public Pistol(World world, MovableObject owner, int ammo) {
         super(world, owner, ammo);
-        ammo = 10;
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.Room;
 import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.map.World;
+import org.freeware.monakhov.game3d.objects.nonmovable.Armor;
 import org.freeware.monakhov.game3d.objects.nonmovable.AssaultRifleAmmo;
 import org.freeware.monakhov.game3d.objects.nonmovable.AssaultRifleOnMap;
 import org.freeware.monakhov.game3d.objects.nonmovable.FireBallAmmo;
@@ -206,6 +207,8 @@ abstract public class WorldObject {
                 return new Tree(world, new Point(attr));
             case "fireball_ammo":
                 return new FireBallAmmo(world, new Point(attr));
+            case "armor":
+                return new Armor(world, new Point(attr));
             case "medkit":
                 return new MedKit(world, new Point(attr));
             case "pistol":

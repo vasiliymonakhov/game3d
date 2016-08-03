@@ -2,7 +2,6 @@ package org.freeware.monakhov.game3d.objects.nonmovable;
 
 import org.freeware.monakhov.game3d.map.Point;
 import org.freeware.monakhov.game3d.map.World;
-import org.freeware.monakhov.game3d.objects.WorldObject;
 import org.freeware.monakhov.game3d.objects.movable.MovableObject;
 import org.freeware.monakhov.game3d.resources.Sprite;
 import org.freeware.monakhov.game3d.weapons.Pistol;
@@ -20,7 +19,7 @@ public class PistolOnMap extends WeaponOnMap {
 
     public PistolOnMap(World world, Point position) {
         super(world, position, 10);
-    }    
+    }
 
     @Override
     public Sprite getSprite() {
